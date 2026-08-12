@@ -1,0 +1,152 @@
+import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAppState } from '../context/AppState.jsx'
+import { answerTagsFrom } from '../data/survey.js'
+import { fetchAiCourse } from '../lib/aiRecommend.js'
+import CourseTimeline from '../components/CourseTimeline.jsx'
+import { BookmarkIcon } from '../components/icons.jsx'
+import TopBar from '../components/TopBar.jsx'
+
+export default function AiCourse() {
+  const navigate = useNavigate()
+  const { answers, aiCourse, setAiCourse } = useAppState()
+  const hasAnswers = Object.keys(answers).length > 0
+  const [status, setStatus] = useState(aiCourse ? 'done' : hasAnswers ? 'loading' : 'no-answers')
+  const [error, setError] = useState('')
+  const [dayIndices, setDayIndices] = useState([])
+
+  const lastSignature = useRef(null)
+
+  useEffect(() => {
+    if (!hasAnswers) return
+    const signature = JSON.stringify(answers)
+    if (aiCourse && lastSignature.current === signature) return
+    lastSignature.current = signature
+    setStatus('loading')
+    fetchAiCourse(answers)
+      .then((result) => {
+        setAiCourse(result)
+        setDayIndices(result.days.map(() => 0))
+        setStatus('done')
+      })
+      .catch((err) => {
+        setError(err.message)
+        setStatus('error')
+      })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasAnswers, answers])
+
+  if (status === 'no-answers') {
+    return (
+      <div className="screen">
+        <TopBar title="AI 맞춤 코스" />
+        <div className="screen-body">
+          <div className="survey-question">아직 답변이 없어요</div>
+          <div className="survey-sub">먼저 5가지 질문에 답해주시면 AI가 코스를 새로 짜드려요.</div>
+          <button className="btn-primary" style={{ width: '100%' }} onClick={() => navigate('/survey/1')}>
+            질문 시작하기
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  if (status === 'loading') {
+    return (
+      <div className="screen">
+        <TopBar title="AI 맞춤 코스" />
+        <div className="screen-body">
+          <div className="answer-tags">
+            {answerTagsFrom(answers).map((label) => (
+              <div key={label} className="pill-tag">
+                {label}
+              </div>
+            ))}
+          </div>
+          <div className="ai-callout ai-callout-loading" style={{ marginTop: 8 }}>
+            <span className="ai-callout-badge">AI 코스 생성 중</span>
+            <span>실제 프로그램을 고르고, 근처 맛집·카페를 찾고 있어요…</span>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (status === 'error') {
+    return (
+      <div className="screen">
+        <TopBar title="AI 맞춤 코스" />
+        <div className="screen-body">
+          <div className="ai-callout ai-callout-error">
+            <span className="ai-callout-badge">AI 코스 생성 실패</span>
+            <span>{error}</span>
+          </div>
+          <button
+            className="btn-primary"
+            style={{ width: '100%', marginTop: 12 }}
+            onClick={() => {
+              lastSignature.current = null
+              setStatus('loading')
+            }}
+          >
+            다시 시도하기
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  const { title, reason, days } = aiCourse
+
+  return (
+    <div className="screen">
+      <TopBar title={title} />
+      <div className="screen-body">
+        <div className="ai-callout" style={{ marginBottom: 4 }}>
+          <span className="ai-callout-badge">AI 추천</span>
+          <p className="ai-callout-text">{reason}</p>
+        </div>
+        <div className="answer-tags" style={{ marginTop: 12, marginBottom: 4 }}>
+          {answerTagsFrom(answers).map((label) => (
+            <div key={label} className="pill-tag">
+              {label}
+            </div>
+          ))}
+        </div>
+
+        {days.map((day, dayIdx) => (
+          <div key={day.dayNumber} style={{ marginTop: 24 }}>
+            <div className="hero-heading" style={{ fontSize: 20, marginBottom: 2 }}>
+              Day {day.dayNumber} · {day.dateLabel}
+            </div>
+            {day.stops.length === 0 ? (
+              <div className="survey-sub">이 날은 조건에 맞는 프로그램을 찾지 못했어요.</div>
+            ) : (
+              <CourseTimeline
+                stops={day.stops}
+                selectedIndex={dayIndices[dayIdx] ?? 0}
+                onSelect={(i) =>
+                  setDayIndices((prev) => {
+                    const next = [...prev]
+                    next[dayIdx] = i
+                    return next
+                  })
+                }
+                onTicket={(stop) => navigate('/ticket', { state: { stop, otherStops: day.stops } })}
+              />
+            )}
+          </div>
+        ))}
+      </div>
+
+      <div className="sticky-cta row">
+        <button className="btn-icon-square" aria-label="저장">
+          <BookmarkIcon />
+        </button>
+        <button className="sticky-cta-btn" onClick={() => navigate('/schedule')}>
+          내 일정에 저장
+        </button>
+      </div>
+    </div>
+  )
+}

@@ -1,0 +1,8 @@
+{
+  "functions": {
+    "api/build-course.js": {
+      "includeFiles": "server/data/**",
+      "maxDuration": 60
+    }
+  }
+}
