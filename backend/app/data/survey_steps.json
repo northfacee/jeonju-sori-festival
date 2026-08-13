@@ -1,0 +1,139 @@
+[
+  {
+    "key": "duration",
+    "question": "여행 기간이 어떻게 되세요?",
+    "sub": "코스 볼륨과 저녁 일정 포함 여부를 정할게요",
+    "options": [
+      {
+        "id": "day",
+        "label": "당일치기",
+        "desc": "아침에 와서 밤에 돌아가기",
+        "icon": "sun"
+      },
+      {
+        "id": "night1",
+        "label": "1박 2일",
+        "desc": "하루 자고 다음 날 오전까지",
+        "icon": "bed"
+      },
+      {
+        "id": "night2",
+        "label": "2박 3일 이상",
+        "desc": "주변 도시까지 여유롭게",
+        "icon": "calendar"
+      }
+    ]
+  },
+  {
+    "key": "time",
+    "question": "몇 시쯔음 방문하세요?",
+    "sub": "방문 시간에 맞는 프로그램부터 보여드려요",
+    "options": [
+      {
+        "id": "morning",
+        "label": "아침 8시",
+        "desc": "한적한 축제장, 조식 맛집 위주",
+        "icon": "sunrise"
+      },
+      {
+        "id": "noon",
+        "label": "오전 11시",
+        "desc": "프로그램이 막 시작되는 시간대",
+        "icon": "clock"
+      },
+      {
+        "id": "afternoon",
+        "label": "오후 3시",
+        "desc": "가장 붐비는 시간, 다양한 부스",
+        "icon": "sun"
+      },
+      {
+        "id": "evening",
+        "label": "저녁 6시",
+        "desc": "야시장·야경 중심으로 추천",
+        "icon": "moon"
+      }
+    ]
+  },
+  {
+    "key": "companion",
+    "question": "누구와 함께 가시나요?",
+    "sub": "동행에 맞춰 동선과 체험을 조정해요",
+    "options": [
+      {
+        "id": "alone",
+        "label": "혼자",
+        "desc": "자유롭게 나만의 속도로",
+        "icon": "user"
+      },
+      {
+        "id": "friend",
+        "label": "친구와",
+        "desc": "함께 걷고 이야기하며",
+        "icon": "users"
+      },
+      {
+        "id": "couple",
+        "label": "커플",
+        "desc": "분위기 있는 코스 위주",
+        "icon": "heart"
+      },
+      {
+        "id": "family",
+        "label": "가족과",
+        "desc": "아이·부모님과 함께",
+        "icon": "family"
+      }
+    ]
+  },
+  {
+    "key": "transport",
+    "question": "주로 어떤 이동수단을 쓰세요?",
+    "sub": "동선 간 거리와 경로를 계산할게요",
+    "options": [
+      {
+        "id": "walk",
+        "label": "도보",
+        "desc": "가까운 구역 위주로 촘촘하게",
+        "icon": "walk"
+      },
+      {
+        "id": "transit",
+        "label": "대중교통",
+        "desc": "버스·택시로 편하게 이동",
+        "icon": "bus"
+      },
+      {
+        "id": "car",
+        "label": "자차",
+        "desc": "주차 가능한 코스로 구성",
+        "icon": "car"
+      }
+    ]
+  },
+  {
+    "key": "budget",
+    "question": "오늘 지갑 컨디션은 어떠세요?",
+    "sub": "예산에 맞는 맛집과 체험을 골라드려요",
+    "options": [
+      {
+        "id": "saving",
+        "label": "가성비 위주",
+        "desc": "알차게, 무리하지 않게",
+        "icon": "coin"
+      },
+      {
+        "id": "balanced",
+        "label": "균형 있게",
+        "desc": "적당히 쓰고 적당히 즐기기",
+        "icon": "scale"
+      },
+      {
+        "id": "splurge",
+        "label": "특별한 하루",
+        "desc": "오늘만큼은 아끼지 않기",
+        "icon": "gift"
+      }
+    ]
+  }
+]

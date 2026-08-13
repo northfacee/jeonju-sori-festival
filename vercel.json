@@ -1,7 +1,7 @@
 {
   "functions": {
-    "api/build-course.js": {
-      "includeFiles": "server/data/**",
+    "api/build-course.py": {
+      "excludeFiles": "**/.env",
       "maxDuration": 60
     }
   }

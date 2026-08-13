@@ -1,0 +1,1365 @@
+{
+  "dateLabels": {
+    "08-12": "8월 12일(수)",
+    "08-13": "8월 13일(목)",
+    "08-14": "8월 14일(금)",
+    "08-15": "8월 15일(토)",
+    "08-16": "8월 16일(일)"
+  },
+  "stops": [
+    {
+      "id": "s1",
+      "date": "08-12",
+      "dateLabel": "8월 12일(수)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "[젊은판소리 다섯바탕] 춘향가 - 이수현",
+      "time": "13:30",
+      "timeEnd": "14:30",
+      "free": false,
+      "hall": "모악당",
+      "desc": "개막일 낮 공연. 다음 세대 소리꾼이 부르는 춘향가.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s2",
+      "date": "08-12",
+      "dateLabel": "8월 12일(수)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "[판소리 다섯바탕] 춘향가 - 장문희",
+      "time": "18:00",
+      "timeEnd": "20:00",
+      "free": false,
+      "hall": "모악당",
+      "desc": "개막일 저녁의 본무대 판소리.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s3",
+      "date": "08-12",
+      "dateLabel": "8월 12일(수)",
+      "venue": {
+        "key": "palbok",
+        "name": "팔복예술공장",
+        "address": "전북특별자치도 전주시 덕진구 구렛들1길 46",
+        "lat": 35.8574188,
+        "lon": 127.1056379
+      },
+      "name": "[어린이 소리축제] 유아특별프로그램 '이상한 나라의 작곡가'",
+      "time": "10:00",
+      "timeEnd": "11:40",
+      "free": false,
+      "desc": "유아 동반 가족을 위한 체험형 공연.",
+      "kidsOnly": true
+    },
+    {
+      "id": "s4",
+      "date": "08-12",
+      "dateLabel": "8월 12일(수)",
+      "venue": {
+        "key": "palbok",
+        "name": "팔복예술공장",
+        "address": "전북특별자치도 전주시 덕진구 구렛들1길 46",
+        "lat": 35.8574188,
+        "lon": 127.1056379
+      },
+      "name": "두드림 리듬 워크숍 '소리, 치다' (5~7세)",
+      "time": "10:30",
+      "timeEnd": "11:30",
+      "free": false,
+      "desc": "어린 아이들을 위한 리듬 체험 워크숍.",
+      "kidsOnly": true
+    },
+    {
+      "id": "s5",
+      "date": "08-12",
+      "dateLabel": "8월 12일(수)",
+      "venue": {
+        "key": "palbok",
+        "name": "팔복예술공장",
+        "address": "전북특별자치도 전주시 덕진구 구렛들1길 46",
+        "lat": 35.8574188,
+        "lon": 127.1056379
+      },
+      "name": "두드림 리듬 워크숍 '소리, 치다' (8~13세)",
+      "time": "14:00",
+      "timeEnd": "15:00",
+      "free": false,
+      "desc": "초등학생 대상 리듬 체험 워크숍.",
+      "kidsOnly": true
+    },
+    {
+      "id": "s6",
+      "date": "08-12",
+      "dateLabel": "8월 12일(수)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "[개막식] 만개의 숨, 하나의 판",
+      "time": "20:00",
+      "timeEnd": "21:00",
+      "free": true,
+      "hall": "놀이마당",
+      "desc": "2026 전주세계소리축제의 개막을 알리는 야외 공식 행사.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s7",
+      "date": "08-12",
+      "dateLabel": "8월 12일(수)",
+      "venue": {
+        "key": "woojin",
+        "name": "우진문화공간",
+        "address": "전북특별자치도 전주시 덕진구 전주천동로 376",
+        "lat": 35.8360688,
+        "lon": 127.1298383
+      },
+      "name": "[소리 프론티어] 모던국악프로젝트 차오름",
+      "time": "21:30",
+      "timeEnd": "22:00",
+      "free": true,
+      "desc": "개막일 심야, 우진문화공간에서 열리는 모던 국악 무대.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s8",
+      "date": "08-12",
+      "dateLabel": "8월 12일(수)",
+      "venue": {
+        "key": "woojin",
+        "name": "우진문화공간",
+        "address": "전북특별자치도 전주시 덕진구 전주천동로 376",
+        "lat": 35.8360688,
+        "lon": 127.1298383
+      },
+      "name": "[소리 프론티어] 황진아",
+      "time": "22:10",
+      "timeEnd": "22:40",
+      "free": true,
+      "desc": "개막일을 마무리하는 심야 무료 무대.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s9",
+      "date": "08-13",
+      "dateLabel": "8월 13일(목)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "[젊은판소리 다섯바탕] 심청가 - 박시본",
+      "time": "13:30",
+      "timeEnd": "14:30",
+      "free": false,
+      "hall": "모악당",
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s10",
+      "date": "08-13",
+      "dateLabel": "8월 13일(목)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "소리 시네마",
+      "time": "11:00",
+      "timeEnd": "16:40",
+      "free": true,
+      "hall": "중회의장",
+      "desc": "판소리·국악 관련 영상을 상영하는 무료 상영관. 원하는 시간에 들어가면 됨.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s11",
+      "date": "08-13",
+      "dateLabel": "8월 13일(목)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "[소리 초이스] 김미선 x 서정숙 x 유인상",
+      "time": "17:00",
+      "timeEnd": "17:40",
+      "free": true,
+      "hall": "명인홀",
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s12",
+      "date": "08-13",
+      "dateLabel": "8월 13일(목)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "[판소리 다섯바탕] 심청가 - 송재영",
+      "time": "18:00",
+      "timeEnd": "20:00",
+      "free": false,
+      "hall": "모악당",
+      "desc": "이날의 본무대 판소리 공연.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s13",
+      "date": "08-13",
+      "dateLabel": "8월 13일(목)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "강릉단오굿",
+      "time": "18:00",
+      "timeEnd": "19:00",
+      "free": true,
+      "hall": "놀이마당",
+      "desc": "국가무형유산 강릉단오굿을 야외 무대에서 무료로 관람.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s14",
+      "date": "08-13",
+      "dateLabel": "8월 13일(목)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "[캐나다] 재니스 조 리 & 더 큐티즈 밴드 with 송봉금",
+      "time": "19:00",
+      "timeEnd": "19:40",
+      "free": true,
+      "hall": "놀이마당",
+      "desc": "해외 아티스트와 국악이 만나는 놀이마당 무료 무대.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s15",
+      "date": "08-13",
+      "dateLabel": "8월 13일(목)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "[소리 초이스] 세움",
+      "time": "18:30",
+      "timeEnd": "19:10",
+      "free": true,
+      "hall": "명인홀",
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s16",
+      "date": "08-13",
+      "dateLabel": "8월 13일(목)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "[소리 초이스] 서정민",
+      "time": "19:20",
+      "timeEnd": "20:00",
+      "free": true,
+      "hall": "명인홀",
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s17",
+      "date": "08-13",
+      "dateLabel": "8월 13일(목)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "창작 국악극 '아버지의 해방일지'",
+      "time": "19:30",
+      "timeEnd": "21:30",
+      "free": false,
+      "hall": "연지홀",
+      "desc": "남원시립국악단의 창작 국악극. 유료 공연.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s18",
+      "date": "08-13",
+      "dateLabel": "8월 13일(목)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "[소리 초이스] 남도콜링",
+      "time": "20:00",
+      "timeEnd": "20:40",
+      "free": true,
+      "hall": "놀이마당",
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s19",
+      "date": "08-13",
+      "dateLabel": "8월 13일(목)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "두번째달 × 장명서",
+      "time": "21:00",
+      "timeEnd": "22:00",
+      "free": true,
+      "hall": "놀이마당",
+      "desc": "이날의 놀이마당을 마무리하는 무료 협연 무대.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s20",
+      "date": "08-13",
+      "dateLabel": "8월 13일(목)",
+      "venue": {
+        "key": "woojin",
+        "name": "우진문화공간",
+        "address": "전북특별자치도 전주시 덕진구 전주천동로 376",
+        "lat": 35.8360688,
+        "lon": 127.1298383
+      },
+      "name": "[소리 프론티어] 오드리",
+      "time": "21:30",
+      "timeEnd": "22:00",
+      "free": true,
+      "desc": "심야 무료 프론티어 무대.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s21",
+      "date": "08-13",
+      "dateLabel": "8월 13일(목)",
+      "venue": {
+        "key": "woojin",
+        "name": "우진문화공간",
+        "address": "전북특별자치도 전주시 덕진구 전주천동로 376",
+        "lat": 35.8360688,
+        "lon": 127.1298383
+      },
+      "name": "[소리 프론티어] 오름새",
+      "time": "22:10",
+      "timeEnd": "22:40",
+      "free": true,
+      "desc": "하루를 마무리하는 심야 무료 무대.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s22",
+      "date": "08-14",
+      "dateLabel": "8월 14일(금)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "[젊은판소리 다섯바탕] 흥보가 - 최광균",
+      "time": "13:30",
+      "timeEnd": "14:30",
+      "free": false,
+      "hall": "모악당",
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s23",
+      "date": "08-14",
+      "dateLabel": "8월 14일(금)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "소리 시네마",
+      "time": "11:00",
+      "timeEnd": "16:40",
+      "free": true,
+      "hall": "중회의장",
+      "desc": "판소리·국악 관련 영상 무료 상영.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s24",
+      "date": "08-14",
+      "dateLabel": "8월 14일(금)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "[월드뮤직 워크숍] 폴란드 - 루토 슬로비아니에 오케스트라",
+      "time": "11:00",
+      "timeEnd": "12:00",
+      "free": true,
+      "hall": "전시장",
+      "desc": "폴란드 월드뮤직 팀과 함께하는 무료 워크숍.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s25",
+      "date": "08-14",
+      "dateLabel": "8월 14일(금)",
+      "venue": {
+        "key": "palbok",
+        "name": "팔복예술공장",
+        "address": "전북특별자치도 전주시 덕진구 구렛들1길 46",
+        "lat": 35.8574188,
+        "lon": 127.1056379
+      },
+      "name": "베이비 드라마 '개똥이의 모험'",
+      "time": "10:00",
+      "timeEnd": "11:00",
+      "free": false,
+      "desc": "유아 동반 가족을 위한 공연형 프로그램.",
+      "kidsOnly": true
+    },
+    {
+      "id": "s26",
+      "date": "08-14",
+      "dateLabel": "8월 14일(금)",
+      "venue": {
+        "key": "palbok",
+        "name": "팔복예술공장",
+        "address": "전북특별자치도 전주시 덕진구 구렛들1길 46",
+        "lat": 35.8574188,
+        "lon": 127.1056379
+      },
+      "name": "유아특별프로그램 '사라진 소리선을 찾아서'",
+      "time": "13:30",
+      "timeEnd": "15:10",
+      "free": false,
+      "desc": "체험형 유아 프로그램.",
+      "kidsOnly": true
+    },
+    {
+      "id": "s27",
+      "date": "08-14",
+      "dateLabel": "8월 14일(금)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "[인도] 요츠나 스리칸쓰",
+      "time": "17:00",
+      "timeEnd": "18:00",
+      "free": false,
+      "hall": "명인홀",
+      "desc": "인도 월드뮤직 아티스트의 유료 공연.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s28",
+      "date": "08-14",
+      "dateLabel": "8월 14일(금)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "[전주세계소리축제×전북CBS] 어반자카파 <코 끝에 겨울>",
+      "time": "16:00",
+      "timeEnd": "17:20",
+      "free": false,
+      "hall": "연지홀",
+      "desc": "어반자카파 특별 공연. 유료.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s29",
+      "date": "08-14",
+      "dateLabel": "8월 14일(금)",
+      "venue": {
+        "key": "palbok",
+        "name": "팔복예술공장",
+        "address": "전북특별자치도 전주시 덕진구 구렛들1길 46",
+        "lat": 35.8574188,
+        "lon": 127.1056379
+      },
+      "name": "[월드뮤직 워크숍] 마지카 밴드",
+      "time": "16:00",
+      "timeEnd": "17:00",
+      "free": true,
+      "desc": "한국×이집트 마지카 밴드와 함께하는 무료 워크숍.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s30",
+      "date": "08-14",
+      "dateLabel": "8월 14일(금)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "김소라 여성농악 '안녕, 평안굿'",
+      "time": "18:00",
+      "timeEnd": "19:00",
+      "free": true,
+      "hall": "놀이마당",
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s31",
+      "date": "08-14",
+      "dateLabel": "8월 14일(금)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "[한국×이집트] 마지카 밴드",
+      "time": "19:00",
+      "timeEnd": "20:00",
+      "free": true,
+      "hall": "놀이마당",
+      "desc": "월드뮤직 워크숍에 이어 놀이마당 본공연으로 만나는 마지카 밴드.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s32",
+      "date": "08-14",
+      "dateLabel": "8월 14일(금)",
+      "venue": {
+        "key": "palbok",
+        "name": "팔복예술공장",
+        "address": "전북특별자치도 전주시 덕진구 구렛들1길 46",
+        "lat": 35.8574188,
+        "lon": 127.1056379
+      },
+      "name": "[소리 프린지] 휘파란",
+      "time": "18:00",
+      "timeEnd": "18:30",
+      "free": true,
+      "desc": "팔복예술공장 저녁 프린지 무대.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s33",
+      "date": "08-14",
+      "dateLabel": "8월 14일(금)",
+      "venue": {
+        "key": "palbok",
+        "name": "팔복예술공장",
+        "address": "전북특별자치도 전주시 덕진구 구렛들1길 46",
+        "lat": 35.8574188,
+        "lon": 127.1056379
+      },
+      "name": "[소리 프린지] 왓더브라스",
+      "time": "19:00",
+      "timeEnd": "19:30",
+      "free": true,
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s34",
+      "date": "08-14",
+      "dateLabel": "8월 14일(금)",
+      "venue": {
+        "key": "jbnu",
+        "name": "전북대학교 구정문",
+        "address": "전북특별자치도 전주시 덕진구 명륜4길 일대",
+        "lat": 35.8435,
+        "lon": 127.1266
+      },
+      "name": "[소리 프린지] 오투",
+      "time": "19:00",
+      "timeEnd": "19:30",
+      "free": true,
+      "desc": "전북대 구정문 거리에서 열리는 밤 프린지.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s35",
+      "date": "08-14",
+      "dateLabel": "8월 14일(금)",
+      "venue": {
+        "key": "jbnu",
+        "name": "전북대학교 구정문",
+        "address": "전북특별자치도 전주시 덕진구 명륜4길 일대",
+        "lat": 35.8435,
+        "lon": 127.1266
+      },
+      "name": "[소리 프린지] 리얼리티",
+      "time": "19:30",
+      "timeEnd": "20:00",
+      "free": true,
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s36",
+      "date": "08-14",
+      "dateLabel": "8월 14일(금)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "[소리 초이스] 동양고주파",
+      "time": "20:00",
+      "timeEnd": "20:40",
+      "free": true,
+      "hall": "놀이마당",
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s37",
+      "date": "08-14",
+      "dateLabel": "8월 14일(금)",
+      "venue": {
+        "key": "jbnu",
+        "name": "전북대학교 구정문",
+        "address": "전북특별자치도 전주시 덕진구 명륜4길 일대",
+        "lat": 35.8435,
+        "lon": 127.1266
+      },
+      "name": "[소리 프린지] 박종훈 재즈 트리오",
+      "time": "20:00",
+      "timeEnd": "20:30",
+      "free": true,
+      "desc": "재즈로 마무리하는 구정문 거리공연.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s38",
+      "date": "08-14",
+      "dateLabel": "8월 14일(금)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "상자루",
+      "time": "21:00",
+      "timeEnd": "22:00",
+      "free": true,
+      "hall": "놀이마당",
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s39",
+      "date": "08-15",
+      "dateLabel": "8월 15일(토)",
+      "venue": {
+        "key": "daesaseup",
+        "name": "전주대사습청",
+        "address": "전북특별자치도 전주시 완산구 한지길 56",
+        "lat": 35.8165,
+        "lon": 127.1538
+      },
+      "name": "[소리 프린지] 이븐타이드",
+      "time": "13:00",
+      "timeEnd": "13:30",
+      "free": true,
+      "desc": "전주대사습청 앞마당, 한옥마을 낮 프린지의 첫 무대.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s40",
+      "date": "08-15",
+      "dateLabel": "8월 15일(토)",
+      "venue": {
+        "key": "daesaseup",
+        "name": "전주대사습청",
+        "address": "전북특별자치도 전주시 완산구 한지길 56",
+        "lat": 35.8165,
+        "lon": 127.1538
+      },
+      "name": "[소리 프린지] 온노트",
+      "time": "13:30",
+      "timeEnd": "14:00",
+      "free": true,
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s41",
+      "date": "08-15",
+      "dateLabel": "8월 15일(토)",
+      "venue": {
+        "key": "daesaseup",
+        "name": "전주대사습청",
+        "address": "전북특별자치도 전주시 완산구 한지길 56",
+        "lat": 35.8165,
+        "lon": 127.1538
+      },
+      "name": "[소리 프린지] 슬로우진",
+      "time": "14:00",
+      "timeEnd": "14:30",
+      "free": true,
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s42",
+      "date": "08-15",
+      "dateLabel": "8월 15일(토)",
+      "venue": {
+        "key": "daesaseup",
+        "name": "전주대사습청",
+        "address": "전북특별자치도 전주시 완산구 한지길 56",
+        "lat": 35.8165,
+        "lon": 127.1538
+      },
+      "name": "[소리 프린지] 아쟁앙상블 난새",
+      "time": "14:30",
+      "timeEnd": "15:00",
+      "free": true,
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s43",
+      "date": "08-15",
+      "dateLabel": "8월 15일(토)",
+      "venue": {
+        "key": "daesaseup",
+        "name": "전주대사습청",
+        "address": "전북특별자치도 전주시 완산구 한지길 56",
+        "lat": 35.8165,
+        "lon": 127.1538
+      },
+      "name": "[소리 프린지] 퓨전국악밴드 JJP",
+      "time": "15:00",
+      "timeEnd": "15:30",
+      "free": true,
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s44",
+      "date": "08-15",
+      "dateLabel": "8월 15일(토)",
+      "venue": {
+        "key": "daesaseup",
+        "name": "전주대사습청",
+        "address": "전북특별자치도 전주시 완산구 한지길 56",
+        "lat": 35.8165,
+        "lon": 127.1538
+      },
+      "name": "[소리 프린지] 아우리",
+      "time": "15:30",
+      "timeEnd": "16:00",
+      "free": true,
+      "desc": "한옥마을 낮 프린지의 마지막 무대.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s45",
+      "date": "08-15",
+      "dateLabel": "8월 15일(토)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "[월드뮤직 워크숍] 인도 - 요츠나 스리칸쓰",
+      "time": "11:00",
+      "timeEnd": "12:00",
+      "free": true,
+      "hall": "전시장",
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s46",
+      "date": "08-15",
+      "dateLabel": "8월 15일(토)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "[젊은판소리 다섯바탕] 적벽가 - 고한돌",
+      "time": "11:00",
+      "timeEnd": "12:00",
+      "free": false,
+      "hall": "모악당",
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s47",
+      "date": "08-15",
+      "dateLabel": "8월 15일(토)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "[판소리 다섯바탕] 적벽가 - 왕기석",
+      "time": "15:00",
+      "timeEnd": "17:00",
+      "free": false,
+      "hall": "모악당",
+      "desc": "이날의 본무대 판소리. 왕기석 명창의 적벽가.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s48",
+      "date": "08-15",
+      "dateLabel": "8월 15일(토)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "[한국×폴란드] 쇼팽&아리랑",
+      "time": "17:00",
+      "timeEnd": "18:00",
+      "free": false,
+      "hall": "명인홀",
+      "desc": "쇼팽과 아리랑을 한 무대에서 잇는 협연.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s49",
+      "date": "08-15",
+      "dateLabel": "8월 15일(토)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "심수봉 <푸른 떨림>",
+      "time": "16:00",
+      "timeEnd": "17:20",
+      "free": false,
+      "hall": "연지홀",
+      "desc": "전주세계소리축제×전북CBS 공동기획 특별 공연.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s50",
+      "date": "08-15",
+      "dateLabel": "8월 15일(토)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "고창농악 만두레 풍장굿",
+      "time": "18:00",
+      "timeEnd": "19:00",
+      "free": true,
+      "hall": "놀이마당",
+      "desc": "전당 야외 놀이마당에서 열리는 무료 농악 공연.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s51",
+      "date": "08-15",
+      "dateLabel": "8월 15일(토)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "[말라위] 마달리초 밴드",
+      "time": "19:00",
+      "timeEnd": "19:40",
+      "free": true,
+      "hall": "놀이마당",
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s52",
+      "date": "08-15",
+      "dateLabel": "8월 15일(토)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "[소리 초이스] 블루찬트",
+      "time": "19:00",
+      "timeEnd": "19:40",
+      "free": true,
+      "hall": "명인홀",
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s53",
+      "date": "08-15",
+      "dateLabel": "8월 15일(토)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "산조의 밤 - 박대성, 박범훈",
+      "time": "19:30",
+      "timeEnd": "20:50",
+      "free": false,
+      "hall": "모악당",
+      "desc": "전통 산조의 정수를 만나는 심야 무대.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s54",
+      "date": "08-15",
+      "dateLabel": "8월 15일(토)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "[소리 초이스] 시오트",
+      "time": "20:00",
+      "timeEnd": "20:40",
+      "free": true,
+      "hall": "놀이마당",
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s55",
+      "date": "08-15",
+      "dateLabel": "8월 15일(토)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "악단광칠",
+      "time": "21:00",
+      "timeEnd": "22:00",
+      "free": true,
+      "hall": "놀이마당",
+      "desc": "놀이마당 무료 공연으로 하루를 마무리.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s56",
+      "date": "08-15",
+      "dateLabel": "8월 15일(토)",
+      "venue": {
+        "key": "palbok",
+        "name": "팔복예술공장",
+        "address": "전북특별자치도 전주시 덕진구 구렛들1길 46",
+        "lat": 35.8574188,
+        "lon": 127.1056379
+      },
+      "name": "베이비 드라마 '개똥이의 모험'",
+      "time": "10:00",
+      "timeEnd": "11:00",
+      "free": false,
+      "desc": "",
+      "kidsOnly": true
+    },
+    {
+      "id": "s57",
+      "date": "08-15",
+      "dateLabel": "8월 15일(토)",
+      "venue": {
+        "key": "palbok",
+        "name": "팔복예술공장",
+        "address": "전북특별자치도 전주시 덕진구 구렛들1길 46",
+        "lat": 35.8574188,
+        "lon": 127.1056379
+      },
+      "name": "유아특별프로그램 '둥둥통통 리듬 탐험대'",
+      "time": "10:00",
+      "timeEnd": "11:40",
+      "free": false,
+      "desc": "",
+      "kidsOnly": true
+    },
+    {
+      "id": "s58",
+      "date": "08-15",
+      "dateLabel": "8월 15일(토)",
+      "venue": {
+        "key": "palbok",
+        "name": "팔복예술공장",
+        "address": "전북특별자치도 전주시 덕진구 구렛들1길 46",
+        "lat": 35.8574188,
+        "lon": 127.1056379
+      },
+      "name": "유아상설프로그램 - 유아 예술 놀이터",
+      "time": "13:30",
+      "timeEnd": "15:10",
+      "free": true,
+      "desc": "무료로 즐기는 유아 상설 놀이 프로그램.",
+      "kidsOnly": true
+    },
+    {
+      "id": "s59",
+      "date": "08-16",
+      "dateLabel": "8월 16일(일)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "[젊은판소리 다섯바탕] 수궁가 - 소장",
+      "time": "11:00",
+      "timeEnd": "12:00",
+      "free": false,
+      "hall": "모악당",
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s60",
+      "date": "08-16",
+      "dateLabel": "8월 16일(일)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "[판소리 다섯바탕] 수궁가 - 김세미",
+      "time": "15:00",
+      "timeEnd": "17:00",
+      "free": false,
+      "hall": "모악당",
+      "desc": "축제 마지막 날의 본무대 판소리.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s61",
+      "date": "08-16",
+      "dateLabel": "8월 16일(일)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "오늘의 시나위",
+      "time": "17:00",
+      "timeEnd": "18:00",
+      "free": false,
+      "hall": "명인홀",
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s62",
+      "date": "08-16",
+      "dateLabel": "8월 16일(일)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "컨트리공방",
+      "time": "18:00",
+      "timeEnd": "19:00",
+      "free": true,
+      "hall": "놀이마당",
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s63",
+      "date": "08-16",
+      "dateLabel": "8월 16일(일)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "[한국×폴란드] String & Wind",
+      "time": "19:00",
+      "timeEnd": "20:00",
+      "free": true,
+      "hall": "놀이마당",
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s64",
+      "date": "08-16",
+      "dateLabel": "8월 16일(일)",
+      "venue": {
+        "key": "sori",
+        "name": "한국소리문화의전당",
+        "address": "전북특별자치도 전주시 덕진구 소리로 31",
+        "lat": 35.8556538,
+        "lon": 127.1384931
+      },
+      "name": "[폐막식] 숨결의 판, 내일의 삶. 모두가 판이 되다",
+      "time": "20:00",
+      "timeEnd": "21:00",
+      "free": true,
+      "hall": "놀이마당",
+      "desc": "2026 전주세계소리축제의 대미를 장식하는 폐막 공식 행사.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s65",
+      "date": "08-16",
+      "dateLabel": "8월 16일(일)",
+      "venue": {
+        "key": "deokjin",
+        "name": "덕진공원 연화정도서관",
+        "address": "전북특별자치도 전주시 덕진구 권삼득로 390-1",
+        "lat": 35.8473769,
+        "lon": 127.121664
+      },
+      "name": "[소리 프린지] 이현",
+      "time": "13:30",
+      "timeEnd": "14:00",
+      "free": true,
+      "desc": "덕진공원 연화정도서관 앞, 물 위 도서관을 배경으로 하는 무대.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s66",
+      "date": "08-16",
+      "dateLabel": "8월 16일(일)",
+      "venue": {
+        "key": "deokjin",
+        "name": "덕진공원 연화정도서관",
+        "address": "전북특별자치도 전주시 덕진구 권삼득로 390-1",
+        "lat": 35.8473769,
+        "lon": 127.121664
+      },
+      "name": "[소리 프린지] 미지",
+      "time": "14:00",
+      "timeEnd": "14:30",
+      "free": true,
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s67",
+      "date": "08-16",
+      "dateLabel": "8월 16일(일)",
+      "venue": {
+        "key": "deokjin",
+        "name": "덕진공원 연화정도서관",
+        "address": "전북특별자치도 전주시 덕진구 권삼득로 390-1",
+        "lat": 35.8473769,
+        "lon": 127.121664
+      },
+      "name": "[소리 프린지] 하랑",
+      "time": "14:30",
+      "timeEnd": "15:00",
+      "free": true,
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s68",
+      "date": "08-16",
+      "dateLabel": "8월 16일(일)",
+      "venue": {
+        "key": "deokjin",
+        "name": "덕진공원 연화정도서관",
+        "address": "전북특별자치도 전주시 덕진구 권삼득로 390-1",
+        "lat": 35.8473769,
+        "lon": 127.121664
+      },
+      "name": "[소리 프린지] 하프스트링 아띠랑스",
+      "time": "15:30",
+      "timeEnd": "16:00",
+      "free": true,
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s69",
+      "date": "08-16",
+      "dateLabel": "8월 16일(일)",
+      "venue": {
+        "key": "deokjin",
+        "name": "덕진공원 연화정도서관",
+        "address": "전북특별자치도 전주시 덕진구 권삼득로 390-1",
+        "lat": 35.8473769,
+        "lon": 127.121664
+      },
+      "name": "[소리 프린지] 파랑",
+      "time": "16:00",
+      "timeEnd": "16:30",
+      "free": true,
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s70",
+      "date": "08-16",
+      "dateLabel": "8월 16일(일)",
+      "venue": {
+        "key": "deokjin",
+        "name": "덕진공원 연화정도서관",
+        "address": "전북특별자치도 전주시 덕진구 권삼득로 390-1",
+        "lat": 35.8473769,
+        "lon": 127.121664
+      },
+      "name": "[소리 프린지] 무작판",
+      "time": "16:30",
+      "timeEnd": "17:00",
+      "free": true,
+      "desc": "",
+      "kidsOnly": false
+    },
+    {
+      "id": "s71",
+      "date": "08-16",
+      "dateLabel": "8월 16일(일)",
+      "venue": {
+        "key": "deokjin",
+        "name": "덕진공원 연화정도서관",
+        "address": "전북특별자치도 전주시 덕진구 권삼득로 390-1",
+        "lat": 35.8473769,
+        "lon": 127.121664
+      },
+      "name": "[소리 프린지] 아르미",
+      "time": "17:00",
+      "timeEnd": "17:30",
+      "free": true,
+      "desc": "덕진공원 프린지의 마지막 무대.",
+      "kidsOnly": false
+    },
+    {
+      "id": "s72",
+      "date": "08-16",
+      "dateLabel": "8월 16일(일)",
+      "venue": {
+        "key": "palbok",
+        "name": "팔복예술공장",
+        "address": "전북특별자치도 전주시 덕진구 구렛들1길 46",
+        "lat": 35.8574188,
+        "lon": 127.1056379
+      },
+      "name": "유아특별프로그램 '이상한 나라의 작곡가'",
+      "time": "10:00",
+      "timeEnd": "11:40",
+      "free": false,
+      "desc": "",
+      "kidsOnly": true
+    },
+    {
+      "id": "s73",
+      "date": "08-16",
+      "dateLabel": "8월 16일(일)",
+      "venue": {
+        "key": "palbok",
+        "name": "팔복예술공장",
+        "address": "전북특별자치도 전주시 덕진구 구렛들1길 46",
+        "lat": 35.8574188,
+        "lon": 127.1056379
+      },
+      "name": "유아상설프로그램 - 유아 예술 놀이터",
+      "time": "13:30",
+      "timeEnd": "15:10",
+      "free": true,
+      "desc": "",
+      "kidsOnly": true
+    }
+  ]
+}
