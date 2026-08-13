@@ -11,6 +11,7 @@ class BuildState(TypedDict):
     day_index: int
     used_food_names: list[str]
     used_stay_names: list[str]
+    used_night_tour_ids: list[str]
     previous_stay: dict | None
 
     current_date: str

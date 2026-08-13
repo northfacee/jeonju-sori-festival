@@ -13,3 +13,5 @@ STOP_POOL: list[dict] = _stop_pool_raw["stops"]
 DATE_ORDER: list[str] = list(DATE_LABELS.keys())
 
 SURVEY_STEPS: list[dict] = json.loads((DATA_DIR / "survey_steps.json").read_text(encoding="utf-8"))
+
+NIGHT_TOUR_EVENTS: list[dict] = json.loads((DATA_DIR / "night_tour.json").read_text(encoding="utf-8"))

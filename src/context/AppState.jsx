@@ -3,7 +3,6 @@ import { createContext, useContext, useState } from 'react'
 const AppStateContext = createContext(null)
 
 export function AppStateProvider({ children }) {
-  const [chip, setChip] = useState('판소리')
   const [courseId, setCourseId] = useState('hanok-sori')
   const [stopIndex, setStopIndex] = useState(3)
   const [answers, setAnswers] = useState({})
@@ -12,8 +11,6 @@ export function AppStateProvider({ children }) {
   const setAnswer = (key, optionId) => setAnswers((prev) => ({ ...prev, [key]: optionId }))
 
   const value = {
-    chip,
-    setChip,
     courseId,
     setCourseId,
     stopIndex,

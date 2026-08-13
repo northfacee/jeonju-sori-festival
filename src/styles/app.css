@@ -81,60 +81,6 @@
   font-weight: 700;
   letter-spacing: -0.01em;
 }
-.icon-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 999px;
-  background: var(--fill);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  border: none;
-  position: relative;
-  padding: 0;
-  flex: none;
-}
-.icon-btn .dot {
-  position: absolute;
-  top: 7px;
-  right: 8px;
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: var(--danger);
-  border: 1.5px solid var(--surface);
-}
-
-/* Chip filter row */
-.chip-row {
-  display: flex;
-  gap: 8px;
-  padding: 0 20px 12px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.chip-row::-webkit-scrollbar {
-  display: none;
-}
-.chip {
-  flex: none;
-  padding: 8px 14px;
-  border-radius: 999px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
-  border: 1px solid var(--border-strong);
-  background: var(--surface);
-  color: var(--text-secondary);
-}
-.chip.is-active {
-  background: var(--primary-tint);
-  border: 1.5px solid var(--primary);
-  color: var(--text);
-}
-
 /* Generic card */
 .card {
   border-radius: var(--radius-lg);
@@ -153,6 +99,12 @@
   position: relative;
   border-bottom: 1px solid var(--border-hairline);
   overflow: hidden;
+}
+.banner-poster {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: var(--surface);
 }
 .banner-badge {
   position: absolute;
@@ -189,6 +141,28 @@
 .banner-actions {
   display: flex;
   gap: 8px;
+}
+.banner-card-lg .banner-art {
+  height: auto;
+  aspect-ratio: 2000 / 990;
+}
+.banner-card-lg .banner-body {
+  padding: 20px;
+}
+.banner-card-lg .banner-date {
+  font-size: 13px;
+}
+.banner-card-lg .banner-name {
+  font-size: 22px;
+  margin-bottom: 6px;
+}
+.banner-card-lg .banner-meta {
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+.banner-card-lg .btn-primary {
+  padding: 15px;
+  font-size: 17px;
 }
 
 /* Buttons */
@@ -285,6 +259,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.feed-thumb {
+  width: 56px;
+  height: 56px;
+  flex: none;
+  border-radius: 8px;
+  object-fit: cover;
 }
 .feed-main {
   flex: 1;
@@ -447,6 +428,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.option-thumb {
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border-radius: 12px;
+  object-fit: cover;
 }
 .option-card.is-selected .option-icon {
   background: #fff;

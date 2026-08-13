@@ -12,9 +12,6 @@ export const NAV_TABS = [
   { key: 'schedule', label: '내 일정', icon: TAB_ICONS.me, path: '/schedule' },
 ]
 
-// 2026 전주세계소리축제가 실제로 밝힌 8개 프로그램 분야 중 이 앱에서 다루는 항목만 추림
-export const CHIP_LABELS = ['전체', '판소리', '월드뮤직', '프린지', '가족']
-
 // 장식용 QR 패턴(실제 예매 정보가 아닌 화면 목업용 픽셀 그리드)
 const QR_SEED = 'sorifestival-2026-myeoingin-chopin-arirang'
 

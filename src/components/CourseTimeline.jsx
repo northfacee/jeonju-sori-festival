@@ -5,6 +5,7 @@ export function badgeFor(s) {
   if (s.kind === 'stay') return { label: '숙소', bg: '#eef0ff', fg: '#4338ca' }
   if (s.kind === 'food') return { label: '식사', bg: '#fff0e8', fg: '#c94a00' }
   if (s.kind === 'cafe') return { label: '카페', bg: '#eaf2fe', fg: '#005eeb' }
+  if (s.kind === 'night-tour') return { label: '야간관광', bg: '#f3e8ff', fg: '#7c3aed' }
   return s.free ? { label: '무료', bg: '#d9ffe6', fg: '#009632' } : { label: '유료', bg: '#fff0e8', fg: '#c94a00' }
 }
 

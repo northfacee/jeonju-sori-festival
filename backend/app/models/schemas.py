@@ -6,12 +6,13 @@ class CamelModel(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
 
-class Answers(BaseModel):
+class Answers(CamelModel):
     duration: str | None = None
     time: str | None = None
     companion: str | None = None
     transport: str | None = None
     budget: str | None = None
+    night_tour_ids: list[str] = []
 
 
 class BuildCourseRequest(BaseModel):

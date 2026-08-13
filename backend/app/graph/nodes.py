@@ -5,7 +5,7 @@ from app.constants import MAX_WALK_KM
 from app.graph.tools import REPORT_STAY_TOOL, SUMMARIZE_TRIP_TOOL, pick_day_stops_tool
 from app.models.state import BuildState
 from app.services.distance import haversine_km
-from app.services.festival_data import DATE_LABELS, STOP_POOL, SURVEY_STEPS
+from app.services.festival_data import DATE_LABELS, NIGHT_TOUR_EVENTS, STOP_POOL, SURVEY_STEPS
 from app.services.food_search import search_places
 from app.services.geocode import geocode_place
 from app.services.llm import call_tool, search_with_google
@@ -180,6 +180,27 @@ async def search_accommodation(anchor_venue: dict, exclude_names: list[str], wal
         return None
 
 
+# ── 야간관광: 사용자가 고른 프로그램 중 그날 실제로 운영하는 것만 저녁 늦은 시간대에 끼워 넣기 ──
+def night_tour_to_stop(event: dict, date: str) -> dict:
+    return {
+        "id": f"night-{event['id']}-{date}",
+        "date": date,
+        "dateLabel": DATE_LABELS[date],
+        "venue": event["venue"],
+        "name": event["name"],
+        "time": None,
+        "timeEnd": None,
+        "kind": "night-tour",
+        "desc": f"{event['desc']} · {event['place']} · {event['price']}",
+    }
+
+
+def pick_night_tour_stops(date: str, selected_ids: list[str], used_ids: list[str]) -> list[tuple[str, dict]]:
+    """(event_id, stop) 쌍으로 반환 — stop id만 보고 event id를 역추적하지 않기 위해."""
+    candidates = [e for e in NIGHT_TOUR_EVENTS if e["id"] in selected_ids and date in e["activeDates"] and e["id"] not in used_ids]
+    return [(e["id"], night_tour_to_stop(e, date)) for e in candidates]
+
+
 # ── 요일 창(연속 날짜) 고르기 ──
 def pick_date_window(day_count: int) -> list[str]:
     max_start = len(DATE_ORDER) - day_count
@@ -202,6 +223,7 @@ def decide_dates_and_filter_node(state: BuildState) -> dict:
         "day_index": 0,
         "used_food_names": [],
         "used_stay_names": [],
+        "used_night_tour_ids": [],
         "previous_stay": None,
         "days": [],
     }
@@ -243,6 +265,31 @@ async def search_food_node(state: BuildState) -> dict:
     new_used_food_names = used_food_names + [p["name"] for p in lunch_places] + [p["name"] for p in dinner_places]
 
     return {"current_stops": stops, "used_food_names": new_used_food_names}
+
+
+def search_night_tour_node(state: BuildState) -> dict:
+    selected_ids = state["answers"].get("nightTourIds") or []
+    if not selected_ids:
+        return {}
+
+    date = state["current_date"]
+    used_ids = state["used_night_tour_ids"]
+    pairs = pick_night_tour_stops(date, selected_ids, used_ids)
+    if not pairs:
+        return {}
+
+    stops = state["current_stops"]
+    items = [stop for _, stop in pairs]
+    anchor_venue = items[0]["venue"]
+    placed = place_items_into_slots(stops, items, 20 * 60, 23 * 60, anchor_venue)
+    if not placed:
+        return {}
+
+    new_stops = dedupe_overlaps(stops + placed)
+    placed_stop_ids = {p["id"] for p in placed}
+    newly_used = [event_id for event_id, stop in pairs if stop["id"] in placed_stop_ids]
+
+    return {"current_stops": new_stops, "used_night_tour_ids": used_ids + newly_used}
 
 
 async def search_stay_node(state: BuildState) -> dict:
