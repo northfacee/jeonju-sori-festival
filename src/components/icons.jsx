@@ -16,13 +16,6 @@ export function BellIcon() {
   )
 }
 
-export function BookmarkIcon({ size = 20, stroke = 'rgba(55,56,60,0.61)' }) {
-  return (
-    <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke={stroke} strokeWidth="2" strokeLinecap="round">
-      <path d="M7 4 h10 v16 l-5 -4 -5 4 Z" />
-    </svg>
-  )
-}
 
 export function DiscountIcon({ size = 28, stroke = '#ff5e00' }) {
   return (

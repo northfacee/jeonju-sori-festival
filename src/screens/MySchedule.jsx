@@ -1,17 +1,41 @@
-import { COURSES } from '../data/courses.js'
+import { useNavigate } from 'react-router-dom'
+import { useAppState } from '../context/AppState.jsx'
+import { directionsUrl, nextStopOf, progressOf, stopKey } from '../data/schedule.js'
 import BottomNav from '../components/BottomNav.jsx'
 
-const MAIN_COURSE_ID = 'hanok-sori'
-const SAVED_IDS = ['deokjin-fringe', 'family-street']
-
 export default function MySchedule() {
-  const course = COURSES.find((c) => c.id === MAIN_COURSE_ID)
-  const savedCourses = SAVED_IDS.map((id) => COURSES.find((c) => c.id === id))
+  const navigate = useNavigate()
+  const { schedule, removeCourse, toggleStopDone, toggleAlarm, setActiveCourse } = useAppState()
+  const { courses, doneStopKeys, alarmOffCourseIds, activeCourseId } = schedule
 
-  const nowIndex = course.stops.findIndex((s) => s.name.includes('쇼팽'))
-  const doneCount = nowIndex
-  const pct = Math.round((doneCount / course.stops.length) * 100)
-  const next = course.stops[nowIndex]
+  const active = courses.find((c) => c.id === activeCourseId) || courses[0] || null
+
+  if (!active) {
+    return (
+      <div className="screen">
+        <div className="home-header">
+          <div className="home-header-row">
+            <div className="home-title">내 일정</div>
+          </div>
+        </div>
+        <div className="screen-body">
+          <div className="empty-state">
+            <div className="empty-title">아직 저장한 일정이 없어요</div>
+            <div className="empty-desc">AI 코스를 만들고 "내 일정에 저장"을 누르면 여기에 쌓여요.</div>
+            <button className="btn-primary" style={{ width: '100%' }} onClick={() => navigate('/survey/1')}>
+              AI 코스 만들러 가기
+            </button>
+          </div>
+        </div>
+        <BottomNav />
+      </div>
+    )
+  }
+
+  const { done, total, pct } = progressOf(active, doneStopKeys)
+  const next = nextStopOf(active, doneStopKeys)
+  const alarmOff = alarmOffCourseIds.includes(active.id)
+  const others = courses.filter((c) => c.id !== active.id)
 
   return (
     <div className="screen">
@@ -22,80 +46,104 @@ export default function MySchedule() {
       </div>
 
       <div className="screen-body">
-        <div className="next-card">
-          <div className="next-tag">
-            <span className="next-tag-dot" />
-            <span className="next-tag-label">오늘의 다음 일정 · {course.dateLabel}</span>
+        {next ? (
+          <div className="next-card">
+            <div className="next-tag">
+              <span className="next-tag-dot" />
+              <span className="next-tag-label">다음 일정 · {next.stop.dateLabel || active.dateLabel}</span>
+            </div>
+            <div className="next-name">{next.stop.name}</div>
+            <div className="next-meta">
+              {next.stop.venue?.name}
+              {next.stop.hall ? ` · ${next.stop.hall}` : ''}
+              {next.stop.time ? ` · ${next.stop.time}–${next.stop.timeEnd}` : ''}
+            </div>
+            <div className="next-actions">
+              <a
+                className="btn-mid-primary"
+                href={directionsUrl(next.stop)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                길찾기 시작
+              </a>
+              <button className="btn-mid-white" onClick={() => toggleAlarm(active.id)}>
+                {alarmOff ? '일정 알림 켜기' : '일정 알림 끄기'}
+              </button>
+            </div>
           </div>
-          <div className="next-name">{next.name}</div>
-          <div className="next-meta">
-            {next.venue.name}
-            {next.hall ? ` · ${next.hall}` : ''} · {next.time}–{next.timeEnd}
+        ) : (
+          <div className="next-card next-card-done">
+            <div className="next-name">일정을 모두 마쳤어요 🎉</div>
+            <div className="next-meta">{active.name} · {total}개 일정 완료</div>
           </div>
-          <div className="next-actions">
-            <button className="btn-mid-primary">길찾기 시작</button>
-            <button className="btn-mid-white">일정 알림 끄기</button>
+        )}
+
+        <div className="section-head">
+          <div className="section-title">{active.name}</div>
+          <div className="section-count">
+            {done} / {total} 완료
           </div>
         </div>
 
-        <div className="section-head">
-          <div className="section-title">오늘 진행률</div>
-          <div style={{ fontSize: 14, fontWeight: 600, color: '#3366ff' }}>
-            {doneCount} / {course.stops.length} 완료
-          </div>
-        </div>
         <div className="progress-card">
           <div className="progress-bar-track">
             <div className="progress-bar-fill" style={{ width: `${pct}%` }} />
           </div>
           <div className="progress-list">
-            {course.stops.map((s, i) => {
-              const done = i < nowIndex
-              const now = i === nowIndex
+            {active.stops.map((stop, i) => {
+              const key = stopKey(active.id, stop, i)
+              const isDone = doneStopKeys.includes(key)
+              const isNext = next?.index === i
               return (
-                <div key={s.name} className="progress-row">
-                  <div
-                    className="progress-dot"
-                    style={{
-                      background: done ? '#00bf40' : now ? '#3366ff' : 'transparent',
-                      border: done || now ? 'none' : '1.5px solid rgba(112,115,124,0.22)',
-                      color: done || now ? '#fff' : 'transparent',
-                    }}
-                  >
-                    {done ? '✓' : now ? '·' : ''}
-                  </div>
-                  <div
-                    className="progress-name"
-                    style={{
-                      color: done ? 'rgba(55,56,60,0.61)' : '#171717',
-                      textDecoration: done ? 'line-through' : 'none',
-                    }}
-                  >
-                    {s.name}
-                  </div>
-                  <div className="progress-time">{s.time}</div>
-                </div>
+                <button
+                  key={key}
+                  className={`progress-row progress-row-btn ${isDone ? 'is-done' : ''} ${isNext ? 'is-next' : ''}`}
+                  onClick={() => toggleStopDone(key)}
+                  aria-pressed={isDone}
+                >
+                  <span className="progress-dot">{isDone ? '✓' : isNext ? '·' : ''}</span>
+                  <span className="progress-name">{stop.name}</span>
+                  <span className="progress-time">{stop.time || ''}</span>
+                </button>
               )
             })}
           </div>
         </div>
 
-        <div className="section-title" style={{ marginBottom: 12 }}>
-          저장한 코스
-        </div>
-        <div className="list-col">
-          {savedCourses.map((s) => (
-            <button key={s.id} className="saved-row">
-              <div className="feed-main">
-                <div className="saved-name">{s.name}</div>
-                <div className="saved-meta">
-                  {s.dateLabel} · {s.summary}
-                </div>
-              </div>
-              <div className="saved-chevron">›</div>
-            </button>
-          ))}
-        </div>
+        {others.length > 0 && (
+          <>
+            <div className="section-title" style={{ marginBottom: 12 }}>
+              저장한 다른 코스
+            </div>
+            <div className="list-col">
+              {others.map((course) => {
+                const p = progressOf(course, doneStopKeys)
+                return (
+                  <div key={course.id} className="saved-row">
+                    <button className="saved-main" onClick={() => setActiveCourse(course.id)}>
+                      <div className="saved-name">{course.name}</div>
+                      <div className="saved-meta">
+                        {course.dateLabel} · {p.done}/{p.total} 완료
+                      </div>
+                    </button>
+                    <button
+                      className="saved-remove"
+                      onClick={() => removeCourse(course.id)}
+                      aria-label={`${course.name} 삭제`}
+                    >
+                      ×
+                    </button>
+                  </div>
+                )
+              })}
+            </div>
+          </>
+        )}
+
+        <button className="text-btn-danger" onClick={() => removeCourse(active.id)}>
+          이 코스를 내 일정에서 빼기
+        </button>
       </div>
 
       <BottomNav />

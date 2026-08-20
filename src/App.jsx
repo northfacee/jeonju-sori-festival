@@ -5,7 +5,6 @@ import Survey from './screens/Survey.jsx'
 import CourseResults from './screens/CourseResults.jsx'
 import AiCourse from './screens/AiCourse.jsx'
 import CourseDetail from './screens/CourseDetail.jsx'
-import Ticket from './screens/Ticket.jsx'
 import MySchedule from './screens/MySchedule.jsx'
 
 export default function App() {
@@ -18,7 +17,6 @@ export default function App() {
           <Route path="/results" element={<CourseResults />} />
           <Route path="/ai-course" element={<AiCourse />} />
           <Route path="/course/:id" element={<CourseDetail />} />
-          <Route path="/ticket" element={<Ticket />} />
           <Route path="/schedule" element={<MySchedule />} />
         </Routes>
       </div>

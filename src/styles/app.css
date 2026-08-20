@@ -182,23 +182,6 @@
 .btn-primary:hover {
   background: var(--primary-hover);
 }
-.btn-icon-square {
-  width: 48px;
-  border-radius: 12px;
-  border: 1px solid var(--border-strong);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  background: var(--surface);
-  transition: background 0.2s;
-  flex: none;
-  padding: 0;
-  align-self: stretch;
-}
-.btn-icon-square:hover {
-  background: var(--bg);
-}
 
 /* Section header */
 .section-head {
@@ -349,10 +332,6 @@
   bottom: 0;
   padding: 12px 20px calc(20px + env(safe-area-inset-bottom, 0px));
   background: linear-gradient(180deg, rgba(247, 247, 248, 0), var(--bg) 40%);
-}
-.sticky-cta.row {
-  display: flex;
-  gap: 8px;
 }
 .sticky-cta-btn {
   padding: 12px 28px;
@@ -780,122 +759,6 @@
 }
 
 /* Coupon / QR screen */
-.store-card {
-  border-radius: 12px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 20px;
-  margin-bottom: 20px;
-}
-.store-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-.store-district {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--accent);
-  margin-bottom: 4px;
-}
-.store-name {
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
-.status-badge {
-  padding: 5px 10px;
-  border-radius: 8px;
-  background: var(--success-tint);
-  color: var(--success);
-  font-size: 11px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-.coupon-highlight {
-  border-radius: 12px;
-  background: var(--accent-tint);
-  padding: 16px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 16px;
-}
-.coupon-amount {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--accent);
-  letter-spacing: -0.01em;
-}
-.coupon-cond {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--accent);
-  margin-top: 2px;
-}
-.coupon-icon-box {
-  width: 56px;
-  height: 56px;
-  flex: none;
-  border-radius: 8px;
-  background: var(--surface);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.qr-wrap {
-  display: flex;
-  justify-content: center;
-  padding: 20px 0 12px;
-}
-.qr-grid {
-  width: 180px;
-  height: 180px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  padding: 12px;
-  box-sizing: border-box;
-  display: grid;
-  grid-template-columns: repeat(9, 1fr);
-  grid-template-rows: repeat(9, 1fr);
-  gap: 2px;
-}
-.qr-cell {
-  border-radius: 2px;
-}
-.qr-hint {
-  text-align: center;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  margin-bottom: 4px;
-}
-.qr-timer {
-  text-align: center;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--primary);
-}
-
-.coupon-row {
-  border-radius: 12px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.coupon-row-btn {
-  padding: 7px 14px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  white-space: nowrap;
-  cursor: pointer;
-}
 
 /* My schedule */
 .next-card {
@@ -1018,4 +881,242 @@
 .saved-chevron {
   font-size: 17px;
   color: var(--text-tertiary);
+}
+
+/* ── AI 코스 생성 로딩 (AI 맞춤 코스 페이지 내부) ── */
+.loading-panel {
+  margin-top: 12px;
+  padding: 24px 20px 8px;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.loading-bar-track {
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--fill);
+  overflow: hidden;
+}
+.loading-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--primary);
+}
+
+.loading-ring-wrap {
+  position: relative;
+  width: 132px;
+  height: 132px;
+  margin: 24px 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.loading-ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+.loading-ring-track {
+  fill: none;
+  stroke: var(--fill);
+  stroke-width: 8;
+}
+.loading-ring-bar {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 8;
+  stroke-linecap: round;
+}
+.loading-ring-pct {
+  position: absolute;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: -0.02em;
+}
+
+.loading-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  text-align: center;
+}
+
+.loading-steps {
+  width: 100%;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+.loading-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 2px;
+  border-top: 1px solid var(--border-hairline);
+}
+.loading-step:first-child {
+  border-top: none;
+}
+.loading-step-mark {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--fill);
+  color: #fff;
+  transition: background 0.2s;
+}
+.loading-step.is-done .loading-step-mark {
+  background: var(--success-strong);
+}
+.loading-step-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-tertiary);
+}
+.loading-step.is-current .loading-step-dot {
+  background: var(--primary);
+  animation: loading-pulse 1.1s ease-in-out infinite;
+}
+.loading-step-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+}
+.loading-step.is-done .loading-step-label,
+.loading-step.is-current .loading-step-label {
+  color: var(--text);
+  font-weight: 600;
+}
+
+@keyframes loading-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.4; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-step-mark { transition: none; }
+  .loading-step.is-current .loading-step-dot { animation: none; }
+}
+
+/* ── 내 일정: 실제 상호작용 요소 ── */
+.section-count {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+/* 정류지 한 줄이 체크 버튼이 된다. 기존 .progress-row 레이아웃은 그대로 쓴다. */
+.progress-row-btn {
+  width: 100%;
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  padding: 4px 0;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+.progress-row-btn:hover {
+  background: var(--fill);
+}
+.progress-row-btn .progress-dot {
+  background: transparent;
+  border: 1.5px solid var(--border-strong);
+  color: transparent;
+}
+.progress-row-btn.is-next .progress-dot {
+  background: var(--primary);
+  border: none;
+  color: #fff;
+}
+.progress-row-btn.is-done .progress-dot {
+  background: var(--success-strong);
+  border: none;
+  color: #fff;
+}
+.progress-row-btn .progress-name {
+  color: var(--text);
+  text-decoration: none;
+}
+.progress-row-btn.is-done .progress-name {
+  color: var(--text-secondary);
+  text-decoration: line-through;
+}
+
+.next-card-done {
+  background: var(--success-tint);
+  border-color: var(--success);
+}
+
+/* 저장한 코스: 본문(선택)과 삭제 버튼을 분리 */
+.saved-main {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  padding: 0;
+  cursor: pointer;
+}
+.saved-remove {
+  width: 28px;
+  height: 28px;
+  flex: none;
+  border-radius: 999px;
+  border: none;
+  background: var(--fill);
+  color: var(--text-secondary);
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+.saved-remove:hover {
+  background: var(--danger);
+  color: #fff;
+}
+
+.text-btn-danger {
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  background: none;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--danger);
+  cursor: pointer;
+}
+
+.empty-state {
+  margin-top: 48px;
+  text-align: center;
+}
+.empty-title {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.empty-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 20px;
 }

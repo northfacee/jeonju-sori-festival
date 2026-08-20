@@ -3,13 +3,16 @@ import { useNavigate } from 'react-router-dom'
 import { useAppState } from '../context/AppState.jsx'
 import { answerTagsFrom } from '../data/survey.js'
 import { fetchAiCourse } from '../lib/aiRecommend.js'
+import { courseFromAi } from '../data/schedule.js'
 import CourseTimeline from '../components/CourseTimeline.jsx'
-import { BookmarkIcon } from '../components/icons.jsx'
+import CourseLoading from '../components/CourseLoading.jsx'
 import TopBar from '../components/TopBar.jsx'
+
+const MIN_LOADING_MS = 5000
 
 export default function AiCourse() {
   const navigate = useNavigate()
-  const { answers, aiCourse, setAiCourse } = useAppState()
+  const { answers, aiCourse, setAiCourse, saveCourse } = useAppState()
   const hasAnswers = Object.keys(answers).length > 0
   const [status, setStatus] = useState(aiCourse ? 'done' : hasAnswers ? 'loading' : 'no-answers')
   const [error, setError] = useState('')
@@ -23,16 +26,28 @@ export default function AiCourse() {
     if (aiCourse && lastSignature.current === signature) return
     lastSignature.current = signature
     setStatus('loading')
-    fetchAiCourse(answers)
-      .then((result) => {
+
+    let cancelled = false
+
+    // 로딩 연출을 끝까지 보여주기 위한 최소 노출 시간. 응답이 이보다 빨리 와도 기다린다.
+    const minWait = new Promise((resolve) => setTimeout(resolve, MIN_LOADING_MS))
+
+    Promise.all([fetchAiCourse(answers), minWait])
+      .then(([result]) => {
+        if (cancelled) return
         setAiCourse(result)
         setDayIndices(result.days.map(() => 0))
         setStatus('done')
       })
       .catch((err) => {
+        if (cancelled) return
         setError(err.message)
         setStatus('error')
       })
+
+    return () => {
+      cancelled = true
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasAnswers, answers])
 
@@ -63,10 +78,7 @@ export default function AiCourse() {
               </div>
             ))}
           </div>
-          <div className="ai-callout ai-callout-loading" style={{ marginTop: 8 }}>
-            <span className="ai-callout-badge">AI 코스 생성 중</span>
-            <span>실제 프로그램을 고르고, 근처 맛집·카페를 찾고 있어요…</span>
-          </div>
+          <CourseLoading answers={answers} />
         </div>
       </div>
     )
@@ -132,18 +144,20 @@ export default function AiCourse() {
                     return next
                   })
                 }
-                onTicket={(stop) => navigate('/ticket', { state: { stop, otherStops: day.stops } })}
               />
             )}
           </div>
         ))}
       </div>
 
-      <div className="sticky-cta row">
-        <button className="btn-icon-square" aria-label="저장">
-          <BookmarkIcon />
-        </button>
-        <button className="sticky-cta-btn" onClick={() => navigate('/schedule')}>
+      <div className="sticky-cta">
+        <button
+          className="sticky-cta-btn"
+          onClick={() => {
+            saveCourse(courseFromAi(aiCourse))
+            navigate('/schedule')
+          }}
+        >
           내 일정에 저장
         </button>
       </div>

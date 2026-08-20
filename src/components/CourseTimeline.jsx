@@ -1,4 +1,5 @@
 import { courseStats, spreadStopPoints } from '../data/courses.js'
+import { directionsUrl } from '../data/schedule.js'
 import KakaoMap from './KakaoMap.jsx'
 
 export function badgeFor(s) {
@@ -9,7 +10,7 @@ export function badgeFor(s) {
   return s.free ? { label: '무료', bg: '#d9ffe6', fg: '#009632' } : { label: '유료', bg: '#fff0e8', fg: '#c94a00' }
 }
 
-export default function CourseTimeline({ stops, selectedIndex, onSelect, onTicket, showDate = false }) {
+export default function CourseTimeline({ stops, selectedIndex, onSelect, showDate = false }) {
   const stats = courseStats({ stops })
   const points = spreadStopPoints(stops)
 
@@ -27,7 +28,6 @@ export default function CourseTimeline({ stops, selectedIndex, onSelect, onTicke
         {stops.map((s, i) => {
           const selected = selectedIndex === i
           const badge = badgeFor(s)
-          const needsTicket = !s.kind && !s.free
           return (
             <button
               key={s.id || s.name}
@@ -56,23 +56,15 @@ export default function CourseTimeline({ stops, selectedIndex, onSelect, onTicke
                     <>
                       {s.desc && <div className="stop-why">{s.desc}</div>}
                       <div className="stop-actions">
-                        {needsTicket && (
-                          <div
-                            className="btn-mid-primary"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              onTicket?.(s, i)
-                            }}
-                          >
-                            예매 확인
-                          </div>
-                        )}
-                        <div
-                          className={needsTicket ? 'btn-mid-secondary' : 'btn-mid-primary'}
+                        <a
+                          className="btn-mid-primary"
+                          href={directionsUrl(s)}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           onClick={(e) => e.stopPropagation()}
                         >
                           길찾기
-                        </div>
+                        </a>
                       </div>
                     </>
                   )}
