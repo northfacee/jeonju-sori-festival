@@ -17,7 +17,15 @@ function RoutedScreen() {
 
   // 연출이 도는 중에는 화면이 옆으로 밀려 들어오면 안 된다. 방울 밑에서
   // 두 가지가 같이 움직이면 지저분하다.
-  const cls = ['route-view', back ? 'is-back' : '', liquid ? 'is-covered' : ''].filter(Boolean).join(' ')
+  //
+  // 설문은 좌우로 밀지 않는다. 문항 사이는 "다른 화면으로 갔다"가 아니라
+  // "같은 자리에서 한 장 넘겼다"라서, 머리(진행 칸·제목줄)는 두고 본문만
+  // 위아래로 움직인다. 그 연출은 Survey 화면이 직접 갖고 있다.
+  const isSurvey = location.pathname.startsWith('/survey')
+
+  const cls = ['route-view', back ? 'is-back' : '', liquid ? 'is-covered' : '', isSurvey ? 'is-survey' : '']
+    .filter(Boolean)
+    .join(' ')
 
   return (
     <div key={location.pathname} className={cls}>

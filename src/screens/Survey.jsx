@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAppState } from '../context/AppState.jsx'
 import { SURVEY_STEPS } from '../data/survey.js'
@@ -9,6 +9,11 @@ import CoachMark from '../components/CoachMark.jsx'
 import { isCoachSeen, markCoachSeen } from '../lib/coachMarks.js'
 
 const TOTAL_STEPS = SURVEY_STEPS.length + 1
+
+// 답을 고르고 나서 다음 문항으로 넘어가기까지. 이 사이에 지금 장이 위로 빠진다.
+// app.css의 survey-page-out 길이와 같아야 한다. 길면 손끝이 굼떠지고,
+// 짧으면 빠지는 게 안 보인 채 화면만 바뀐다.
+const LEAVE_MS = 150
 
 export default function Survey() {
   const { step } = useParams()
@@ -26,11 +31,20 @@ export default function Survey() {
   }
   const current = isNightTourStep ? null : SURVEY_STEPS[index]
 
+  // 지금 장이 빠지는 중인지. 빠지는 동안에는 이 장을 더 누를 수 없다(app.css).
+  const [leaving, setLeaving] = useState(false)
+  // 연출이 화면에 반영되기 전에 한 번 더 눌리면 이동이 두 번 예약돼 문항을
+  // 하나 건너뛴다. 상태는 다음 그림까지 기다려야 해서 여기선 ref로 막는다.
+  const goingRef = useRef(false)
+
   const choose = (optionId) => {
     setAnswer(current.key, optionId)
+    if (goingRef.current) return
+    goingRef.current = true
+    setLeaving(true)
     setTimeout(() => {
       navigate(`/survey/${index + 2}`)
-    }, 220)
+    }, LEAVE_MS)
   }
 
   const toggleNightTour = (eventId) => {
@@ -44,16 +58,19 @@ export default function Survey() {
       <TopBar title={`질문 ${index + 1} / ${TOTAL_STEPS}`} />
       <div className="survey-progress">
         {Array.from({ length: TOTAL_STEPS }, (_, i) => (
-          <div key={i} className={`survey-progress-dot ${i <= index ? 'is-done' : ''}`} />
+          <div
+            key={i}
+            className={`survey-progress-dot ${i <= index ? 'is-done' : ''} ${i === index ? 'is-current' : ''}`}
+          />
         ))}
       </div>
 
       {isNightTourStep ? (
-        <div className="screen-body">
+        <div className="screen-body survey-page">
           <div className="survey-question">야간관광 프로그램도 코스에 넣을까요?</div>
           <div className="survey-sub">원하는 만큼 골라주세요. 안 골라도 코스는 그대로 만들어드려요.</div>
 
-          <div>
+          <div className="survey-options">
             {NIGHT_TOUR_EVENTS.map((event) => {
               const selected = (answers.nightTourIds || []).includes(event.id)
               return (
@@ -76,7 +93,7 @@ export default function Survey() {
           </div>
 
           <button
-            className="btn-primary"
+            className="btn-primary survey-next"
             style={{ width: '100%', marginTop: 8 }}
             onClick={() => navigate('/ai-course')}
           >
@@ -93,11 +110,11 @@ export default function Survey() {
           )}
         </div>
       ) : (
-        <div className="screen-body">
+        <div className={`screen-body survey-page ${leaving ? 'is-leaving' : ''}`}>
           <div className="survey-question">{current.question}</div>
           <div className="survey-sub">{current.sub}</div>
 
-          <div>
+          <div className="survey-options">
             {current.options.map((opt) => {
               const selected = answers[current.key] === opt.id
               return (
