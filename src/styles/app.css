@@ -1311,7 +1311,8 @@
   display: flex;
   align-items: baseline;
   gap: 10px;
-  margin-bottom: 22px;
+  margin-bottom: 16px;
+  flex: none;
 }
 .hero-brand-mark {
   font-size: 22px;
@@ -1325,21 +1326,26 @@
   color: rgba(255, 255, 255, 0.72);
 }
 
-/* 카드 폭을 82%로 둬서 양옆 카드가 살짝 보이게 한다. */
+/* 카드 폭을 86%로 둬서 양옆 카드가 살짝 보이게 한다. */
 .hero-viewport {
   width: 100%;
   overflow: hidden;
   touch-action: pan-y;
+  /* 남는 세로 공간을 카드가 다 쓰게 한다. min-height:0이 없으면 flex가 안 줄어든다. */
+  flex: 1;
+  min-height: 0;
 }
 .hero-track {
   display: flex;
+  height: 100%;
   will-change: transform;
 }
 .hero-track.is-snapping {
   transition: transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 .hero-slide {
-  flex: 0 0 82%;
+  flex: 0 0 86%;
+  height: 100%;
   padding: 0 5px;
   box-sizing: border-box;
   transform: scale(0.94);
@@ -1353,9 +1359,9 @@
 
 .hero-card {
   position: relative;
-  border-radius: 14px;
+  border-radius: 16px;
   overflow: hidden;
-  aspect-ratio: 4 / 5;
+  height: 100%;
   background: rgba(0, 0, 0, 0.3);
 }
 .hero-card-img {
@@ -1366,10 +1372,17 @@
   -webkit-user-drag: none;
   user-select: none;
 }
+/* 포스터형 이미지는 아래쪽에 자체 문구가 박혀 있어서, 오버레이 텍스트와
+   겹쳐 보이지 않으려면 아래를 충분히 덮어야 한다. */
 .hero-card-shade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 0.72) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 40%,
+    rgba(0, 0, 0, 0.55) 68%,
+    rgba(0, 0, 0, 0.88) 100%
+  );
 }
 .hero-card-text {
   position: absolute;
@@ -1409,7 +1422,8 @@
   display: flex;
   justify-content: center;
   gap: 6px;
-  margin-top: 20px;
+  margin-top: 16px;
+  flex: none;
 }
 .hero-dot {
   width: 22px;
@@ -1426,7 +1440,9 @@
 }
 
 .hero-meta {
-  margin-top: 18px;
+  margin-top: 12px;
+  margin-bottom: 14px;
+  flex: none;
   padding: 0 24px;
   text-align: center;
   font-size: 13px;
@@ -1436,7 +1452,7 @@
 }
 
 .hero-cta {
-  margin: auto 20px 8px;
+  margin: 4px 20px 8px;
   width: calc(100% - 40px);
   padding: 16px;
   border: none;

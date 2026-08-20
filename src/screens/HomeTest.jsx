@@ -31,7 +31,7 @@ export default function HomeTest() {
   }, [])
 
   const count = HERO_CARDS.length
-  const slideW = viewportW * 0.82
+  const slideW = viewportW * 0.86
   // 활성 카드를 가운데 두면 양옆이 똑같이 살짝 보인다.
   const offset = (viewportW - slideW) / 2
 
