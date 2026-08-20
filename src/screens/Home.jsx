@@ -206,7 +206,11 @@ export default function Home() {
           className="hero-cta"
           onClick={(e) => {
             // 방울이 이 버튼에서 솟아난다. 연출을 못 켜면 평소대로 바로 넘어간다.
-            if (!startLiquid(e.currentTarget.getBoundingClientRect(), '/survey/1')) navigate('/survey/1')
+            const started = startLiquid({
+              rect: e.currentTarget.getBoundingClientRect(),
+              onCover: () => navigate('/survey/1'),
+            })
+            if (!started) navigate('/survey/1')
           }}
         >
           AI 코스 추천받기

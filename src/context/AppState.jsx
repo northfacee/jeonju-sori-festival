@@ -81,10 +81,14 @@ export function AppStateProvider({ children }) {
 
   // 연출을 못 켜는 경우(모션 최소화 설정, 이미 도는 중)를 여기서 한 번에 판단해서
   // 부르는 쪽이 매번 신경 쓰지 않게 한다. 시작 못 하면 false를 돌려준다.
-  const startLiquid = (rect, to) => {
+  //
+  // rect    : 방울이 솟아날 자리(누른 버튼, 진행 링 등)
+  // radius  : 도입부 테두리 빛의 모서리. 링처럼 둥근 대상은 '50%'
+  // onCover : 화면이 덮인 순간에 할 일. 화면 이동일 수도, 상태 전환일 수도 있다
+  const startLiquid = ({ rect, radius, onCover }) => {
     if (liquid) return false
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return false
-    setLiquid({ rect, to })
+    setLiquid({ rect, radius, onCover })
     return true
   }
   const endLiquid = () => setLiquid(null)

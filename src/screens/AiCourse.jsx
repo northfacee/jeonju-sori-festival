@@ -14,7 +14,7 @@ const MIN_LOADING_MS = 5000
 
 export default function AiCourse() {
   const navigate = useNavigate()
-  const { answers, aiCourse, setAiCourse, aiCourseKey, setAiCourseKey, saveCourse } = useAppState()
+  const { answers, aiCourse, setAiCourse, aiCourseKey, setAiCourseKey, saveCourse, startLiquid } = useAppState()
   const hasAnswers = Object.keys(answers).length > 0
   const signature = JSON.stringify(answers)
   const hasFreshCourse = Boolean(aiCourse) && aiCourseKey === signature
@@ -52,10 +52,22 @@ export default function AiCourse() {
     Promise.all([fetchAiCourse(answers), minWait])
       .then(([result]) => {
         if (cancelled) return
-        setAiCourse(result)
-        setAiCourseKey(signature)
-        setDayIndices(result.days.map(() => 0))
-        setStatus('done')
+
+        // 화면에 반영하는 걸 통째로 미룬다. 코스를 먼저 저장해버리면 hasFreshCourse가
+        // 참이 되면서 이 효과가 다시 돌고, 그 자리에서 바로 done으로 넘어간다.
+        // 그러면 아직 방울이 퍼지는 중인데 뒤 화면이 결과로 바뀌어, 감추려던 교체가 그대로 보인다.
+        const apply = () => {
+          setAiCourse(result)
+          setAiCourseKey(signature)
+          setDayIndices(result.days.map(() => 0))
+          setStatus('done')
+        }
+
+        // 코스가 다 나오면 진행 링에서 방울이 퍼져 화면을 덮고, 덮인 사이에 결과로 바꾼다.
+        // 링을 못 찾거나 연출을 못 켜면 지금까지처럼 바로 결과를 보여준다.
+        const ring = document.querySelector('.loading-ring-wrap')?.getBoundingClientRect()
+        const started = ring && startLiquid({ rect: ring, radius: '50%', onCover: apply })
+        if (!started) apply()
       })
       .catch((err) => {
         if (cancelled) return

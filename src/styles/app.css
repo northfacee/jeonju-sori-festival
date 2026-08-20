@@ -1895,7 +1895,8 @@
   top: var(--lq-top);
   width: var(--lq-w);
   height: var(--lq-h);
-  border-radius: 14px;
+  /* 대상 모양을 그대로 따라간다. 버튼이면 14px, 진행 링이면 50%. */
+  border-radius: var(--lq-radius, 14px);
   border: 2px solid #fff;
   box-shadow:
     0 0 30px 8px rgba(255, 255, 255, 0.55),
