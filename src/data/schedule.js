@@ -26,7 +26,7 @@ export function courseFromMock(course) {
 }
 
 export function courseFromAi(aiCourse) {
-  const stops = aiCourse.days.flatMap((day) => day.stops)
+  const stops = aiCourse.days.flatMap((day) => day.stops.map(effectiveStop))
   const dates = aiCourse.days.map((day) => day.date).join('_')
   return {
     id: `ai-${slugify(aiCourse.title)}-${dates}`,
@@ -35,6 +35,20 @@ export function courseFromAi(aiCourse) {
     summary: aiCourse.reason,
     stops,
     source: 'ai',
+  }
+}
+
+// 소상공인 홍보 가게를 고른 정류지는 그 가게가 실제 일정이 된다.
+// 카드에는 양쪽을 다 보여줘야 해서 원본은 그대로 두고, 지도·저장·길찾기처럼
+// "한 곳"이 필요한 곳에서만 이걸로 바꿔 쓴다.
+export function effectiveStop(stop) {
+  if (!stop.promo || stop.chosen !== 'promo') return stop
+  const p = stop.promo
+  return {
+    ...stop,
+    name: p.name,
+    venue: { key: stop.venue?.key, name: p.name, address: p.address, lat: p.lat, lon: p.lon },
+    desc: p.desc,
   }
 }
 

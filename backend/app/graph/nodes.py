@@ -6,7 +6,7 @@ from app.graph.tools import REPORT_STAY_TOOL, SUMMARIZE_TRIP_TOOL, pick_day_stop
 from app.models.state import BuildState
 from app.services.distance import haversine_km
 from app.services.festival_data import DATE_LABELS, NIGHT_TOUR_EVENTS, STOP_POOL, SURVEY_STEPS
-from app.services.food_search import search_places
+from app.services.food_search import find_promo_place, search_places
 from app.services.geocode import geocode_place
 from app.services.llm import call_tool, search_with_google
 from app.services.time_utils import (
@@ -22,6 +22,7 @@ from app.services.time_utils import (
 
 DATE_ORDER = list(DATE_LABELS.keys())
 DURATION_DAY_COUNT = {"day": 1, "night1": 2, "night2": 3}
+PROMO_LIMIT = 2  # 하루에 소상공인 홍보를 붙일 정류지 수
 
 
 # ── Phase 1: 그날의 실제 축제 프로그램 고르기 (사전 정리된 일정 데이터 사용) ──
@@ -113,12 +114,16 @@ async def pick_day_stops(date: str, pool: list[dict], answers: dict, anchor_venu
 
 # ── Phase 2: 전주시 공공데이터 "음식점기본정보"에서 근처 실제 음식점/카페 찾기 ──
 async def to_stop_from_place(place: dict, date: str, anchor_venue: dict, walk: bool, kind_override: str | None = None) -> dict:
-    if place.get("lat") is not None and place.get("lon") is not None:
+    from_dataset = place.get("lat") is not None and place.get("lon") is not None
+    if from_dataset:
         geo = {"lat": place["lat"], "lon": place["lon"]}
     else:
         geo = await geocode_place(place["name"], place["address"])
 
-    if walk and geo and haversine_km(anchor_venue, geo) > MAX_WALK_KM * 2.5:
+    # 이 거리 검사는 지오코딩이 엉뚱한 곳을 집었을 때를 걸러내려는 것이다.
+    # 공공데이터 좌표는 믿을 수 있으므로 버리면 안 된다. 버리면 뒤에서 앵커 좌표로
+    # 덮여서 길찾기가 실제 가게가 아닌 다른 곳을 가리키게 된다.
+    if walk and geo and not from_dataset and haversine_km(anchor_venue, geo) > MAX_WALK_KM * 2.5:
         geo = None
 
     return {
@@ -264,7 +269,33 @@ async def search_food_node(state: BuildState) -> dict:
 
     new_used_food_names = used_food_names + [p["name"] for p in lunch_places] + [p["name"] for p in dinner_places]
 
+    attach_promos(placed_lunch + placed_dinner, new_used_food_names, walk)
+
     return {"current_stops": stops, "used_food_names": new_used_food_names}
+
+
+def attach_promos(food_stops: list[dict], used_names: list[str], walk: bool) -> None:
+    """식사·카페 정류지 중 앞의 몇 곳에만 소상공인 홍보 가게를 붙인다.
+    전부에 붙이면 광고처럼 보여서 하루 PROMO_LIMIT곳으로 제한한다."""
+    taken = list(used_names)
+    attached = 0
+
+    for stop in food_stops:
+        if attached >= PROMO_LIMIT:
+            break
+        kind = "cafe" if stop.get("kind") == "cafe" else "food"
+        promo = find_promo_place(stop["venue"], taken, kind, walk)
+        if not promo:
+            continue
+        stop["promo"] = {
+            "name": promo["name"],
+            "address": promo["address"],
+            "lat": promo["lat"],
+            "lon": promo["lon"],
+            "desc": promo["desc"],
+        }
+        taken.append(promo["name"])
+        attached += 1
 
 
 def search_night_tour_node(state: BuildState) -> dict:

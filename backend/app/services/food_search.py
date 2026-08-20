@@ -34,17 +34,35 @@ def find_nearby_restaurants(anchor_venue: dict, radius_km: float, exclude_names:
     return picked[:count]
 
 
+def _to_place(r: dict) -> dict:
+    return {
+        "name": r["name"],
+        "address": r["address"],
+        "lat": r["lat"],
+        "lon": r["lon"],
+        "type": "카페" if r["kind"] == "cafe" else "식당",
+        "desc": f"{r['type']} · 전주시 등록 음식점(공공데이터) · 약 {r['distanceKm']:.1f}km",
+    }
+
+
+def find_promo_place(anchor_venue: dict, exclude_names: list[str], kind: str, walk: bool) -> dict | None:
+    """소상공인 홍보 슬롯에 넣을 대안 가게. 추천 가게와 같은 종류(식당/카페)로 근처에서 하나 고른다."""
+    radius_km = MAX_WALK_KM if walk else 5
+    excluded = {n.strip().lower() for n in exclude_names}
+    candidates = [
+        {**r, "distanceKm": haversine_km(anchor_venue, r)}
+        for r in get_restaurants()
+        if r["kind"] == kind and r["name"].strip().lower() not in excluded
+    ]
+    candidates = [r for r in candidates if r["distanceKm"] <= radius_km]
+    if not candidates:
+        return None
+
+    candidates.sort(key=lambda r: r["distanceKm"])
+    return _to_place(random.choice(candidates[:12]))
+
+
 def search_places(anchor_venue: dict, exclude_names: list[str], walk: bool) -> list[dict]:
     radius_km = MAX_WALK_KM if walk else 5
     picks = find_nearby_restaurants(anchor_venue, radius_km, exclude_names, count=2)
-    return [
-        {
-            "name": r["name"],
-            "address": r["address"],
-            "lat": r["lat"],
-            "lon": r["lon"],
-            "type": "카페" if r["kind"] == "cafe" else "식당",
-            "desc": f"{r['type']} · 전주시 등록 음식점(공공데이터) · 약 {r['distanceKm']:.1f}km",
-        }
-        for r in picks
-    ]
+    return [_to_place(r) for r in picks]

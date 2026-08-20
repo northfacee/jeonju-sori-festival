@@ -1561,3 +1561,123 @@
   .coach-spot,
   .coach-bubble { animation: none; }
 }
+
+/* ── 소상공인 홍보: 정류지 카드를 좌우 반반으로 ── */
+.stop-card-split {
+  padding: 14px 14px 12px;
+  cursor: default;
+}
+.stop-split-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.stop-split-head .stop-time {
+  flex: 1;
+}
+
+.stop-split-body {
+  display: flex;
+  align-items: stretch;
+}
+.stop-half-wrap {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  align-items: stretch;
+}
+/* 가운데 세로 구분선 */
+.stop-split-line {
+  width: 1px;
+  flex: none;
+  margin: 0 10px;
+  background: var(--border);
+}
+
+.stop-half {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  padding: 4px 2px;
+  border: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+.stop-half:hover {
+  background: var(--fill);
+}
+.stop-half-tag {
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--primary-tint);
+  color: var(--primary);
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.stop-half-tag.is-promo {
+  background: var(--accent-tint);
+  color: var(--accent);
+}
+.stop-half-name {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  /* 상호가 길면 두 줄까지만 */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.stop-half-meta {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.stop-half-go {
+  margin-top: 8px;
+  width: 100%;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  background: var(--primary);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+/* 반반 카드에서 실제 일정에 들어간 쪽 표시 */
+.stop-half-top {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.stop-half-check {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--success);
+  white-space: nowrap;
+}
+.stop-half.is-chosen {
+  background: var(--success-tint);
+  outline: 1.5px solid var(--success-strong);
+  outline-offset: -1.5px;
+}
+.stop-half.is-chosen:hover {
+  background: var(--success-tint);
+}

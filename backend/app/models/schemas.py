@@ -27,6 +27,16 @@ class Venue(CamelModel):
     lon: float | None = None
 
 
+class Promo(CamelModel):
+    """소상공인 홍보 슬롯에 노출하는 대안 가게."""
+
+    name: str
+    address: str
+    lat: float | None = None
+    lon: float | None = None
+    desc: str = ""
+
+
 class Stop(CamelModel):
     id: str
     date: str
@@ -40,6 +50,7 @@ class Stop(CamelModel):
     hall: str | None = None
     desc: str = ""
     kids_only: bool | None = None
+    promo: Promo | None = None
 
 
 class DayPlan(CamelModel):

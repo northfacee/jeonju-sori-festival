@@ -1,5 +1,5 @@
 import { courseStats, spreadStopPoints } from '../data/courses.js'
-import { directionsUrl } from '../data/schedule.js'
+import { directionsUrl, effectiveStop } from '../data/schedule.js'
 import KakaoMap from './KakaoMap.jsx'
 import SwipeToDelete from './SwipeToDelete.jsx'
 
@@ -11,9 +11,79 @@ export function badgeFor(s) {
   return s.free ? { label: '무료', bg: '#d9ffe6', fg: '#009632' } : { label: '유료', bg: '#fff0e8', fg: '#c94a00' }
 }
 
-export default function CourseTimeline({ stops, selectedIndex, onSelect, onDelete, showDate = false }) {
-  const stats = courseStats({ stops })
-  const points = spreadStopPoints(stops)
+// 홍보 가게는 stop이 아니라 정보 묶음이라, 길찾기 링크를 만들려고 stop 모양으로 감싼다.
+function promoAsStop(promo) {
+  return {
+    name: promo.name,
+    venue: { name: promo.name, address: promo.address, lat: promo.lat, lon: promo.lon },
+  }
+}
+
+function splitCard(s, i, selected, badge, onSelect, onChoose) {
+  const chosen = s.chosen === 'promo' ? 'promo' : 'ours'
+  const halves = [
+    { key: 'ours', tag: 'AI 추천', name: s.name, meta: s.venue.name, target: s },
+    { key: 'promo', tag: '소상공인 홍보', name: s.promo.name, meta: s.promo.address, target: promoAsStop(s.promo) },
+  ]
+
+  return (
+    <div className={`stop-card stop-card-split ${selected ? 'is-selected' : ''}`}>
+      <div className="stop-split-head">
+        <div className={`stop-num ${selected ? 'is-selected' : ''}`}>{i + 1}</div>
+        <div className="stop-time">
+          {s.time}–{s.timeEnd}
+        </div>
+        <div className="stop-perk" style={{ background: badge.bg, color: badge.fg }}>
+          <span className="stop-perk-dot" />
+          {badge.label}
+        </div>
+      </div>
+
+      <div className="stop-split-body">
+        {halves.map((half, idx) => {
+          const isChosen = chosen === half.key
+          return (
+            <div key={half.key} className="stop-half-wrap">
+              {idx > 0 && <div className="stop-split-line" />}
+              <button
+                className={`stop-half ${isChosen ? 'is-chosen' : ''}`}
+                aria-pressed={isChosen}
+                onClick={() => {
+                  onSelect(i)
+                  onChoose?.(s, half.key)
+                }}
+              >
+                <span className="stop-half-top">
+                  <span className={`stop-half-tag ${half.key === 'promo' ? 'is-promo' : ''}`}>{half.tag}</span>
+                  {isChosen && <span className="stop-half-check">✓ 일정에 포함</span>}
+                </span>
+                <span className="stop-half-name">{half.name}</span>
+                <span className="stop-half-meta">{half.meta}</span>
+                {selected && (
+                  <a
+                    className="stop-half-go"
+                    href={directionsUrl(half.target)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    길찾기
+                  </a>
+                )}
+              </button>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+export default function CourseTimeline({ stops, selectedIndex, onSelect, onDelete, onChoose, showDate = false }) {
+  // 지도에는 실제로 일정에 들어간 가게(홍보를 골랐으면 그쪽)를 찍는다.
+  const shown = stops.map(effectiveStop)
+  const stats = courseStats({ stops: shown })
+  const points = spreadStopPoints(shown)
 
   return (
     <>
@@ -73,12 +143,15 @@ export default function CourseTimeline({ stops, selectedIndex, onSelect, onDelet
             </button>
           )
 
+          // 소상공인 홍보가 붙은 정류지는 카드를 좌우로 반 나눠 두 가게를 같이 보여준다.
+          const node = s.promo ? splitCard(s, i, selected, badge, onSelect, onChoose) : card
+
           const key = s.id || s.name
-          if (!onDelete) return <div key={key}>{card}</div>
+          if (!onDelete) return <div key={key}>{node}</div>
 
           return (
             <SwipeToDelete key={key} onDelete={() => onDelete(s, i)}>
-              {card}
+              {node}
             </SwipeToDelete>
           )
         })}

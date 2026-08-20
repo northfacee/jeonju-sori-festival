@@ -137,6 +137,23 @@ export default function AiCourse() {
     })
   }
 
+  // 반반 카드에서 고른 가게가 실제 일정이 된다(지도·저장·길찾기 모두 이걸 따라간다).
+  const chooseStopPlace = (dayIdx, stop, which) => {
+    setAiCourse((prev) => ({
+      ...prev,
+      days: prev.days.map((day, i) =>
+        i === dayIdx
+          ? {
+              ...day,
+              stops: day.stops.map((s) =>
+                (s.id || s.name) === (stop.id || stop.name) ? { ...s, chosen: which } : s,
+              ),
+            }
+          : day,
+      ),
+    }))
+  }
+
   const { title, reason, days } = aiCourse
 
   return (
@@ -174,6 +191,7 @@ export default function AiCourse() {
                   })
                 }
                 onDelete={(stop) => removeStop(dayIdx, stop)}
+                onChoose={(stop, which) => chooseStopPlace(dayIdx, stop, which)}
               />
             )}
           </div>
