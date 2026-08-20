@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAppState } from '../context/AppState.jsx'
 import { answerTagsFrom } from '../data/survey.js'
@@ -12,19 +12,21 @@ const MIN_LOADING_MS = 5000
 
 export default function AiCourse() {
   const navigate = useNavigate()
-  const { answers, aiCourse, setAiCourse, saveCourse } = useAppState()
+  const { answers, aiCourse, setAiCourse, aiCourseKey, setAiCourseKey, saveCourse } = useAppState()
   const hasAnswers = Object.keys(answers).length > 0
-  const [status, setStatus] = useState(aiCourse ? 'done' : hasAnswers ? 'loading' : 'no-answers')
+  const signature = JSON.stringify(answers)
+  const hasFreshCourse = Boolean(aiCourse) && aiCourseKey === signature
+  const [status, setStatus] = useState(hasFreshCourse ? 'done' : hasAnswers ? 'loading' : 'no-answers')
   const [error, setError] = useState('')
   const [dayIndices, setDayIndices] = useState([])
 
-  const lastSignature = useRef(null)
-
   useEffect(() => {
     if (!hasAnswers) return
-    const signature = JSON.stringify(answers)
-    if (aiCourse && lastSignature.current === signature) return
-    lastSignature.current = signature
+    // 같은 답변으로 만든 코스가 이미 있으면 그대로 쓴다.
+    if (hasFreshCourse) {
+      setStatus('done')
+      return
+    }
     setStatus('loading')
 
     let cancelled = false
@@ -36,6 +38,7 @@ export default function AiCourse() {
       .then(([result]) => {
         if (cancelled) return
         setAiCourse(result)
+        setAiCourseKey(signature)
         setDayIndices(result.days.map(() => 0))
         setStatus('done')
       })
@@ -49,7 +52,7 @@ export default function AiCourse() {
       cancelled = true
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasAnswers, answers])
+  }, [hasAnswers, signature, hasFreshCourse])
 
   if (status === 'no-answers') {
     return (
@@ -97,7 +100,7 @@ export default function AiCourse() {
             className="btn-primary"
             style={{ width: '100%', marginTop: 12 }}
             onClick={() => {
-              lastSignature.current = null
+              setAiCourseKey(null)
               setStatus('loading')
             }}
           >

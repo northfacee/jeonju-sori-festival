@@ -20,6 +20,9 @@ export function AppStateProvider({ children }) {
   const [stopIndex, setStopIndex] = useState(3)
   const [answers, setAnswers] = useState({})
   const [aiCourse, setAiCourse] = useState(null) // { title, reason, days } | null
+  // aiCourse를 만들어낸 설문 답변의 서명. 같은 답변으로 다시 들어오면 재생성하지 않는다
+  // (재생성하면 사용자가 스와이프로 지운 정류지가 되살아난다).
+  const [aiCourseKey, setAiCourseKey] = useState(null)
   const [schedule, setSchedule] = useState(loadSchedule)
 
   useEffect(() => {
@@ -82,6 +85,8 @@ export function AppStateProvider({ children }) {
     setAnswer,
     aiCourse,
     setAiCourse,
+    aiCourseKey,
+    setAiCourseKey,
     schedule,
     saveCourse,
     removeCourse,
