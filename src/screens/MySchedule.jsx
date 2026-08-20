@@ -4,6 +4,7 @@ import { useAppState } from '../context/AppState.jsx'
 import { directionsUrl, groupByDay, nextStopOf, progressOf, stopKey } from '../data/schedule.js'
 import BottomNav from '../components/BottomNav.jsx'
 import DayPager from '../components/DayPager.jsx'
+import { preloadKakaoShare, shareCourse } from '../lib/share.js'
 
 export default function MySchedule() {
   const navigate = useNavigate()
@@ -14,6 +15,15 @@ export default function MySchedule() {
 
   // null이면 "아직 사용자가 안 넘김" — 다음 일정이 있는 날을 자동으로 보여준다.
   const [dayIndexRaw, setDayIndexRaw] = useState(null)
+  // 공유가 카카오톡이나 기기 공유 시트로 넘어가면 화면에 알릴 게 없지만,
+  // 클립보드 복사로 내려간 경우엔 아무 일도 안 일어난 것처럼 보여서 한 줄 띄운다.
+  const [shareNote, setShareNote] = useState('')
+
+  // 누를 때 SDK를 받으면 그 사이에 "방금 눌렀다"는 자격이 만료돼 공유 시트가 막힌다.
+  // 화면에 들어올 때 미리 받아둔다.
+  useEffect(() => {
+    preloadKakaoShare()
+  }, [])
   useEffect(() => setDayIndexRaw(null), [activeCourseId])
 
   if (!active) {
@@ -197,6 +207,20 @@ export default function MySchedule() {
             </div>
           </>
         )}
+
+        <button
+          className="btn-kakao"
+          onClick={async () => {
+            const how = await shareCourse(active)
+            // 클립보드로 내려간 경우엔 아무 일도 안 일어난 것처럼 보이므로 알려준다.
+            if (how === 'copied') setShareNote('일정을 복사했어요. 카카오톡에 붙여넣어 주세요.')
+            else if (how === 'failed') setShareNote('공유에 실패했어요. 잠시 후 다시 시도해주세요.')
+            else setShareNote('')
+          }}
+        >
+          카카오톡으로 공유하기
+        </button>
+        {shareNote && <div className="share-note">{shareNote}</div>}
 
         <button className="btn-danger" onClick={() => removeCourse(active.id)}>
           이 코스를 내 일정에서 빼기
