@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate, useLocation, useNavigationType } from 'react-router-dom'
-import { AppStateProvider } from './context/AppState.jsx'
+import { AppStateProvider, useAppState } from './context/AppState.jsx'
+import LiquidTransition from './components/LiquidTransition.jsx'
 import Home from './screens/Home.jsx'
 import Survey from './screens/Survey.jsx'
 import CourseResults from './screens/CourseResults.jsx'
@@ -12,9 +13,14 @@ import MySchedule from './screens/MySchedule.jsx'
 function RoutedScreen() {
   const location = useLocation()
   const back = useNavigationType() === 'POP'
+  const { liquid } = useAppState()
+
+  // 연출이 도는 중에는 화면이 옆으로 밀려 들어오면 안 된다. 방울 밑에서
+  // 두 가지가 같이 움직이면 지저분하다.
+  const cls = ['route-view', back ? 'is-back' : '', liquid ? 'is-covered' : ''].filter(Boolean).join(' ')
 
   return (
-    <div key={location.pathname} className={`route-view ${back ? 'is-back' : ''}`}>
+    <div key={location.pathname} className={cls}>
       <Routes location={location}>
         <Route path="/" element={<Home />} />
         {/* 히어로 화면을 시험하던 주소. 그동안 열어보던 링크가 빈 화면이 되지 않게 넘겨준다. */}
@@ -35,6 +41,8 @@ export default function App() {
       <div className="app-shell">
         <RoutedScreen />
       </div>
+      {/* 화면 전환보다 오래 살아야 해서 route 바깥에 둔다. */}
+      <LiquidTransition />
     </AppStateProvider>
   )
 }

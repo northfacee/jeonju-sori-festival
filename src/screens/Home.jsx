@@ -1,12 +1,14 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { HERO_CARDS } from '../data/heroCards.js'
+import { useAppState } from '../context/AppState.jsx'
 
 const CHANGE_AT = 48 // 이만큼 끌면 옆 카드로 넘어간다
 const EDGE_RESISTANCE = 0.32
 
 export default function Home() {
   const navigate = useNavigate()
+  const { startLiquid } = useAppState()
   const [index, setIndex] = useState(0)
   const [dx, setDx] = useState(0)
   const [snapping, setSnapping] = useState(false)
@@ -200,7 +202,13 @@ export default function Home() {
 
         <div className="hero-meta">{active.meta}</div>
 
-        <button className="hero-cta" onClick={() => navigate('/survey/1')}>
+        <button
+          className="hero-cta"
+          onClick={(e) => {
+            // 방울이 이 버튼에서 솟아난다. 연출을 못 켜면 평소대로 바로 넘어간다.
+            if (!startLiquid(e.currentTarget.getBoundingClientRect(), '/survey/1')) navigate('/survey/1')
+          }}
+        >
           AI 코스 추천받기
         </button>
       </div>

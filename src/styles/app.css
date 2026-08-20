@@ -1852,3 +1852,94 @@
     transform: none;
   }
 }
+
+/* ══ 방울이 퍼졌다 빠지는 화면 전환 ══
+   누른 버튼에서 방울들이 솟아 화면을 덮고, 그 사이 다음 화면으로 바꿔둔 뒤
+   방울이 다시 빠지면서 새 화면이 드러난다. 전체 2초.
+
+   방울은 흐리지 않는다. 흐리면 덩어리가 뭉개져서 액체가 아니라 얼룩으로 보인다.
+   대신 크기·방향·시점이 조금씩 다른 방울 다섯을 겹친다. 색이 같아 겹친 자리는
+   보이지 않고, 뭉친 덩어리의 가장자리만 울퉁불퉁하게 남아 액체처럼 읽힌다. */
+.liquid {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  overflow: hidden;
+}
+.liquid-blob {
+  position: absolute;
+  left: var(--lq-x);
+  top: var(--lq-y);
+  width: 110vmax;
+  height: 110vmax;
+  margin-left: -55vmax;
+  margin-top: -55vmax;
+  border-radius: 50%;
+  background: var(--primary);
+  transform: scale(0);
+  will-change: transform;
+  /* 지연은 animation-delay가 아니라 키프레임 안에서 준다. 그래야 시작이 어긋나도
+     다섯이 같은 순간에 끝나서, 마지막 방울이 늦게 남는 일이 없다. */
+  animation-duration: 2.05s;
+  animation-fill-mode: forwards;
+  animation-timing-function: cubic-bezier(0.62, 0.02, 0.3, 1);
+}
+
+.liquid-blob-1 { animation-name: lq-blob-1; }
+.liquid-blob-2 { animation-name: lq-blob-2; }
+.liquid-blob-3 { animation-name: lq-blob-3; }
+.liquid-blob-4 { animation-name: lq-blob-4; }
+.liquid-blob-5 { animation-name: lq-blob-5; }
+
+/* 방울들이 서로 삐져나와야 덩어리 가장자리가 울퉁불퉁해진다. 하나가 유독 크면
+   나머지가 그 안에 묻혀서 그냥 매끈한 원으로 보인다. 그래서 크기는 비슷하게 두고
+   방향만 벌려놓는다. 벌린 거리(최대 26vmax)만큼 반지름도 키워야 완전히 덮인다.
+
+   빠질 때는 제자리에서 각자 사라지면 안 된다. 벌어져 있던 자리에 점만 다섯 개
+   남아 흩어진 것처럼 보인다. 누른 버튼 쪽으로 모이면서 줄어들어야 물이 빠지듯 읽힌다. */
+@keyframes lq-blob-1 {
+  0% { transform: translate(0, 0) scale(0); }
+  43% { transform: translate(0, 0) scale(2.5); }
+  56% { transform: translate(0, 0) scale(2.5); }
+  80% { transform: translate(0, 0) scale(1.15); }
+  96%, 100% { transform: translate(0, 0) scale(0); }
+}
+@keyframes lq-blob-2 {
+  0%, 5% { transform: translate(-24vmax, -15vmax) scale(0); }
+  39% { transform: translate(-24vmax, -15vmax) scale(2.35); }
+  56% { transform: translate(-24vmax, -15vmax) scale(2.35); }
+  78% { transform: translate(-13vmax, -8vmax) scale(1.05); }
+  92%, 100% { transform: translate(0, 0) scale(0); }
+}
+@keyframes lq-blob-3 {
+  0%, 9% { transform: translate(23vmax, -19vmax) scale(0); }
+  48% { transform: translate(23vmax, -19vmax) scale(2.4); }
+  56% { transform: translate(23vmax, -19vmax) scale(2.4); }
+  76% { transform: translate(12vmax, -10vmax) scale(1.1); }
+  89%, 100% { transform: translate(0, 0) scale(0); }
+}
+@keyframes lq-blob-4 {
+  0%, 13% { transform: translate(-15vmax, 21vmax) scale(0); }
+  41% { transform: translate(-15vmax, 21vmax) scale(2.3); }
+  56% { transform: translate(-15vmax, 21vmax) scale(2.3); }
+  74% { transform: translate(-8vmax, 11vmax) scale(1); }
+  86%, 100% { transform: translate(0, 0) scale(0); }
+}
+@keyframes lq-blob-5 {
+  0%, 17% { transform: translate(19vmax, 18vmax) scale(0); }
+  50% { transform: translate(19vmax, 18vmax) scale(2.35); }
+  56% { transform: translate(19vmax, 18vmax) scale(2.35); }
+  72% { transform: translate(10vmax, 9vmax) scale(1); }
+  83%, 100% { transform: translate(0, 0) scale(0); }
+}
+
+/* 덮여 있는 동안에는 다음 화면이 옆에서 밀려 들어오지 않게 한다. */
+.route-view.is-covered {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .liquid {
+    display: none;
+  }
+}

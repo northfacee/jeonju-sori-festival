@@ -24,6 +24,9 @@ export function AppStateProvider({ children }) {
   // (재생성하면 사용자가 스와이프로 지운 정류지가 되살아난다).
   const [aiCourseKey, setAiCourseKey] = useState(null)
   const [schedule, setSchedule] = useState(loadSchedule)
+  // 화면 전환 연출. 넘어가는 도중에도 살아 있어야 해서 화면이 아니라 여기서 들고 있다.
+  // { rect, to } — rect는 연출이 솟아날 버튼 자리.
+  const [liquid, setLiquid] = useState(null)
 
   useEffect(() => {
     try {
@@ -76,6 +79,16 @@ export function AppStateProvider({ children }) {
 
   const setActiveCourse = (id) => setSchedule((prev) => ({ ...prev, activeCourseId: id }))
 
+  // 연출을 못 켜는 경우(모션 최소화 설정, 이미 도는 중)를 여기서 한 번에 판단해서
+  // 부르는 쪽이 매번 신경 쓰지 않게 한다. 시작 못 하면 false를 돌려준다.
+  const startLiquid = (rect, to) => {
+    if (liquid) return false
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return false
+    setLiquid({ rect, to })
+    return true
+  }
+  const endLiquid = () => setLiquid(null)
+
   const value = {
     courseId,
     setCourseId,
@@ -93,6 +106,9 @@ export function AppStateProvider({ children }) {
     toggleStopDone,
     toggleAlarm,
     setActiveCourse,
+    liquid,
+    startLiquid,
+    endLiquid,
   }
 
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>
