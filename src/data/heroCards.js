@@ -1,12 +1,14 @@
 // 홈 히어로 캐러셀에 쓰는 카드. bg는 블러 배경 전용 축소본(원본을 흐리면 모바일에서 무겁다).
+// video가 있는 카드는 사진 대신 영상을 재생하고, image는 그때 포스터(자동재생 실패 시 화면)로 쓰인다.
 export const HERO_CARDS = [
   {
     id: 'sori',
     title: '2026 전주세계소리축제',
     subtitle: '소리의 숨결, 모아 판으로',
     meta: '8월 12일(수) ~ 8월 16일(일) · 한국소리문화의전당',
-    image: '/hero/sori.jpg',
-    bg: '/hero/sori-bg.jpg',
+    video: '/hero/sori.mp4',
+    image: '/hero/sori-video-poster.jpg',
+    bg: '/hero/sori-video-bg.jpg',
   },
   {
     id: 'gunsan',

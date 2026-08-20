@@ -1681,3 +1681,9 @@
 .stop-half.is-chosen:hover {
   background: var(--success-tint);
 }
+
+/* 히어로 카드 영상. 스와이프 제스처는 바깥 뷰포트가 받아야 해서 포인터를 통과시킨다. */
+.hero-card-video {
+  pointer-events: none;
+  background: #000;
+}

@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { HERO_CARDS } from '../data/heroCards.js'
 import BottomNav from '../components/BottomNav.jsx'
@@ -29,6 +29,30 @@ export default function HomeTest() {
     ro.observe(el)
     return () => ro.disconnect()
   }, [])
+
+  // 보이는 카드의 영상만 재생한다. 안 보이는 영상까지 돌면 발열·배터리만 잡아먹는다.
+  const videoRefs = useRef({})
+  useEffect(() => {
+    const sync = () => {
+      Object.entries(videoRefs.current).forEach(([id, el]) => {
+        if (!el) return
+        if (id !== HERO_CARDS[index].id || document.hidden) {
+          el.pause()
+          return
+        }
+        // React가 muted를 속성으로만 넣는 경우가 있어 직접 켠다. 음소거가 아니면 자동재생이 막힌다.
+        el.muted = true
+        // 저전력 모드처럼 브라우저가 재생을 막으면 포스터가 그대로 남는다. 실패는 그냥 둔다.
+        el.play().catch(() => {})
+      })
+    }
+
+    sync()
+    // 브라우저는 탭을 가리거나 앱을 벗어나면 영상을 자기 마음대로 멈춘다.
+    // 그대로 두면 돌아왔을 때 정지 화면이라, 다시 보일 때 직접 이어준다.
+    document.addEventListener('visibilitychange', sync)
+    return () => document.removeEventListener('visibilitychange', sync)
+  }, [index])
 
   const count = HERO_CARDS.length
   const slideW = viewportW * 0.86
@@ -115,7 +139,24 @@ export default function HomeTest() {
             {HERO_CARDS.map((card, i) => (
               <div key={card.id} className={`hero-slide ${i === index ? 'is-active' : ''}`}>
                 <div className="hero-card">
-                  <img className="hero-card-img" src={card.image} alt={card.title} draggable="false" />
+                  {card.video ? (
+                    <video
+                      ref={(el) => {
+                        videoRefs.current[card.id] = el
+                      }}
+                      className="hero-card-img hero-card-video"
+                      src={card.video}
+                      poster={card.image}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload="auto"
+                      aria-label={card.title}
+                    />
+                  ) : (
+                    <img className="hero-card-img" src={card.image} alt={card.title} draggable="false" />
+                  )}
                   <div className="hero-card-shade" />
                   <div className="hero-card-text">
                     <div className="hero-card-count">
