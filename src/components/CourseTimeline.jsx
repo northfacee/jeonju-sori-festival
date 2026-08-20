@@ -20,7 +20,10 @@ function promoAsStop(promo) {
 }
 
 function splitCard(s, i, selected, badge, onSelect, onChoose) {
-  const chosen = s.chosen === 'promo' ? 'promo' : 'ours'
+  // 아직 안 고른 정류지는 어느 쪽에도 표시를 넣지 않는다. 들어오자마자 한쪽이 초록이면
+  // 이미 정해진 것처럼 보여서 고를 수 있다는 걸 모르고 지나친다.
+  // (고르지 않아도 일정에는 AI 추천 쪽이 들어간다 — effectiveStop 참고)
+  const chosen = s.chosen
   const halves = [
     { key: 'ours', tag: 'AI 추천', name: s.name, meta: s.venue.name, target: s },
     { key: 'promo', tag: '소상공인 홍보', name: s.promo.name, meta: s.promo.address, target: promoAsStop(s.promo) },

@@ -22,11 +22,17 @@ export default function AiCourse() {
   const [error, setError] = useState('')
   const [dayIndices, setDayIndices] = useState([])
 
-  // 결과가 나온 뒤, 스와이프로 정류지를 뺄 수 있다는 걸 한 번 알려준다.
+  // 결과가 나온 뒤 안내를 두 개 띄운다. 한꺼번에 겹치면 못 읽으니 위에서 아래 순서로
+  // 하나씩 — 스와이프 삭제(첫 카드) 먼저, 닫으면 가게 선택(반반 카드).
   const [showSwipeCoach, setShowSwipeCoach] = useState(() => !isCoachSeen('swipe-delete'))
+  const [showChooseCoach, setShowChooseCoach] = useState(() => !isCoachSeen('choose-place'))
   const closeSwipeCoach = () => {
     markCoachSeen('swipe-delete')
     setShowSwipeCoach(false)
+  }
+  const closeChooseCoach = () => {
+    markCoachSeen('choose-place')
+    setShowChooseCoach(false)
   }
 
   useEffect(() => {
@@ -216,6 +222,15 @@ export default function AiCourse() {
           title="빼고 싶은 일정은 밀어서 삭제"
           description="마음에 들지 않는 일정은 카드를 왼쪽으로 밀면 코스에서 뺄 수 있어요."
           onClose={closeSwipeCoach}
+        />
+      )}
+
+      {!showSwipeCoach && showChooseCoach && days.some((d) => d.stops.some((s) => s.promo)) && (
+        <CoachMark
+          targetSelector=".stop-card-split"
+          title="식당·카페는 두 곳 중에 고르세요"
+          description="왼쪽은 AI 추천, 오른쪽은 근처 소상공인 가게예요. 원하는 쪽을 누르면 그 가게로 일정이 짜여요."
+          onClose={closeChooseCoach}
         />
       )}
     </div>
