@@ -205,9 +205,12 @@ export default function Home() {
         <button
           className="hero-cta"
           onClick={(e) => {
-            // 방울이 이 버튼에서 솟아난다. 연출을 못 켜면 평소대로 바로 넘어간다.
+            // 방울이 이 버튼에서 솟아나고, 테두리 빛은 버튼 테두리를 그대로 덧그린다.
+            // 모서리 값은 적어두지 않고 버튼에서 읽어온다 — 버튼 모양이 바뀌어도 계속 맞는다.
+            const el = e.currentTarget
             const started = startLiquid({
-              rect: e.currentTarget.getBoundingClientRect(),
+              rect: el.getBoundingClientRect(),
+              radius: getComputedStyle(el).borderRadius,
               onCover: () => navigate('/survey/1'),
             })
             if (!started) navigate('/survey/1')

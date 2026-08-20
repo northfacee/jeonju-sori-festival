@@ -1887,8 +1887,13 @@
   animation-timing-function: cubic-bezier(0.62, 0.02, 0.3, 1);
 }
 
-/* 도입부: 누른 버튼 테두리가 확 밝아졌다가, 방울이 솟아오르면 삼켜지듯 사라진다.
-   버튼과 같은 자리·같은 모서리라 "이 버튼에서 시작됐다"가 읽힌다. */
+/* 도입부: 누른 대상의 테두리가 밝아지고, 그 테두리에서 빛이 사방으로 번져 나간다.
+   대상과 같은 자리·같은 모서리라 "여기서 시작됐다"가 읽힌다.
+
+   번지는 걸 transform: scale로 하면 안 된다. 배율은 원래 길이에 비례해서 커지므로,
+   가로로 긴 버튼(353x52)에서는 같은 1.02배라도 좌우는 4px씩 벌어지는데 위아래는
+   0.6px밖에 안 벌어진다. 좌우로만 번지는 것처럼 보인다.
+   box-shadow의 퍼짐(spread)은 사방으로 똑같은 픽셀만큼 커지고 모서리도 그대로 따라간다. */
 .liquid-glow {
   position: absolute;
   left: var(--lq-left);
@@ -1897,21 +1902,42 @@
   height: var(--lq-h);
   /* 대상 모양을 그대로 따라간다. 버튼이면 14px, 진행 링이면 50%. */
   border-radius: var(--lq-radius, 14px);
-  border: 2px solid #fff;
-  box-shadow:
-    0 0 30px 8px rgba(255, 255, 255, 0.55),
-    0 0 60px 14px rgba(51, 102, 255, 0.5),
-    inset 0 0 20px rgba(255, 255, 255, 0.45);
+  border: 2px solid rgba(255, 255, 255, 0.95);
   opacity: 0;
-  will-change: transform, opacity;
-  animation: lq-glow 3.1s cubic-bezier(0.3, 0, 0.2, 1) forwards;
+  animation: lq-glow 3.1s cubic-bezier(0.22, 0.8, 0.3, 1) forwards;
 }
-/* %는 전체 길이(3.1초) 기준이다. 도입부 자체는 0.8초로 그대로 두려고 값을 맞춰뒀다. */
+/* %는 전체 길이(3.1초) 기준이다. 도입부 자체는 0.8초로 그대로 두려고 값을 맞춰뒀다.
+   테두리에 붙어 있던 빛이 한 겹 부풀었다가 사방으로 옅게 퍼지며 사라진다. */
 @keyframes lq-glow {
-  0% { opacity: 0; transform: scale(1); }
-  6.9% { opacity: 1; transform: scale(1.02); }
-  15.7% { opacity: 0.9; transform: scale(1.07); }
-  25.5%, 100% { opacity: 0; transform: scale(1.16); }
+  0% {
+    opacity: 0;
+    box-shadow:
+      0 0 0 0 rgba(255, 255, 255, 0.7),
+      0 0 0 0 rgba(51, 102, 255, 0.55),
+      inset 0 0 0 rgba(255, 255, 255, 0.5);
+  }
+  6.9% {
+    opacity: 1;
+    box-shadow:
+      0 0 16px 3px rgba(255, 255, 255, 0.65),
+      0 0 34px 7px rgba(51, 102, 255, 0.5),
+      inset 0 0 16px rgba(255, 255, 255, 0.45);
+  }
+  15.7% {
+    opacity: 0.85;
+    box-shadow:
+      0 0 30px 11px rgba(255, 255, 255, 0.4),
+      0 0 62px 20px rgba(51, 102, 255, 0.32),
+      inset 0 0 22px rgba(255, 255, 255, 0.2);
+  }
+  25.5%,
+  100% {
+    opacity: 0;
+    box-shadow:
+      0 0 44px 22px rgba(255, 255, 255, 0),
+      0 0 90px 34px rgba(51, 102, 255, 0),
+      inset 0 0 26px rgba(255, 255, 255, 0);
+  }
 }
 
 .liquid-blob-1 { animation-name: lq-blob-1; }
