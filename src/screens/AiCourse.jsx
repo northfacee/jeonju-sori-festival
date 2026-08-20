@@ -6,6 +6,8 @@ import { fetchAiCourse } from '../lib/aiRecommend.js'
 import { courseFromAi } from '../data/schedule.js'
 import CourseTimeline from '../components/CourseTimeline.jsx'
 import CourseLoading from '../components/CourseLoading.jsx'
+import CoachMark from '../components/CoachMark.jsx'
+import { isCoachSeen, markCoachSeen } from '../lib/coachMarks.js'
 import TopBar from '../components/TopBar.jsx'
 
 const MIN_LOADING_MS = 5000
@@ -19,6 +21,13 @@ export default function AiCourse() {
   const [status, setStatus] = useState(hasFreshCourse ? 'done' : hasAnswers ? 'loading' : 'no-answers')
   const [error, setError] = useState('')
   const [dayIndices, setDayIndices] = useState([])
+
+  // 결과가 나온 뒤, 스와이프로 정류지를 뺄 수 있다는 걸 한 번 알려준다.
+  const [showSwipeCoach, setShowSwipeCoach] = useState(() => !isCoachSeen('swipe-delete'))
+  const closeSwipeCoach = () => {
+    markCoachSeen('swipe-delete')
+    setShowSwipeCoach(false)
+  }
 
   useEffect(() => {
     if (!hasAnswers) return
@@ -182,6 +191,15 @@ export default function AiCourse() {
           내 일정에 저장
         </button>
       </div>
+
+      {showSwipeCoach && days.some((d) => d.stops.length > 0) && (
+        <CoachMark
+          targetSelector=".swipe-item"
+          title="빼고 싶은 일정은 밀어서 삭제"
+          description="마음에 들지 않는 일정은 카드를 왼쪽으로 밀면 코스에서 뺄 수 있어요."
+          onClose={closeSwipeCoach}
+        />
+      )}
     </div>
   )
 }

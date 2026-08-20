@@ -1483,3 +1483,81 @@
     transition-duration: 0.01ms;
   }
 }
+
+/* ── 코치마크 (기능 안내 오버레이) ── */
+.coach {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+}
+/* 커다란 box-shadow로 주변을 덮으면 대상만 뚫린 것처럼 보인다. */
+.coach-spot {
+  position: fixed;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 0 0 9999px rgba(10, 10, 14, 0.68);
+  pointer-events: none;
+  animation: coach-spot-in 0.28s ease-out;
+}
+@keyframes coach-spot-in {
+  from { box-shadow: 0 0 0 9999px rgba(10, 10, 14, 0); }
+}
+
+.coach-bubble {
+  position: fixed;
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 18px 18px 14px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.24);
+  animation: coach-bubble-in 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+@keyframes coach-bubble-in {
+  from { opacity: 0; transform: translateY(8px); }
+}
+/* 대상을 가리키는 삼각형 */
+.coach-bubble::before {
+  content: '';
+  position: absolute;
+  left: 28px;
+  border: 8px solid transparent;
+}
+.coach-bubble.is-below::before {
+  top: -16px;
+  border-bottom-color: var(--surface);
+}
+.coach-bubble.is-above::before {
+  bottom: -16px;
+  border-top-color: var(--surface);
+}
+
+.coach-title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 6px;
+}
+.coach-desc {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+.coach-btn {
+  margin-top: 14px;
+  width: 100%;
+  padding: 11px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--primary);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.coach-btn:hover {
+  background: var(--primary-hover);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .coach-spot,
+  .coach-bubble { animation: none; }
+}

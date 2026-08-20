@@ -1,9 +1,12 @@
+import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAppState } from '../context/AppState.jsx'
 import { SURVEY_STEPS } from '../data/survey.js'
 import { NIGHT_TOUR_EVENTS } from '../data/nightTour.js'
 import { QuestionIcon } from '../components/surveyIcons.jsx'
 import TopBar from '../components/TopBar.jsx'
+import CoachMark from '../components/CoachMark.jsx'
+import { isCoachSeen, markCoachSeen } from '../lib/coachMarks.js'
 
 const TOTAL_STEPS = SURVEY_STEPS.length + 1
 
@@ -14,6 +17,13 @@ export default function Survey() {
 
   const index = Math.max(1, Math.min(TOTAL_STEPS, Number(step) || 1)) - 1
   const isNightTourStep = index === SURVEY_STEPS.length
+
+  // 야간관광 단계는 처음 보는 사람에게 무엇을 고르는 화면인지 한 번 설명한다.
+  const [showNightCoach, setShowNightCoach] = useState(() => !isCoachSeen('night-tour'))
+  const closeNightCoach = () => {
+    markCoachSeen('night-tour')
+    setShowNightCoach(false)
+  }
   const current = isNightTourStep ? null : SURVEY_STEPS[index]
 
   const choose = (optionId) => {
@@ -72,6 +82,15 @@ export default function Survey() {
           >
             다음
           </button>
+
+          {showNightCoach && (
+            <CoachMark
+              targetSelector=".option-card"
+              title="야간관광도 코스에 넣을 수 있어요"
+              description="축제 기간에 실제로 운영하는 야간 프로그램이에요. 여러 개 골라도 되고, 안 골라도 코스는 그대로 만들어드려요."
+              onClose={closeNightCoach}
+            />
+          )}
         </div>
       ) : (
         <div className="screen-body">
