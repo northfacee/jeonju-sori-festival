@@ -1,5 +1,8 @@
 .app-shell {
+  /* 모바일의 100vh는 "주소창이 숨겨졌을 때" 높이라 주소창이 보이면 아래가 잘린다.
+     dvh는 실제로 보이는 높이다. dvh를 모르는 브라우저를 위해 vh를 먼저 둔다. */
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   justify-content: center;
   background: var(--bg);
@@ -9,6 +12,7 @@
   width: 100%;
   max-width: 480px;
   min-height: 100vh;
+  min-height: 100dvh;
   background: var(--bg);
   display: flex;
   flex-direction: column;
@@ -1270,6 +1274,9 @@
   position: relative;
   overflow: hidden;
   background: #12101a;
+  /* 이 화면은 스크롤이 없어서 넘치는 만큼 그냥 잘린다. 보이는 높이에 딱 맞춘다. */
+  height: 100vh;
+  height: 100dvh;
 }
 
 /* 배경: 같은 사진을 크게 확대해 흐린다. scale을 키워야 블러로 생긴 가장자리가 안 보인다. */
@@ -1301,6 +1308,9 @@
   position: relative;
   z-index: 1;
   flex: 1;
+  /* min-height:0이 없으면 flex 항목이 내용 높이 아래로 안 줄어든다. 화면이 짧은 기기에서
+     이게 없으면 내용이 넘치고, 이 화면은 스크롤이 없어서 버튼이 그냥 잘린다. */
+  min-height: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
