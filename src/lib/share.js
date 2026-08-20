@@ -12,6 +12,13 @@ const SDK_SRC = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js'
 // 지도와 같은 JavaScript 앱 키를 쓴다.
 const APP_KEY = import.meta.env.VITE_KAKAO_MAP_KEY
 
+// 공유 링크에 넣을 주소. 지금 열려 있는 주소(window.location.origin)를 쓰면 안 된다.
+// 로컬에서 누르면 localhost가, Vercel 미리보기에서 누르면 곧 사라질 임시 주소가
+// 그대로 박혀서, 받는 사람은 열리지 않는 링크를 받는다.
+// 카카오에 등록된 주소여야 한다 — 등록 안 된 주소면 카카오가 다른 걸로 바꿔치기한다.
+// 도메인을 옮기려면 이 한 줄만 고치면 된다.
+const SHARE_ORIGIN = 'https://jeonju-sori-festival.vercel.app'
+
 let loading = null
 
 export function preloadKakaoShare() {
@@ -44,7 +51,7 @@ export function courseAsText(course) {
 }
 
 export function shareCourse(course) {
-  const url = window.location.origin
+  const url = SHARE_ORIGIN
   const text = courseAsText(course)
   const summary = `${course.dateLabel} · 정류지 ${course.stops.length}곳`
 
