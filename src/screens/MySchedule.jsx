@@ -1,7 +1,9 @@
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAppState } from '../context/AppState.jsx'
-import { directionsUrl, nextStopOf, progressOf, stopKey } from '../data/schedule.js'
+import { directionsUrl, groupByDay, nextStopOf, progressOf, stopKey } from '../data/schedule.js'
 import BottomNav from '../components/BottomNav.jsx'
+import DayPager from '../components/DayPager.jsx'
 
 export default function MySchedule() {
   const navigate = useNavigate()
@@ -9,6 +11,10 @@ export default function MySchedule() {
   const { courses, doneStopKeys, alarmOffCourseIds, activeCourseId } = schedule
 
   const active = courses.find((c) => c.id === activeCourseId) || courses[0] || null
+
+  // null이면 "아직 사용자가 안 넘김" — 다음 일정이 있는 날을 자동으로 보여준다.
+  const [dayIndexRaw, setDayIndexRaw] = useState(null)
+  useEffect(() => setDayIndexRaw(null), [activeCourseId])
 
   if (!active) {
     return (
@@ -36,6 +42,14 @@ export default function MySchedule() {
   const next = nextStopOf(active, doneStopKeys)
   const alarmOff = alarmOffCourseIds.includes(active.id)
   const others = courses.filter((c) => c.id !== active.id)
+  const groups = groupByDay(active)
+
+  // 코스를 바꾸면 1일차부터, 그리고 다음 일정이 있는 날을 먼저 펴준다.
+  const initialDay = Math.max(
+    0,
+    groups.findIndex((g) => g.items.some((it) => it.index === next?.index)),
+  )
+  const dayIndex = Math.min(dayIndexRaw ?? initialDay, groups.length - 1)
 
   return (
     <div className="screen">
@@ -90,25 +104,68 @@ export default function MySchedule() {
           <div className="progress-bar-track">
             <div className="progress-bar-fill" style={{ width: `${pct}%` }} />
           </div>
-          <div className="progress-list">
-            {active.stops.map((stop, i) => {
-              const key = stopKey(active.id, stop, i)
-              const isDone = doneStopKeys.includes(key)
-              const isNext = next?.index === i
-              return (
+
+          {groups.length > 1 && (
+            <div className="day-pager-head">
+              <button
+                className="day-pager-nav"
+                onClick={() => setDayIndexRaw(dayIndex - 1)}
+                disabled={dayIndex === 0}
+                aria-label="이전 날"
+              >
+                ‹
+              </button>
+              <div className="day-pager-title">
+                <span className="day-pager-day">Day {dayIndex + 1}</span>
+                <span className="day-pager-date">{groups[dayIndex].label}</span>
+              </div>
+              <button
+                className="day-pager-nav"
+                onClick={() => setDayIndexRaw(dayIndex + 1)}
+                disabled={dayIndex === groups.length - 1}
+                aria-label="다음 날"
+              >
+                ›
+              </button>
+            </div>
+          )}
+
+          <DayPager index={dayIndex} count={groups.length} onChange={setDayIndexRaw}>
+            {groups.map((group) => (
+              <div className="progress-list" key={group.key}>
+                {group.items.map(({ stop, index }) => {
+                  const key = stopKey(active.id, stop, index)
+                  const isDone = doneStopKeys.includes(key)
+                  const isNext = next?.index === index
+                  return (
+                    <button
+                      key={key}
+                      className={`progress-row progress-row-btn ${isDone ? 'is-done' : ''} ${isNext ? 'is-next' : ''}`}
+                      onClick={() => toggleStopDone(key)}
+                      aria-pressed={isDone}
+                    >
+                      <span className="progress-dot">{isDone ? '✓' : isNext ? '·' : ''}</span>
+                      <span className="progress-name">{stop.name}</span>
+                      <span className="progress-time">{stop.time || ''}</span>
+                    </button>
+                  )
+                })}
+              </div>
+            ))}
+          </DayPager>
+
+          {groups.length > 1 && (
+            <div className="day-pager-dots">
+              {groups.map((group, i) => (
                 <button
-                  key={key}
-                  className={`progress-row progress-row-btn ${isDone ? 'is-done' : ''} ${isNext ? 'is-next' : ''}`}
-                  onClick={() => toggleStopDone(key)}
-                  aria-pressed={isDone}
-                >
-                  <span className="progress-dot">{isDone ? '✓' : isNext ? '·' : ''}</span>
-                  <span className="progress-name">{stop.name}</span>
-                  <span className="progress-time">{stop.time || ''}</span>
-                </button>
-              )
-            })}
-          </div>
+                  key={group.key}
+                  className={`day-pager-dot ${i === dayIndex ? 'is-active' : ''}`}
+                  onClick={() => setDayIndexRaw(i)}
+                  aria-label={`${i + 1}일차 보기`}
+                />
+              ))}
+            </div>
+          )}
         </div>
 
         {others.length > 0 && (

@@ -38,6 +38,25 @@ export function courseFromAi(aiCourse) {
   }
 }
 
+// 날짜별로 묶는다. 목업 코스 stop에는 날짜가 없어서 그럴 땐 한 묶음이 된다.
+// items의 index는 course.stops 기준 원래 위치 — stopKey가 어긋나지 않게 유지해야 한다.
+export function groupByDay(course) {
+  const groups = []
+  const byKey = new Map()
+
+  course.stops.forEach((stop, index) => {
+    const key = stop.date || stop.dateLabel || '__single__'
+    if (!byKey.has(key)) {
+      const group = { key, label: stop.dateLabel || course.dateLabel || '', items: [] }
+      byKey.set(key, group)
+      groups.push(group)
+    }
+    byKey.get(key).items.push({ stop, index })
+  })
+
+  return groups
+}
+
 // 아직 체크하지 않은 첫 정류지 = 다음 일정.
 export function nextStopOf(course, doneKeys) {
   const index = course.stops.findIndex((stop, i) => !doneKeys.includes(stopKey(course.id, stop, i)))
