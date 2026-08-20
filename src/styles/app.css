@@ -1265,7 +1265,7 @@
   }
 }
 
-/* ── [테스트] 히어로 홈 화면 (/home-test) ── */
+/* ── 히어로 홈 화면 ── */
 .hero-screen {
   position: relative;
   overflow: hidden;
@@ -1304,7 +1304,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 14px 0 20px;
+  /* 하단 탭이 없어서 아래 여백을 직접 챙긴다. 안 주면 홈 인디케이터에 버튼이 붙는다. */
+  padding: 14px 0 calc(20px + env(safe-area-inset-bottom, 0px));
   /* 카드를 밀어 넘길 때 제목 글자가 드래그로 선택되면 안 된다. */
   user-select: none;
   -webkit-user-select: none;
@@ -1450,14 +1451,6 @@
 }
 .hero-cta:hover {
   background: var(--primary-hover);
-}
-
-/* 이 화면에서는 하단 탭도 어두운 배경에 맞춘다. */
-.hero-screen .bottom-nav {
-  position: relative;
-  z-index: 1;
-  background: rgba(18, 16, 26, 0.92);
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1670,4 +1663,182 @@
 .hero-card-video {
   pointer-events: none;
   background: #000;
+}
+
+/* ══ 화면 전환 ══
+   경로가 바뀌면 새 화면이 옆에서 들어온다. 뒤로 갈 때는 반대 방향에서 들어와야
+   "돌아왔다"는 게 느껴진다. */
+.route-view {
+  /* .screen이 갖고 있던 자리(가운데 480px)를 그대로 물려받는다. */
+  /* fill-mode는 both가 아니라 backwards다. both면 애니메이션이 멈춘 환경(백그라운드 탭 등)에서
+     첫 프레임(투명)에 갇혀 화면이 안 보인다. backwards는 끝나면 원래 상태로 돌아온다. */
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  animation: route-in 0.28s cubic-bezier(0.22, 0.61, 0.36, 1) backwards;
+}
+.route-view.is-back {
+  animation-name: route-in-back;
+}
+@keyframes route-in {
+  from {
+    opacity: 0;
+    transform: translate3d(20px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes route-in-back {
+  from {
+    opacity: 0;
+    transform: translate3d(-20px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ══ 누를 때 반응 ══
+   모바일에는 hover가 없어서, 눌린 순간 크기가 살짝 줄어드는 게 유일한 즉각 반응이다.
+   손가락이 닿자마자 반응하도록 되돌아오는 시간(0.16s)보다 눌리는 시간을 짧게 둔다. */
+.btn-primary,
+.sticky-cta-btn,
+.hero-cta,
+.coach-btn,
+.btn-danger,
+.btn-mid-primary,
+.btn-mid-secondary,
+.btn-mid-white {
+  transition: background 0.2s, border-color 0.2s, transform 0.16s ease;
+}
+.btn-primary:active,
+.sticky-cta-btn:active,
+.hero-cta:active,
+.coach-btn:active,
+.btn-danger:active,
+.btn-mid-primary:active,
+.btn-mid-secondary:active,
+.btn-mid-white:active {
+  transform: scale(0.97);
+  transition-duration: 0.06s;
+}
+
+/* 카드는 면적이 넓어서 같은 비율로 줄이면 과하게 움직인다. 더 작게 준다. */
+.option-card,
+.course-card,
+.stop-card {
+  transition: background 0.2s, border-color 0.2s, transform 0.16s ease;
+}
+.option-card:active,
+.course-card:active,
+.stop-card:active {
+  transform: scale(0.985);
+  transition-duration: 0.06s;
+}
+/* 미는 중에는 누른 반응을 끈다. 스와이프와 겹치면 카드가 흔들려 보인다. */
+.swipe-fg.is-dragging .stop-card:active {
+  transform: none;
+}
+
+.stop-half {
+  transition: background 0.16s, outline-color 0.16s, transform 0.16s ease;
+}
+.stop-half:active {
+  transform: scale(0.96);
+  transition-duration: 0.06s;
+}
+
+.bottom-nav-item,
+.topbar-back,
+.hero-dot {
+  transition: transform 0.16s ease, background 0.2s, width 0.2s;
+}
+.bottom-nav-item:active {
+  transform: scale(0.9);
+  transition-duration: 0.06s;
+}
+.topbar-back:active {
+  transform: scale(0.85);
+  transition-duration: 0.06s;
+}
+.hero-dot:active {
+  transform: scaleY(2);
+}
+/* 탭을 옮길 때 색이 툭 바뀌지 않고 물들듯이 */
+.bottom-nav-label,
+.bottom-nav-item svg {
+  transition: color 0.22s ease, stroke 0.22s ease;
+}
+
+/* ══ 목록 등장 ══
+   한꺼번에 다 나타나면 정보량이 벽처럼 느껴진다. 위에서부터 차례로 올라오게 한다. */
+.list-col > * {
+  animation: list-item-in 0.34s cubic-bezier(0.22, 0.61, 0.36, 1) backwards;
+}
+.list-col > *:nth-child(1) { animation-delay: 0.02s; }
+.list-col > *:nth-child(2) { animation-delay: 0.05s; }
+.list-col > *:nth-child(3) { animation-delay: 0.08s; }
+.list-col > *:nth-child(4) { animation-delay: 0.11s; }
+.list-col > *:nth-child(5) { animation-delay: 0.14s; }
+.list-col > *:nth-child(6) { animation-delay: 0.17s; }
+/* 정류지가 20곳 넘는 코스도 있다. 계속 늦추면 마지막 카드는 한참 뒤에 나온다. */
+.list-col > *:nth-child(n + 7) { animation-delay: 0.2s; }
+
+@keyframes list-item-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 카드를 골랐을 때 펼쳐지는 설명·길찾기도 툭 튀어나오지 않게 */
+.stop-why,
+.stop-actions,
+.stop-half-go {
+  animation: reveal-in 0.2s ease backwards;
+}
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -4px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-view,
+  .list-col > *,
+  .stop-why,
+  .stop-actions,
+  .stop-half-go {
+    animation: none;
+  }
+  .btn-primary:active,
+  .sticky-cta-btn:active,
+  .hero-cta:active,
+  .coach-btn:active,
+  .btn-danger:active,
+  .btn-mid-primary:active,
+  .btn-mid-secondary:active,
+  .btn-mid-white:active,
+  .option-card:active,
+  .course-card:active,
+  .stop-card:active,
+  .stop-half:active,
+  .bottom-nav-item:active,
+  .topbar-back:active,
+  .hero-dot:active {
+    transform: none;
+  }
 }

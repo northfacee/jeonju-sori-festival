@@ -76,7 +76,8 @@ export default function SwipeToDelete({ children, onDelete, label = '삭제' }) 
         <span className="swipe-bg-label">{label}</span>
       </div>
       <div
-        className={`swipe-fg ${snapping ? 'is-snapping' : ''}`}
+        // 미는 중에는 카드가 눌린 것처럼 작아지면 안 된다(누르는 반응과 스와이프가 겹친다).
+        className={`swipe-fg ${snapping ? 'is-snapping' : ''} ${dx !== 0 ? 'is-dragging' : ''}`}
         style={{ transform: `translateX(${dx}px)` }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}

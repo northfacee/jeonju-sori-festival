@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 const SPOT_PAD = 6
 const BUBBLE_H = 170 // 아래/위 중 어디에 띄울지 판단할 때 쓰는 대략 높이
@@ -14,14 +15,25 @@ export default function CoachMark({ targetSelector, title, description, onClose 
     let raf = 0
     let tries = 0
 
+    let settled = 0
+    let prev = null
+
     const measure = () => {
       const el = document.querySelector(targetSelector)
       if (el) {
         const r = el.getBoundingClientRect()
         // 화면 밖이면 아직 렌더가 덜 된 것으로 보고 조금 더 기다린다.
         if (r.width > 0 && r.height > 0) {
-          setRect({ top: r.top, left: r.left, width: r.width, height: r.height })
-          return
+          const next = { top: r.top, left: r.left, width: r.width, height: r.height }
+          // 화면 전환 애니메이션이 도는 중에 한 번 재고 끝내면, 밀려 있던 위치를
+          // 그대로 붙잡아 스포트라이트가 대상에서 어긋난다. 몇 프레임 연속 같은
+          // 자리로 나올 때까지 계속 다시 잰다.
+          const same =
+            prev && Math.abs(prev.top - next.top) < 0.5 && Math.abs(prev.left - next.left) < 0.5
+          if (!same) setRect(next)
+          settled = same ? settled + 1 : 0
+          prev = next
+          if (settled >= 3) return
         }
       }
       if (tries++ < 90) raf = requestAnimationFrame(measure)
@@ -36,10 +48,14 @@ export default function CoachMark({ targetSelector, title, description, onClose 
     }
     window.addEventListener('resize', onChange)
     window.addEventListener('scroll', onChange, true)
+    // 화면 전환은 끝자락에서 아주 조금씩 움직여서, 프레임 비교만으로는 1px쯤 남기고
+    // "멈췄다"고 판단해버린다. 끝나는 순간 한 번 더 재서 정확히 맞춘다.
+    window.addEventListener('animationend', onChange, true)
     return () => {
       cancelAnimationFrame(raf)
       window.removeEventListener('resize', onChange)
       window.removeEventListener('scroll', onChange, true)
+      window.removeEventListener('animationend', onChange, true)
     }
   }, [targetSelector])
 
@@ -68,7 +84,9 @@ export default function CoachMark({ targetSelector, title, description, onClose 
     bubbleStyle.right = 20
   }
 
-  return (
+  // body 바로 아래에 띄운다. 화면 전환 애니메이션처럼 위쪽 요소에 transform이 걸리면
+  // position:fixed의 기준이 그 요소로 바뀌어 스포트라이트가 엉뚱한 데를 비춘다.
+  return createPortal(
     <div className="coach" onClick={onClose} role="dialog" aria-label={title}>
       <div className="coach-spot" style={spot} />
       <div className={`coach-bubble ${below ? 'is-below' : 'is-above'}`} style={bubbleStyle}>
@@ -78,6 +96,7 @@ export default function CoachMark({ targetSelector, title, description, onClose 
           알겠어요
         </button>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }
