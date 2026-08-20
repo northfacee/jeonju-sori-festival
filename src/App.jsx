@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import { AppStateProvider } from './context/AppState.jsx'
 import Home from './screens/Home.jsx'
+import HomeTest from './screens/HomeTest.jsx'
 import Survey from './screens/Survey.jsx'
 import CourseResults from './screens/CourseResults.jsx'
 import AiCourse from './screens/AiCourse.jsx'
@@ -13,6 +14,7 @@ export default function App() {
       <div className="app-shell">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/home-test" element={<HomeTest />} />
           <Route path="/survey/:step" element={<Survey />} />
           <Route path="/results" element={<CourseResults />} />
           <Route path="/ai-course" element={<AiCourse />} />
