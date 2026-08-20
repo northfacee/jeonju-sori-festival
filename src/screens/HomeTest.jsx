@@ -17,18 +17,31 @@ export default function HomeTest() {
   const axis = useRef(null)
 
   // %로 밀면 트랙 너비와 슬라이드 실제 폭이 달라 매 장마다 어긋난다. 픽셀로 계산한다.
+  // 카드 폭은 CSS가 정하므로 여기서 비율을 다시 쓰지 않고 직접 잰다. 양쪽에 적어두면
+  // CSS만 고쳤을 때 카드가 어긋난다.
   const viewportRef = useRef(null)
-  const [viewportW, setViewportW] = useState(0)
+  const slideRef = useRef(null)
+  const [size, setSize] = useState({ viewportW: 0, slideW: 0 })
 
   useLayoutEffect(() => {
-    const el = viewportRef.current
-    if (!el) return
-    const measure = () => setViewportW(el.clientWidth)
+    const vp = viewportRef.current
+    const slide = slideRef.current
+    if (!vp || !slide) return
+    const measure = () => setSize({ viewportW: vp.clientWidth, slideW: slide.offsetWidth })
     measure()
     const ro = new ResizeObserver(measure)
-    ro.observe(el)
+    ro.observe(vp)
+    ro.observe(slide)
     return () => ro.disconnect()
   }, [])
+
+  // 영상은 한 편에 1MB가 넘는다. 처음부터 다 받으면 홈 화면 진입만으로 데이터를 크게 쓰니
+  // 실제로 본 카드만 받는다. 안 받은 카드는 포스터 사진이 대신 보여서 티가 나지 않는다.
+  const [fetched, setFetched] = useState(() => new Set([HERO_CARDS[0].id]))
+  useEffect(() => {
+    const id = HERO_CARDS[index].id
+    setFetched((prev) => (prev.has(id) ? prev : new Set(prev).add(id)))
+  }, [index])
 
   // 보이는 카드의 영상만 재생한다. 안 보이는 영상까지 돌면 발열·배터리만 잡아먹는다.
   const videoRefs = useRef({})
@@ -52,10 +65,12 @@ export default function HomeTest() {
     // 그대로 두면 돌아왔을 때 정지 화면이라, 다시 보일 때 직접 이어준다.
     document.addEventListener('visibilitychange', sync)
     return () => document.removeEventListener('visibilitychange', sync)
-  }, [index])
+    // fetched도 봐야 한다. 처음 넘어간 카드는 src가 이 다음 렌더에 붙어서,
+    // index만 보면 src 없는 영상에 play()를 걸고 끝나버린다.
+  }, [index, fetched])
 
   const count = HERO_CARDS.length
-  const slideW = viewportW * 0.86
+  const { viewportW, slideW } = size
   // 활성 카드를 가운데 두면 양옆이 똑같이 살짝 보인다.
   const offset = (viewportW - slideW) / 2
 
@@ -119,11 +134,6 @@ export default function HomeTest() {
       </div>
 
       <div className="hero-body">
-        <div className="hero-brand">
-          <span className="hero-brand-mark">SORI</span>
-          <span className="hero-brand-sub">전주세계소리축제</span>
-        </div>
-
         <div
           ref={viewportRef}
           className="hero-viewport"
@@ -137,7 +147,11 @@ export default function HomeTest() {
             style={{ transform: `translateX(${offset - index * slideW + dx}px)` }}
           >
             {HERO_CARDS.map((card, i) => (
-              <div key={card.id} className={`hero-slide ${i === index ? 'is-active' : ''}`}>
+              <div
+                key={card.id}
+                ref={i === 0 ? slideRef : null}
+                className={`hero-slide ${i === index ? 'is-active' : ''}`}
+              >
                 <div className="hero-card">
                   {card.video ? (
                     <video
@@ -145,9 +159,9 @@ export default function HomeTest() {
                         videoRefs.current[card.id] = el
                       }}
                       className="hero-card-img hero-card-video"
-                      src={card.video}
+                      // src를 아직 안 붙인 카드는 포스터만 보인다. 넘겨서 보는 순간 받기 시작한다.
+                      src={fetched.has(card.id) ? card.video : undefined}
                       poster={card.image}
-                      autoPlay
                       muted
                       loop
                       playsInline

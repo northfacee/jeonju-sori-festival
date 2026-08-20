@@ -1304,29 +1304,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 28px 0 20px;
+  padding: 14px 0 20px;
+  /* 카드를 밀어 넘길 때 제목 글자가 드래그로 선택되면 안 된다. */
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-.hero-brand {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  margin-bottom: 16px;
-  flex: none;
-}
-.hero-brand-mark {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  color: #fff;
-}
-.hero-brand-sub {
-  font-size: 13px;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.72);
-}
-
-/* 카드 폭을 86%로 둬서 양옆 카드가 살짝 보이게 한다. */
+/* 카드 폭. 100%가 아니라 양옆 카드가 살짝 보여야 넘길 수 있다는 게 드러난다. */
 .hero-viewport {
   width: 100%;
   overflow: hidden;
@@ -1344,9 +1328,9 @@
   transition: transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 .hero-slide {
-  flex: 0 0 86%;
+  flex: 0 0 93%;
   height: 100%;
-  padding: 0 5px;
+  padding: 0 4px;
   box-sizing: border-box;
   transform: scale(0.94);
   opacity: 0.55;
@@ -1422,7 +1406,7 @@
   display: flex;
   justify-content: center;
   gap: 6px;
-  margin-top: 16px;
+  margin-top: 12px;
   flex: none;
 }
 .hero-dot {
@@ -1440,8 +1424,8 @@
 }
 
 .hero-meta {
-  margin-top: 12px;
-  margin-bottom: 14px;
+  margin-top: 10px;
+  margin-bottom: 12px;
   flex: none;
   padding: 0 24px;
   text-align: center;

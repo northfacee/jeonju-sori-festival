@@ -15,8 +15,9 @@ export const HERO_CARDS = [
     title: '2026 군산 국가유산 야행',
     subtitle: '근대 문화유산 빛의 거리를 걷다',
     meta: '8월 14일(금) ~ 8월 22일(토) · 군산 원도심 일원',
-    image: '/hero/gunsan.jpg',
-    bg: '/hero/gunsan-bg.jpg',
+    video: '/hero/gunsan.mp4',
+    image: '/hero/gunsan-video-poster.jpg',
+    bg: '/hero/gunsan-video-bg.jpg',
   },
   {
     id: 'muju',
