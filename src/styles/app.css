@@ -1092,17 +1092,24 @@
   color: #fff;
 }
 
-.text-btn-danger {
+/* .sticky-cta-btn과 같은 형태에 색만 위험(빨강)으로 바꾼 버튼 */
+.btn-danger {
   display: block;
   width: 100%;
   margin-top: 20px;
-  padding: 12px;
-  background: none;
-  border: none;
-  font-size: 13px;
+  padding: 12px 28px;
+  border-radius: 12px;
+  background: var(--danger);
+  color: #fff;
+  text-align: center;
+  font-size: 16px;
   font-weight: 600;
-  color: var(--danger);
   cursor: pointer;
+  border: none;
+  transition: background 0.2s;
+}
+.btn-danger:hover {
+  background: #e02f2f;
 }
 
 .empty-state {
@@ -1119,4 +1126,51 @@
   color: var(--text-secondary);
   line-height: 1.6;
   margin-bottom: 20px;
+}
+
+/* ── 스와이프로 코스 정류지 삭제 ── */
+.swipe-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+/* 높이를 0으로 줄이며 사라지는 애니메이션. gap까지 같이 접어야 빈 틈이 안 남는다. */
+.swipe-item.is-collapsing {
+  transition: height 0.24s ease, opacity 0.24s ease, margin-bottom 0.24s ease;
+  opacity: 0;
+  margin-bottom: -8px;
+}
+
+.swipe-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  background: var(--danger);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 22px;
+}
+.swipe-bg-label {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.swipe-fg {
+  position: relative;
+  /* 가로 스와이프는 직접 처리하고 세로 스크롤은 브라우저에 넘긴다. */
+  touch-action: pan-y;
+  will-change: transform;
+}
+.swipe-fg.is-snapping {
+  transition: transform 0.22s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swipe-item.is-collapsing,
+  .swipe-fg.is-snapping {
+    transition-duration: 0.01ms;
+  }
 }

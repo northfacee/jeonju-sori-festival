@@ -141,7 +141,7 @@ export default function MySchedule() {
           </>
         )}
 
-        <button className="text-btn-danger" onClick={() => removeCourse(active.id)}>
+        <button className="btn-danger" onClick={() => removeCourse(active.id)}>
           이 코스를 내 일정에서 빼기
         </button>
       </div>

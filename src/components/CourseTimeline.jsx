@@ -1,6 +1,7 @@
 import { courseStats, spreadStopPoints } from '../data/courses.js'
 import { directionsUrl } from '../data/schedule.js'
 import KakaoMap from './KakaoMap.jsx'
+import SwipeToDelete from './SwipeToDelete.jsx'
 
 export function badgeFor(s) {
   if (s.kind === 'stay') return { label: '숙소', bg: '#eef0ff', fg: '#4338ca' }
@@ -10,7 +11,7 @@ export function badgeFor(s) {
   return s.free ? { label: '무료', bg: '#d9ffe6', fg: '#009632' } : { label: '유료', bg: '#fff0e8', fg: '#c94a00' }
 }
 
-export default function CourseTimeline({ stops, selectedIndex, onSelect, showDate = false }) {
+export default function CourseTimeline({ stops, selectedIndex, onSelect, onDelete, showDate = false }) {
   const stats = courseStats({ stops })
   const points = spreadStopPoints(stops)
 
@@ -28,9 +29,8 @@ export default function CourseTimeline({ stops, selectedIndex, onSelect, showDat
         {stops.map((s, i) => {
           const selected = selectedIndex === i
           const badge = badgeFor(s)
-          return (
+          const card = (
             <button
-              key={s.id || s.name}
               className={`stop-card ${selected ? 'is-selected' : ''}`}
               onClick={() => onSelect(i)}
             >
@@ -71,6 +71,15 @@ export default function CourseTimeline({ stops, selectedIndex, onSelect, showDat
                 </div>
               </div>
             </button>
+          )
+
+          const key = s.id || s.name
+          if (!onDelete) return <div key={key}>{card}</div>
+
+          return (
+            <SwipeToDelete key={key} onDelete={() => onDelete(s, i)}>
+              {card}
+            </SwipeToDelete>
           )
         })}
       </div>

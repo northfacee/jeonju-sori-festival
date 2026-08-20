@@ -108,6 +108,23 @@ export default function AiCourse() {
     )
   }
 
+  // 스와이프로 정류지를 빼면 그 날의 stops에서만 제거하고, 선택 인덱스가
+  // 목록 밖으로 나가지 않게 당겨준다.
+  const removeStop = (dayIdx, stop) => {
+    setAiCourse((prev) => ({
+      ...prev,
+      days: prev.days.map((day, i) =>
+        i === dayIdx ? { ...day, stops: day.stops.filter((s) => (s.id || s.name) !== (stop.id || stop.name)) } : day,
+      ),
+    }))
+    setDayIndices((prev) => {
+      const next = [...prev]
+      const remaining = (aiCourse.days[dayIdx]?.stops.length ?? 1) - 1
+      next[dayIdx] = Math.max(0, Math.min(next[dayIdx] ?? 0, remaining - 1))
+      return next
+    })
+  }
+
   const { title, reason, days } = aiCourse
 
   return (
@@ -144,6 +161,7 @@ export default function AiCourse() {
                     return next
                   })
                 }
+                onDelete={(stop) => removeStop(dayIdx, stop)}
               />
             )}
           </div>
