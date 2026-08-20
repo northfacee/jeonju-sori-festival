@@ -1,4 +1,6 @@
 import { Routes, Route, Navigate, useLocation, useNavigationType } from 'react-router-dom'
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 import { AppStateProvider, useAppState } from './context/AppState.jsx'
 import LiquidTransition from './components/LiquidTransition.jsx'
 import Home from './screens/Home.jsx'
@@ -7,6 +9,30 @@ import CourseResults from './screens/CourseResults.jsx'
 import AiCourse from './screens/AiCourse.jsx'
 import CourseDetail from './screens/CourseDetail.jsx'
 import MySchedule from './screens/MySchedule.jsx'
+
+// 주소에 값이 박히는 화면들. /survey/1..6은 한 화면이라 속도를 잴 때는 하나로 묶는다.
+// 여기 없는 주소는 주소 그대로 잡힌다 — 잘게 쪼개질 뿐 틀리게 세지는 않는다.
+const ROUTE_PATTERNS = [
+  [/^\/survey\/[^/]+$/, '/survey/[step]'],
+  [/^\/course\/[^/]+$/, '/course/[id]'],
+]
+
+// Vercel 계측. 화면에 아무것도 그리지 않는다.
+function Insights() {
+  const { pathname } = useLocation()
+  const route = ROUTE_PATTERNS.find(([re]) => re.test(pathname))?.[1] ?? pathname
+
+  return (
+    <>
+      {/* 방문 수는 주소를 그대로 센다. 질문 여섯 개가 따로 잡혀야
+          몇 번째에서 그만두는지가 보인다. */}
+      <Analytics />
+      {/* 속도는 반대로 묶는다. 같은 화면이 여섯 줄로 쪼개지면 줄마다 표본이 적어
+          수치를 믿기 어렵다. */}
+      <SpeedInsights route={route} />
+    </>
+  )
+}
 
 // 화면이 바뀔 때마다 새로 그려지도록 경로를 key로 준다. 그래야 등장 애니메이션이 다시 돈다.
 // 뒤로 갈 때는 들어온 반대 방향에서 나와야 앞뒤 관계가 몸에 익는다.
@@ -51,6 +77,7 @@ export default function App() {
       </div>
       {/* 화면 전환보다 오래 살아야 해서 route 바깥에 둔다. */}
       <LiquidTransition />
+      <Insights />
     </AppStateProvider>
   )
 }
