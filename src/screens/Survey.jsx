@@ -93,15 +93,20 @@ export default function Survey() {
                 >
                   <img className="option-thumb" src={event.image} alt={event.name} />
                   <div className="option-main">
-                    <div className="option-title">{event.name}</div>
-                    {/* 이름과 값만 있으면 무엇을 하는 곳인지 알 수 없다. 먼저 무엇인지, 그 다음 어디서 얼마인지. */}
-                    <div className="option-desc">{event.desc}</div>
-                    {/* 장소와 값은 문장이 아니라 값이다. 칸으로 떼어놓으면 여러 카드를
-                        훑을 때 같은 자리에서 같은 색으로 잡혀 비교가 빨라진다. */}
-                    <div className="option-tags">
-                      <span className="option-tag is-place">{event.place}</span>
-                      <span className="option-tag is-price">{event.price}</span>
+                    {/* 장소와 값은 문장이 아니라 값이다. 이름 옆에 칸으로 붙여두면
+                        카드를 훑을 때 같은 자리에서 같은 색으로 잡혀 비교가 빨라진다.
+                        이름이 길어 한 줄에 안 들어가면 아래로 내려간다. */}
+                    <div className="option-head">
+                      <div className="option-title">{event.name}</div>
+                      {/* 두 칸은 함께 움직인다. 따로 흐르게 두면 카드마다 두 줄·세 줄로
+                          갈려서 목록이 들쭉날쭉해진다. */}
+                      <div className="option-tags">
+                        <span className="option-tag is-place">{event.place}</span>
+                        <span className="option-tag is-price">{event.price}</span>
+                      </div>
                     </div>
+                    {/* 이름과 값만 있으면 무엇을 하는 곳인지 알 수 없다. */}
+                    <div className="option-desc">{event.desc}</div>
                     {days ? (
                       <div className="option-when">축제 기간 중 {days} 운영</div>
                     ) : (
