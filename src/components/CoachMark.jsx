@@ -17,10 +17,25 @@ export default function CoachMark({ targetSelector, title, description, onClose 
 
     let settled = 0
     let prev = null
+    let centered = false
+
+    // 안내가 뜬 동안에는 화면을 붙잡아둔다. 손가락으로 밀리면 스포트라이트와 말풍선이
+    // 같이 따라다녀서 읽는 중에 화면이 출렁인다.
+    // overflow를 막는 대신 제스처만 막는다 — overflow를 끄면 스크롤바가 사라지며
+    // 폭이 바뀌어 스포트라이트가 어긋나고, 코드로 옮기는 스크롤도 같이 막힌다.
+    const blockScroll = (e) => e.preventDefault()
+    window.addEventListener('wheel', blockScroll, { passive: false })
+    window.addEventListener('touchmove', blockScroll, { passive: false })
 
     const measure = () => {
       const el = document.querySelector(targetSelector)
       if (el) {
+        // 대상을 화면 가운데로 끌어온 다음에 자리를 잰다. 아래쪽에 있는 대상을
+        // 그대로 두면 말풍선이 화면 밖으로 밀려 잘린다.
+        if (!centered) {
+          centered = true
+          el.scrollIntoView({ block: 'center', behavior: 'instant' })
+        }
         const r = el.getBoundingClientRect()
         // 화면 밖이면 아직 렌더가 덜 된 것으로 보고 조금 더 기다린다.
         if (r.width > 0 && r.height > 0) {
@@ -56,6 +71,12 @@ export default function CoachMark({ targetSelector, title, description, onClose 
       window.removeEventListener('resize', onChange)
       window.removeEventListener('scroll', onChange, true)
       window.removeEventListener('animationend', onChange, true)
+      window.removeEventListener('wheel', blockScroll)
+      window.removeEventListener('touchmove', blockScroll)
+      // 안내가 끝나면 맨 위로 돌려놓는다. 뒤에 다른 안내가 이어지는 경우에는
+      // 그쪽이 곧바로 자기 대상으로 다시 옮기는데, 둘 다 화면에 그려지기 전에
+      // 끝나므로 맨 위로 갔다 오는 중간 모습은 보이지 않는다.
+      window.scrollTo({ top: 0, behavior: 'instant' })
     }
   }, [targetSelector])
 
