@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useAppState } from '../context/AppState.jsx'
 import { SURVEY_STEPS } from '../data/survey.js'
 import { NIGHT_TOUR_EVENTS } from '../data/nightTour.js'
+import { DATE_LABELS } from '../data/stopPool.js'
 import { QuestionIcon } from '../components/surveyIcons.jsx'
 import TopBar from '../components/TopBar.jsx'
 import CoachMark from '../components/CoachMark.jsx'
@@ -14,6 +15,16 @@ const TOTAL_STEPS = SURVEY_STEPS.length + 1
 // app.css의 survey-page-out 길이와 같아야 한다. 길면 손끝이 굼떠지고,
 // 짧으면 빠지는 게 안 보인 채 화면만 바뀐다.
 const LEAVE_MS = 150
+
+// 이 프로그램이 축제 기간 중 실제로 여는 날. "5월부터 11월까지 매주 금·토"보다
+// "내가 가 있는 날에 여는가"가 먼저 궁금하다. 축제는 8월 안에 다 끝나므로
+// 달은 한 번만 적는다.
+function openDays(activeDates) {
+  if (activeDates.length === 0) return null
+  const labels = activeDates.map((d) => DATE_LABELS[d] || d)
+  const month = labels[0].split(' ')[0]
+  return `${month} ${labels.map((l) => l.split(' ').slice(1).join(' ')).join('·')}`
+}
 
 export default function Survey() {
   const { step } = useParams()
@@ -73,18 +84,28 @@ export default function Survey() {
           <div className="survey-options">
             {NIGHT_TOUR_EVENTS.map((event) => {
               const selected = (answers.nightTourIds || []).includes(event.id)
+              const days = openDays(event.activeDates)
               return (
                 <button
                   key={event.id}
-                  className={`option-card ${selected ? 'is-selected' : ''}`}
+                  className={`option-card option-card-tall ${selected ? 'is-selected' : ''}`}
                   onClick={() => toggleNightTour(event.id)}
                 >
                   <img className="option-thumb" src={event.image} alt={event.name} />
                   <div className="option-main">
                     <div className="option-title">{event.name}</div>
-                    <div className="option-desc">
-                      {event.period} · {event.price}
+                    {/* 이름과 값만 있으면 무엇을 하는 곳인지 알 수 없다. 먼저 무엇인지, 그 다음 어디서 얼마인지. */}
+                    <div className="option-desc">{event.desc}</div>
+                    <div className="option-meta">
+                      {event.place} · {event.price}
                     </div>
+                    {days ? (
+                      <div className="option-when">축제 기간 중 {days} 운영</div>
+                    ) : (
+                      // 여는 날이 축제 기간과 안 겹치면 코스에 들어갈 수 없다. 골라놓고 안 나오면
+                      // 빠진 줄 알기 때문에, 왜 안 나오는지 미리 적어둔다.
+                      <div className="option-when is-off">축제 기간에는 운영하지 않아요 (9~10월 프로그램)</div>
+                    )}
                   </div>
                   <div className={`option-radio ${selected ? 'is-selected' : ''}`}>{selected ? '✓' : ''}</div>
                 </button>
