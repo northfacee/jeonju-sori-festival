@@ -1,3 +1,4 @@
+import { useLayoutEffect } from 'react'
 import { Routes, Route, Navigate, useLocation, useNavigationType } from 'react-router-dom'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/react'
@@ -48,6 +49,15 @@ function RoutedScreen() {
   // "같은 자리에서 한 장 넘겼다"라서, 머리(진행 칸·제목줄)는 두고 본문만
   // 위아래로 움직인다. 그 연출은 Survey 화면이 직접 갖고 있다.
   const isSurvey = location.pathname.startsWith('/survey')
+
+  // 화면이 바뀌면 맨 위에서 시작한다. 그냥 두면 앞 화면에서 내려둔 만큼을 그대로
+  // 물려받아서, 새 화면의 중간이 첫 화면으로 보인다(코스 화면에서 873px 내려간 뒤
+  // 내 일정으로 가면 521px 자리에서 열렸다).
+  // 그리기 전에 옮겨야 잘못된 자리가 한 프레임 비치지 않으므로 layout 효과를 쓴다.
+  // 코치마크는 이 다음 프레임에 자기 대상으로 다시 옮기므로 서로 부딪히지 않는다.
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }, [location.pathname])
 
   const cls = ['route-view', back ? 'is-back' : '', liquid ? 'is-covered' : '', isSurvey ? 'is-survey' : '']
     .filter(Boolean)
