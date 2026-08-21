@@ -71,9 +71,19 @@ export function groupByDay(course) {
   return groups
 }
 
-// 아직 체크하지 않은 첫 정류지 = 다음 일정.
+// 다음 일정 = 마지막으로 체크한 곳보다 뒤에 있는, 아직 체크하지 않은 첫 정류지.
+//
+// 그냥 "체크 안 한 첫 정류지"로 잡으면 안 된다. 17시를 건너뛰고 18시를 다녀온
+// 사람에게 17시가 계속 다음 일정으로 남는다. 뒤엣것을 체크했다는 건 앞엣것은
+// 이미 지나갔다는 뜻이다.
+//
+// 뒤에 남은 게 없으면(마지막 것을 먼저 체크한 경우) 앞으로 돌아가 못 한 것 중
+// 가장 이른 것을 집는다. 그러지 않으면 하나 체크했는데 다 끝난 것처럼 보인다.
 export function nextStopOf(course, doneKeys) {
-  const index = course.stops.findIndex((stop, i) => !doneKeys.includes(stopKey(course.id, stop, i)))
+  const done = course.stops.map((stop, i) => doneKeys.includes(stopKey(course.id, stop, i)))
+  const lastDone = done.lastIndexOf(true)
+  const after = done.findIndex((isDone, i) => i > lastDone && !isDone)
+  const index = after !== -1 ? after : done.indexOf(false)
   return index === -1 ? null : { stop: course.stops[index], index }
 }
 
