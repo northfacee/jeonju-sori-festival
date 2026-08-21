@@ -96,8 +96,11 @@ export default function Survey() {
                     <div className="option-title">{event.name}</div>
                     {/* 이름과 값만 있으면 무엇을 하는 곳인지 알 수 없다. 먼저 무엇인지, 그 다음 어디서 얼마인지. */}
                     <div className="option-desc">{event.desc}</div>
-                    <div className="option-meta">
-                      {event.place} · {event.price}
+                    {/* 장소와 값은 문장이 아니라 값이다. 칸으로 떼어놓으면 여러 카드를
+                        훑을 때 같은 자리에서 같은 색으로 잡혀 비교가 빨라진다. */}
+                    <div className="option-tags">
+                      <span className="option-tag is-place">{event.place}</span>
+                      <span className="option-tag is-price">{event.price}</span>
                     </div>
                     {days ? (
                       <div className="option-when">축제 기간 중 {days} 운영</div>

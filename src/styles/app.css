@@ -466,22 +466,38 @@
 .option-desc {
   line-height: 1.45;
 }
-.option-meta {
-  font-size: 12.5px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  line-height: 1.45;
-  margin-top: 4px;
+/* 장소는 주황, 값은 초록. 이름이 길면 줄을 내린다 — 줄이는 것보다 넘기는 게 낫다. */
+.option-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.option-tag {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+  line-height: 1.4;
+}
+.option-tag.is-place {
+  color: var(--accent);
+  background: var(--accent-tint);
+}
+.option-tag.is-price {
+  color: var(--success);
+  background: var(--success-tint);
 }
 .option-when {
   font-size: 12.5px;
   font-weight: 600;
   color: var(--primary);
-  margin-top: 4px;
+  margin-top: 6px;
 }
-/* 축제 기간에 안 여는 프로그램. 고를 수는 있지만 코스에는 안 들어간다. */
+/* 축제 기간에 안 여는 프로그램. 고를 수는 있지만 코스에는 안 들어간다.
+   장소 칸이 주황을 쓰게 됐으니 경고는 빨강으로 비켜준다 — 안 겹쳐야 경고로 읽힌다. */
 .option-when.is-off {
-  color: var(--accent);
+  color: var(--danger);
   font-weight: 500;
 }
 
