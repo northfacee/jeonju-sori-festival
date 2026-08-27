@@ -1,0 +1,545 @@
+{
+  "festival": {
+    "name": "제9회 전주독서대전",
+    "edition": "제9회",
+    "theme": "책, 읽는 도시 전주",
+    "dateLabel": "9월 11일(금) – 9월 13일(일)",
+    "programLabel": "9개 분야 54개 프로그램",
+    "ticketLabel": "대부분 무료 · 사전접수 프로그램은 공식 홈페이지에서 신청",
+    "pickupPolicy": "사전접수 프로그램은 jjbook.kr에서 미리 신청해야 하며, 현장접수·상시운영은 그냥 가면 됩니다.",
+    "venue": {
+      "key": "hanbyeok",
+      "name": "전주한벽문화관",
+      "address": "전북특별자치도 전주시 완산구 전주천동로 20",
+      "lat": 35.811804,
+      "lon": 127.159205
+    }
+  },
+  "venues": {
+    "hanbyeok": {
+      "key": "hanbyeok",
+      "name": "전주한벽문화관",
+      "address": "전북특별자치도 전주시 완산구 전주천동로 20",
+      "lat": 35.811804,
+      "lon": 127.159205
+    },
+    "hyanggyo": {
+      "key": "hyanggyo",
+      "name": "향교문화관",
+      "address": "전북특별자치도 전주시 완산구 향교길 일원",
+      "lat": 35.811846,
+      "lon": 127.15278
+    }
+  },
+  "dateLabels": {
+    "09-11": "9월 11일(금)",
+    "09-12": "9월 12일(토)",
+    "09-13": "9월 13일(일)"
+  },
+  "stops": [
+    {
+      "id": "b1",
+      "date": "09-11",
+      "dateLabel": "9월 11일(금)",
+      "venue": {
+        "key": "hyanggyo",
+        "name": "향교문화관",
+        "address": "전북특별자치도 전주시 완산구 향교길 일원",
+        "lat": 35.811846,
+        "lon": 127.15278
+      },
+      "name": "[정휘립] 전주작가 강연",
+      "time": "11:00",
+      "timeEnd": "13:00",
+      "free": true,
+      "hall": "세미나실",
+      "desc": "모노산달로스: 외짝신의 영웅들",
+      "kidsOnly": false,
+      "booking": "사전접수",
+      "applyUrl": "https://www.jjbook.kr/web/page.php?pcode=96&pcate=2/&program_code=26080410320779"
+    },
+    {
+      "id": "b2",
+      "date": "09-11",
+      "dateLabel": "9월 11일(금)",
+      "venue": {
+        "key": "hanbyeok",
+        "name": "전주한벽문화관",
+        "address": "전북특별자치도 전주시 완산구 전주천동로 20",
+        "lat": 35.811804,
+        "lon": 127.159205
+      },
+      "name": "[공연] 사르르 솜사탕 공연",
+      "time": "11:30",
+      "timeEnd": "12:00",
+      "free": true,
+      "hall": "야외공연장",
+      "desc": "솜사탕 만들기 퍼포먼스 및 보고 맛보는 체험형 공연",
+      "kidsOnly": false,
+      "booking": "사전접수",
+      "applyUrl": "https://www.jjbook.kr/web/page.php?pcode=96&pcate=3/&program_code=26072113290036"
+    },
+    {
+      "id": "b3",
+      "date": "09-11",
+      "dateLabel": "9월 11일(금)",
+      "venue": {
+        "key": "hanbyeok",
+        "name": "전주한벽문화관",
+        "address": "전북특별자치도 전주시 완산구 전주천동로 20",
+        "lat": 35.811804,
+        "lon": 127.159205
+      },
+      "name": "[공연] 태권도 공연",
+      "time": "14:30",
+      "timeEnd": "15:00",
+      "free": true,
+      "hall": "야외공연장",
+      "desc": "전북특별자치도 태권도 협회 태권도 시범단 격파 및 퍼포먼스",
+      "kidsOnly": false,
+      "booking": "사전접수",
+      "applyUrl": "https://www.jjbook.kr/web/page.php?pcode=96&pcate=3/&program_code=26072113350919"
+    },
+    {
+      "id": "b4",
+      "date": "09-11",
+      "dateLabel": "9월 11일(금)",
+      "venue": {
+        "key": "hyanggyo",
+        "name": "향교문화관",
+        "address": "전북특별자치도 전주시 완산구 향교길 일원",
+        "lat": 35.811846,
+        "lon": 127.15278
+      },
+      "name": "[윤일호] 전주 올해의 책 강연(어린이 글 부분)",
+      "time": "15:30",
+      "timeEnd": "17:30",
+      "free": true,
+      "hall": "세미나실",
+      "desc": "AI시대, 용기 내어 도전하는 힘!(진행: 이지선)",
+      "kidsOnly": true,
+      "booking": "사전접수",
+      "applyUrl": "https://www.jjbook.kr/web/page.php?pcode=96&pcate=2/&program_code=26072110235893"
+    },
+    {
+      "id": "b5",
+      "date": "09-11",
+      "dateLabel": "9월 11일(금)",
+      "venue": {
+        "key": "hanbyeok",
+        "name": "전주한벽문화관",
+        "address": "전북특별자치도 전주시 완산구 전주천동로 20",
+        "lat": 35.811804,
+        "lon": 127.159205
+      },
+      "name": "[음악] 문장을 달리는 낭독회",
+      "time": "16:00",
+      "timeEnd": "17:00",
+      "free": true,
+      "hall": "경업당",
+      "desc": "책이 사람에게 달려가고, 문장이 마음에 도착하며, 낭독이 서로의 삶을 이어주는 순간을 함께 경험하는 낭독회",
+      "kidsOnly": false,
+      "booking": "사전접수",
+      "applyUrl": "https://www.jjbook.kr/web/page.php?pcode=96&pcate=22/&program_code=26072114331379"
+    },
+    {
+      "id": "b6",
+      "date": "09-11",
+      "dateLabel": "9월 11일(금)",
+      "venue": {
+        "key": "hanbyeok",
+        "name": "전주한벽문화관",
+        "address": "전북특별자치도 전주시 완산구 전주천동로 20",
+        "lat": 35.811804,
+        "lon": 127.159205
+      },
+      "name": "[최상희] 전주 올해의 책 강연(청소년 부문)",
+      "time": "17:00",
+      "timeEnd": "19:00",
+      "free": true,
+      "hall": "공연장",
+      "desc": "‘폭력과 다정한 연대의 힘’에 대한 이야기(진행: 이정원)",
+      "kidsOnly": false,
+      "booking": "사전접수",
+      "applyUrl": "https://www.jjbook.kr/web/page.php?pcode=96&pcate=2/&program_code=26072110350339"
+    },
+    {
+      "id": "b7",
+      "date": "09-12",
+      "dateLabel": "9월 12일(토)",
+      "venue": {
+        "key": "hanbyeok",
+        "name": "전주한벽문화관",
+        "address": "전북특별자치도 전주시 완산구 전주천동로 20",
+        "lat": 35.811804,
+        "lon": 127.159205
+      },
+      "name": "[특별체험] 전주독서대전과 함께하는 전주도서관 여행",
+      "time": "09:30",
+      "timeEnd": "17:00",
+      "free": true,
+      "hall": null,
+      "desc": "도서관 여행 해설사와 여행 버스를 타고 도서관을 여행 전주독서대전과 함께하는 전주 도서관 여행 * 전주시립도서관 누리집에서 별도 신청 · 내용 : 도서관 여행 해설사와 함께 전용 버스를 타고 전주의 도서관과 문화공간을 체험하고 독서대전 행사장을 마지막 도착지로 하는 여행 · 코스일시 - 9. 12.( 토 ) 09:30~13:00 완산도서관 → 연화정도서관 → 책보책방 → 한벽문화관 - 9. 12.( 토 ) 13:00~17:00 전주시립도서관꽃심 → 동문헌책도서관 → 아중호수도서관 → 완판본문화관 → 한벽문화관 [접수링크] 책의도시 전주 &gt; 전주 도서관 여행 &gt; 전주 도서관 여행 신청 게시판 목록",
+      "kidsOnly": false,
+      "booking": "사전접수",
+      "applyUrl": "https://www.jjbook.kr/web/page.php?pcode=96&pcate=12/&program_code=26072114421169"
+    },
+    {
+      "id": "b8",
+      "date": "09-12",
+      "dateLabel": "9월 12일(토)",
+      "venue": {
+        "key": "hanbyeok",
+        "name": "전주한벽문화관",
+        "address": "전북특별자치도 전주시 완산구 전주천동로 20",
+        "lat": 35.811804,
+        "lon": 127.159205
+      },
+      "name": "[경연] 제21회 어린이 독후활동 대회",
+      "time": "10:00",
+      "timeEnd": "17:00",
+      "free": true,
+      "hall": null,
+      "desc": "지정 도서를 미리 읽고 느낀 점을 당일 그림 또는 글로 표현해서 제출",
+      "kidsOnly": true,
+      "booking": "사전접수",
+      "applyUrl": "https://www.jjbook.kr/web/page.php?pcode=96&pcate=10/&program_code=26072820320762"
+    },
+    {
+      "id": "b9",
+      "date": "09-12",
+      "dateLabel": "9월 12일(토)",
+      "venue": {
+        "key": "hanbyeok",
+        "name": "전주한벽문화관",
+        "address": "전북특별자치도 전주시 완산구 전주천동로 20",
+        "lat": 35.811804,
+        "lon": 127.159205
+      },
+      "name": "[특별체험] 끄고, 듣고, 읽다: 청음독서",
+      "time": "11:00",
+      "timeEnd": "13:00",
+      "free": true,
+      "hall": "공연장",
+      "desc": "시민들이 추천한 독서하기 좋은 음악과 그 속에 담긴 사연을 만나고, 같은 선율 속에서 각자의 책을 읽는 특별한 몰입독서 체험",
+      "kidsOnly": false,
+      "booking": "사전접수",
+      "applyUrl": "https://www.jjbook.kr/web/page.php?pcode=96&pcate=12/&program_code=26072114431572"
+    },
+    {
+      "id": "b10",
+      "date": "09-12",
+      "dateLabel": "9월 12일(토)",
+      "venue": {
+        "key": "hanbyeok",
+        "name": "전주한벽문화관",
+        "address": "전북특별자치도 전주시 완산구 전주천동로 20",
+        "lat": 35.811804,
+        "lon": 127.159205
+      },
+      "name": "[서지원] 출판사 초청 작가 강연",
+      "time": "11:00",
+      "timeEnd": "12:00",
+      "free": true,
+      "hall": "세미나실",
+      "desc": "<조선왕조실록> 속 호랑이에 대한 이야기 및 사인회 등(출판사: (주)지학사)",
+      "kidsOnly": false,
+      "booking": "사전접수",
+      "applyUrl": "https://www.jjbook.kr/web/page.php?pcode=96&pcate=6/&program_code=26072110570358"
+    },
+    {
+      "id": "b11",
+      "date": "09-12",
+      "dateLabel": "9월 12일(토)",
+      "venue": {
+        "key": "hanbyeok",
+        "name": "전주한벽문화관",
+        "address": "전북특별자치도 전주시 완산구 전주천동로 20",
+        "lat": 35.811804,
+        "lon": 127.159205
+      },
+      "name": "[공연] 알록달록 풍선 공연",
+      "time": "11:30",
+      "timeEnd": "12:00",
+      "free": true,
+      "hall": "야외공연장",
+      "desc": "풍선으로 다양한 작품들을 만드는 풍선아트 공연",
+      "kidsOnly": false,
+      "booking": "사전접수",
+      "applyUrl": "https://www.jjbook.kr/web/page.php?pcode=96&pcate=3/&program_code=26072113373542"
+    },
+    {
+      "id": "b12",
+      "date": "09-12",
+      "dateLabel": "9월 12일(토)",
+      "venue": {
+        "key": "hanbyeok",
+        "name": "전주한벽문화관",
+        "address": "전북특별자치도 전주시 완산구 전주천동로 20",
+        "lat": 35.811804,
+        "lon": 127.159205
+      },
+      "name": "[류미정] 출판사 초청 작가 강연",
+      "time": "13:00",
+      "timeEnd": "14:00",
+      "free": true,
+      "hall": "세미나실",
+      "desc": "<생일엔 마라탕> 북토크 및 걱정 날리는 글쓰기 활동, 작가 관련 질의응답(출판사: 밝은미래)",
+      "kidsOnly": false,
+      "booking": "사전접수",
+      "applyUrl": "https://www.jjbook.kr/web/page.php?pcode=96&pcate=6/&program_code=26072111013853"
+    },
+    {
+      "id": "b13",
+      "date": "09-12",
+      "dateLabel": "9월 12일(토)",
+      "venue": {
+        "key": "hanbyeok",
+        "name": "전주한벽문화관",
+        "address": "전북특별자치도 전주시 완산구 전주천동로 20",
+        "lat": 35.811804,
+        "lon": 127.159205
+      },
+      "name": "[김현경] 북마켓 초청 작가 강연",
+      "time": "14:30",
+      "timeEnd": "15:30",
+      "free": true,
+      "hall": "세미나실",
+      "desc": "에니어그램 전문가 ‘김현경’ 작가와 알아보는 <관계와 소통> 강연(출판사: 청미출판사)",
+      "kidsOnly": false,
+      "booking": "사전접수",
+      "applyUrl": "https://www.jjbook.kr/web/page.php?pcode=96&pcate=6/&program_code=26072111071080"
+    },
+    {
+      "id": "b14",
+      "date": "09-12",
+      "dateLabel": "9월 12일(토)",
+      "venue": {
+        "key": "hanbyeok",
+        "name": "전주한벽문화관",
+        "address": "전북특별자치도 전주시 완산구 전주천동로 20",
+        "lat": 35.811804,
+        "lon": 127.159205
+      },
+      "name": "[공연] 한옥마을 전통연희 퍼레이드",
+      "time": "15:00",
+      "timeEnd": "15:30",
+      "free": true,
+      "hall": "야외마당",
+      "desc": "전북무형문화재 전주 기접놀이와 전통연희 퍼레이드",
+      "kidsOnly": false,
+      "booking": "현장접수",
+      "applyUrl": "https://www.jjbook.kr/web/page.php?pcode=96&pcate=3/&program_code=26072113405266"
+    },
+    {
+      "id": "b15",
+      "date": "09-12",
+      "dateLabel": "9월 12일(토)",
+      "venue": {
+        "key": "hyanggyo",
+        "name": "향교문화관",
+        "address": "전북특별자치도 전주시 완산구 향교길 일원",
+        "lat": 35.811846,
+        "lon": 127.15278
+      },
+      "name": "[김민우] 전주 올해의 책 강연(어린이 그림 부문)",
+      "time": "16:00",
+      "timeEnd": "18:00",
+      "free": true,
+      "hall": "세미나실",
+      "desc": "황금고라니-나를 이해해주는 사람과 함께하는 즐거움 황금 고라니 만들기!",
+      "kidsOnly": true,
+      "booking": "사전접수",
+      "applyUrl": "https://www.jjbook.kr/web/page.php?pcode=96&pcate=2/&program_code=26072110400097"
+    },
+    {
+      "id": "b16",
+      "date": "09-12",
+      "dateLabel": "9월 12일(토)",
+      "venue": {
+        "key": "hanbyeok",
+        "name": "전주한벽문화관",
+        "address": "전북특별자치도 전주시 완산구 전주천동로 20",
+        "lat": 35.811804,
+        "lon": 127.159205
+      },
+      "name": "[김희영] 북마켓 초청 작가 강연",
+      "time": "16:00",
+      "timeEnd": "17:00",
+      "free": true,
+      "hall": "세미나실",
+      "desc": "23년 경력 현직 교사의 생생한 교실 이야기를 통한 사춘기 길목에 선 아이들과 학부모의 갈등 해결 방법 안내 강연(출판사: 세종마루)",
+      "kidsOnly": false,
+      "booking": "사전접수",
+      "applyUrl": "https://www.jjbook.kr/web/page.php?pcode=96&pcate=6/&program_code=26072111132661"
+    },
+    {
+      "id": "b17",
+      "date": "09-13",
+      "dateLabel": "9월 13일(일)",
+      "venue": {
+        "key": "hanbyeok",
+        "name": "전주한벽문화관",
+        "address": "전북특별자치도 전주시 완산구 전주천동로 20",
+        "lat": 35.811804,
+        "lon": 127.159205
+      },
+      "name": "[정이현] 전주 올해의 책 강연(일반 부문)",
+      "time": "10:30",
+      "timeEnd": "12:30",
+      "free": true,
+      "hall": "공연장",
+      "desc": "선 위를 걷는다는 것(진행자: 임주아)",
+      "kidsOnly": false,
+      "booking": "사전접수",
+      "applyUrl": "https://www.jjbook.kr/web/page.php?pcode=96&pcate=2/&program_code=26072110462492"
+    },
+    {
+      "id": "b18",
+      "date": "09-13",
+      "dateLabel": "9월 13일(일)",
+      "venue": {
+        "key": "hanbyeok",
+        "name": "전주한벽문화관",
+        "address": "전북특별자치도 전주시 완산구 전주천동로 20",
+        "lat": 35.811804,
+        "lon": 127.159205
+      },
+      "name": "[공연] 빙글빙글 저글링 공연",
+      "time": "13:30",
+      "timeEnd": "14:00",
+      "free": true,
+      "hall": "야외공연장",
+      "desc": "다양한 도구를 활용한 재미있는 저글링",
+      "kidsOnly": false,
+      "booking": "사전접수",
+      "applyUrl": "https://www.jjbook.kr/web/page.php?pcode=96&pcate=3/&program_code=26072113503560"
+    },
+    {
+      "id": "b19",
+      "date": "09-13",
+      "dateLabel": "9월 13일(일)",
+      "venue": {
+        "key": "hanbyeok",
+        "name": "전주한벽문화관",
+        "address": "전북특별자치도 전주시 완산구 전주천동로 20",
+        "lat": 35.811804,
+        "lon": 127.159205
+      },
+      "name": "[경연] 제9회 온고을 어린이 동화구연 대회",
+      "time": "13:30",
+      "timeEnd": "16:30",
+      "free": true,
+      "hall": "전시실",
+      "desc": "",
+      "kidsOnly": true,
+      "booking": "사전접수",
+      "applyUrl": "https://www.jjbook.kr/web/page.php?pcode=96&pcate=10/&program_code=26072114001479"
+    },
+    {
+      "id": "b20",
+      "date": "09-13",
+      "dateLabel": "9월 13일(일)",
+      "venue": {
+        "key": "hyanggyo",
+        "name": "향교문화관",
+        "address": "전북특별자치도 전주시 완산구 향교길 일원",
+        "lat": 35.811846,
+        "lon": 127.15278
+      },
+      "name": "[워크숍] 시민작가 출판기념회",
+      "time": "14:00",
+      "timeEnd": "16:00",
+      "free": true,
+      "hall": "세미나실",
+      "desc": "2026년 전주 출판학교 참여로 첫 책을 출판한 시민 작가들의 합동 출판기념회",
+      "kidsOnly": false,
+      "booking": "사전접수",
+      "applyUrl": "https://www.jjbook.kr/web/page.php?pcode=96&pcate=2/&program_code=26072114263833"
+    },
+    {
+      "id": "b21",
+      "date": "09-13",
+      "dateLabel": "9월 13일(일)",
+      "venue": {
+        "key": "hanbyeok",
+        "name": "전주한벽문화관",
+        "address": "전북특별자치도 전주시 완산구 전주천동로 20",
+        "lat": 35.811804,
+        "lon": 127.159205
+      },
+      "name": "[음악] 풍류를 달리는 낭독회",
+      "time": "14:00",
+      "timeEnd": "15:00",
+      "free": true,
+      "hall": "경업당",
+      "desc": "시낭송과 국악 선율이 함께 하는 시를 깊이 체험하는 공연",
+      "kidsOnly": false,
+      "booking": "사전접수",
+      "applyUrl": "https://www.jjbook.kr/web/page.php?pcode=96&pcate=22/&program_code=26072114365922"
+    },
+    {
+      "id": "b22",
+      "date": "09-13",
+      "dateLabel": "9월 13일(일)",
+      "venue": {
+        "key": "hanbyeok",
+        "name": "전주한벽문화관",
+        "address": "전북특별자치도 전주시 완산구 전주천동로 20",
+        "lat": 35.811804,
+        "lon": 127.159205
+      },
+      "name": "[루카] 북마켓 초청 작가 강연",
+      "time": "14:30",
+      "timeEnd": "15:30",
+      "free": true,
+      "hall": "세미나실",
+      "desc": "영화 속 SF, 생명 과학, 좀비 등을 과학의 시선에서 바라보고 해석하는 강연(출판사: 세종마루)",
+      "kidsOnly": false,
+      "booking": "사전접수",
+      "applyUrl": "https://www.jjbook.kr/web/page.php?pcode=96&pcate=6/&program_code=26072111230322"
+    },
+    {
+      "id": "b23",
+      "date": "09-13",
+      "dateLabel": "9월 13일(일)",
+      "venue": {
+        "key": "hanbyeok",
+        "name": "전주한벽문화관",
+        "address": "전북특별자치도 전주시 완산구 전주천동로 20",
+        "lat": 35.811804,
+        "lon": 127.159205
+      },
+      "name": "[음악] 책장을 달리는 노래",
+      "time": "16:00",
+      "timeEnd": "16:30",
+      "free": true,
+      "hall": "공연장",
+      "desc": "전통의 기록과 역사를 오늘의 이야기로 다시 써내려가는 차오름의 퓨전국악공연",
+      "kidsOnly": false,
+      "booking": "사전접수",
+      "applyUrl": "https://www.jjbook.kr/web/page.php?pcode=96&pcate=22/&program_code=26072114392525"
+    },
+    {
+      "id": "b24",
+      "date": "09-13",
+      "dateLabel": "9월 13일(일)",
+      "venue": {
+        "key": "hanbyeok",
+        "name": "전주한벽문화관",
+        "address": "전북특별자치도 전주시 완산구 전주천동로 20",
+        "lat": 35.811804,
+        "lon": 127.159205
+      },
+      "name": "[박남준] 북마켓 초청 작가 강연",
+      "time": "16:00",
+      "timeEnd": "17:00",
+      "free": true,
+      "hall": "세미나실",
+      "desc": "박남준 시인의 <내가 고요해질 때> 출간 기념 북 토크와 시 낭송, 저자 사인회(출판사: 책마을해리)",
+      "kidsOnly": false,
+      "booking": "사전접수",
+      "applyUrl": "https://www.jjbook.kr/web/page.php?pcode=96&pcate=6/&program_code=26072111274288"
+    }
+  ]
+}

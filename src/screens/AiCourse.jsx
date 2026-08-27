@@ -14,9 +14,12 @@ const MIN_LOADING_MS = 5000
 
 export default function AiCourse() {
   const navigate = useNavigate()
-  const { answers, aiCourse, setAiCourse, aiCourseKey, setAiCourseKey, saveCourse, startLiquid } = useAppState()
+  const { answers, aiCourse, setAiCourse, aiCourseKey, setAiCourseKey, saveCourse, startLiquid, festival } =
+    useAppState()
   const hasAnswers = Object.keys(answers).length > 0
-  const signature = JSON.stringify(answers)
+  // 축제도 서명에 넣는다. 답변이 같아도 축제가 다르면 다른 코스라, 안 넣으면
+  // 축제를 바꿔도 앞서 만든 코스가 그대로 다시 나온다.
+  const signature = JSON.stringify({ answers, festival })
   const hasFreshCourse = Boolean(aiCourse) && aiCourseKey === signature
   const [status, setStatus] = useState(hasFreshCourse ? 'done' : hasAnswers ? 'loading' : 'no-answers')
   const [error, setError] = useState('')
@@ -49,7 +52,7 @@ export default function AiCourse() {
     // 로딩 연출을 끝까지 보여주기 위한 최소 노출 시간. 응답이 이보다 빨리 와도 기다린다.
     const minWait = new Promise((resolve) => setTimeout(resolve, MIN_LOADING_MS))
 
-    Promise.all([fetchAiCourse(answers), minWait])
+    Promise.all([fetchAiCourse(answers, festival), minWait])
       .then(([result]) => {
         if (cancelled) return
 

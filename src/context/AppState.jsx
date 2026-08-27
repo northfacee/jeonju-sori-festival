@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
+import { DEFAULT_FESTIVAL } from '../data/festivals.js'
 
 const AppStateContext = createContext(null)
 
@@ -19,6 +20,8 @@ export function AppStateProvider({ children }) {
   const [courseId, setCourseId] = useState('hanok-sori')
   const [stopIndex, setStopIndex] = useState(3)
   const [answers, setAnswers] = useState({})
+  // 어떤 축제로 코스를 짤지. 설문에 들어가기 전에 홈에서 고른다.
+  const [festival, setFestival] = useState(DEFAULT_FESTIVAL)
   const [aiCourse, setAiCourse] = useState(null) // { title, reason, days } | null
   // aiCourse를 만들어낸 설문 답변의 서명. 같은 답변으로 다시 들어오면 재생성하지 않는다
   // (재생성하면 사용자가 스와이프로 지운 정류지가 되살아난다).
@@ -91,6 +94,8 @@ export function AppStateProvider({ children }) {
     setStopIndex,
     answers,
     setAnswer,
+    festival,
+    setFestival,
     aiCourse,
     setAiCourse,
     aiCourseKey,

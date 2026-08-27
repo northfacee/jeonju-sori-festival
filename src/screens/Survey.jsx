@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAppState } from '../context/AppState.jsx'
+import { festivalOf } from '../data/festivals.js'
 import { SURVEY_STEPS } from '../data/survey.js'
 import { NIGHT_TOUR_EVENTS } from '../data/nightTour.js'
 import { DATE_LABELS } from '../data/stopPool.js'
@@ -9,7 +10,8 @@ import TopBar from '../components/TopBar.jsx'
 import CoachMark from '../components/CoachMark.jsx'
 import { isCoachSeen, markCoachSeen } from '../lib/coachMarks.js'
 
-const TOTAL_STEPS = SURVEY_STEPS.length + 1
+// 야간관광 질문은 그 프로그램이 있는 축제에서만 묻는다.
+const withNightTour = (has) => (has ? SURVEY_STEPS.length + 1 : SURVEY_STEPS.length)
 
 // 답을 고르고 나서 다음 문항으로 넘어가기까지. 이 사이에 지금 장이 위로 빠진다.
 // app.css의 survey-page-out 길이와 같아야 한다. 길면 손끝이 굼떠지고,
@@ -29,10 +31,12 @@ function openDays(activeDates) {
 export default function Survey() {
   const { step } = useParams()
   const navigate = useNavigate()
-  const { answers, setAnswer } = useAppState()
+  const { answers, setAnswer, festival } = useAppState()
 
+  const hasNightTour = festivalOf(festival).hasNightTour
+  const TOTAL_STEPS = withNightTour(hasNightTour)
   const index = Math.max(1, Math.min(TOTAL_STEPS, Number(step) || 1)) - 1
-  const isNightTourStep = index === SURVEY_STEPS.length
+  const isNightTourStep = hasNightTour && index === SURVEY_STEPS.length
 
   // 야간관광 단계는 처음 보는 사람에게 무엇을 고르는 화면인지 한 번 설명한다.
   const [showNightCoach, setShowNightCoach] = useState(() => !isCoachSeen('night-tour'))
@@ -53,8 +57,10 @@ export default function Survey() {
     if (goingRef.current) return
     goingRef.current = true
     setLeaving(true)
+    // 야간관광 질문이 없는 축제에서는 마지막 답을 고르면 바로 코스로 넘어간다.
+    const next = index + 2
     setTimeout(() => {
-      navigate(`/survey/${index + 2}`)
+      navigate(next > TOTAL_STEPS ? '/ai-course' : `/survey/${next}`)
     }, LEAVE_MS)
   }
 

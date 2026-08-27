@@ -1564,6 +1564,35 @@
   background: #fff;
 }
 
+/* 어느 축제로 코스를 짤지 고르는 줄. 사진 위에 얹히므로 반투명 흰 바탕을 쓴다. */
+.hero-picker {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+  flex: none;
+}
+.hero-pick {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.78);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.16s ease;
+}
+.hero-pick.is-active {
+  background: #fff;
+  border-color: #fff;
+  color: var(--text);
+}
+.hero-pick:active {
+  transform: scale(0.96);
+  transition-duration: 0.06s;
+}
+
 .hero-meta {
   margin-top: 10px;
   margin-bottom: 12px;

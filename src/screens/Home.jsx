@@ -2,13 +2,14 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { HERO_CARDS } from '../data/heroCards.js'
 import { useAppState } from '../context/AppState.jsx'
+import { FESTIVALS, festivalOf } from '../data/festivals.js'
 
 const CHANGE_AT = 48 // 이만큼 끌면 옆 카드로 넘어간다
 const EDGE_RESISTANCE = 0.32
 
 export default function Home() {
   const navigate = useNavigate()
-  const { startLiquid, schedule } = useAppState()
+  const { startLiquid, schedule, festival, setFestival } = useAppState()
   const [index, setIndex] = useState(0)
   const [dx, setDx] = useState(0)
   const [snapping, setSnapping] = useState(false)
@@ -118,7 +119,6 @@ export default function Home() {
     setDx(0)
   }
 
-  const active = HERO_CARDS[index]
   // 저장한 일정이 있는 사람에게만 그리로 가는 길을 낸다. 홈에는 하단 탭이 없어서
   // 이 버튼이 없으면 다시 찾은 사람은 설문을 처음부터 다시 하는 수밖에 없다.
   // 일정은 첫 렌더 전에 저장소에서 읽어오므로 버튼이 뒤늦게 튀어나오지 않는다.
@@ -204,7 +204,19 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="hero-meta">{active.meta}</div>
+        {/* 어느 축제로 코스를 짤지 먼저 고른다. 설문 답변은 축제와 상관없이 같은 것을 묻는다. */}
+        <div className="hero-picker">
+          {FESTIVALS.map((f) => (
+            <button
+              key={f.key}
+              className={`hero-pick ${f.key === festival ? 'is-active' : ''}`}
+              onClick={() => setFestival(f.key)}
+            >
+              {f.short}
+            </button>
+          ))}
+        </div>
+        <div className="hero-meta">{festivalOf(festival).dateLabel} · {festivalOf(festival).place}</div>
 
         <div className="hero-actions">
           <button

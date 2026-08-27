@@ -5,7 +5,7 @@ from app.constants import MAX_WALK_KM
 from app.graph.tools import REPORT_STAY_TOOL, SUMMARIZE_TRIP_TOOL, pick_day_stops_tool
 from app.models.state import BuildState
 from app.services.distance import haversine_km
-from app.services.festival_data import DATE_LABELS, NIGHT_TOUR_EVENTS, STOP_POOL, SURVEY_STEPS
+from app.services.festival_data import SURVEY_STEPS
 from app.services.food_search import find_promo_place, search_places
 from app.services.geocode import geocode_place
 from app.services.llm import call_tool, search_with_google
@@ -20,7 +20,6 @@ from app.services.time_utils import (
     to_minutes,
 )
 
-DATE_ORDER = list(DATE_LABELS.keys())
 DURATION_DAY_COUNT = {"day": 1, "night1": 2, "night2": 3}
 PROMO_LIMIT = 2  # 하루에 소상공인 홍보를 붙일 정류지 수
 
@@ -47,7 +46,9 @@ def _answer_lines(answers: dict) -> str:
     return "\n".join(lines)
 
 
-async def pick_day_stops(date: str, pool: list[dict], answers: dict, anchor_venue: dict | None) -> list[dict]:
+async def pick_day_stops(
+    date: str, pool: list[dict], answers: dict, anchor_venue: dict | None, fest: dict
+) -> list[dict]:
     day_pool = [s for s in pool if s["date"] == date]
     if not day_pool:
         return []
@@ -67,12 +68,13 @@ async def pick_day_stops(date: str, pool: list[dict], answers: dict, anchor_venu
             "그 근처에서 시작하는 동선을 우선 고려하세요."
         )
 
-    prompt = f"""2026 전주세계소리축제 {DATE_LABELS[date]}에 실제로 열리는 프로그램 목록입니다. 아래 목록에만 있는 것을 골라 그날의 동선을 짜주세요.
+    day_label = fest["date_labels"][date]
+    prompt = f"""{fest["name"]} {day_label}에 실제로 열리는 프로그램 목록입니다. 아래 목록에만 있는 것을 골라 그날의 동선을 짜주세요.
 
 [사용자 답변]
 {_answer_lines(answers)}
 
-[{DATE_LABELS[date]} 실제 프로그램 목록]
+[{day_label} 실제 프로그램 목록]
 {json.dumps([_summarize_stop(s) for s in day_pool], ensure_ascii=False)}
 
 규칙:
@@ -113,7 +115,10 @@ async def pick_day_stops(date: str, pool: list[dict], answers: dict, anchor_venu
 
 
 # ── Phase 2: 전주시 공공데이터 "음식점기본정보"에서 근처 실제 음식점/카페 찾기 ──
-async def to_stop_from_place(place: dict, date: str, anchor_venue: dict, walk: bool, kind_override: str | None = None) -> dict:
+async def to_stop_from_place(
+    place: dict, date: str, anchor_venue: dict, walk: bool, date_labels: dict,
+    kind_override: str | None = None,
+) -> dict:
     from_dataset = place.get("lat") is not None and place.get("lon") is not None
     if from_dataset:
         geo = {"lat": place["lat"], "lon": place["lon"]}
@@ -129,7 +134,7 @@ async def to_stop_from_place(place: dict, date: str, anchor_venue: dict, walk: b
     return {
         "id": f"place-{slugify(place['name'])}-{date}",
         "date": date,
-        "dateLabel": DATE_LABELS[date],
+        "dateLabel": date_labels[date],
         "venue": {
             "key": slugify(place["name"]),
             "name": place["name"],
@@ -186,11 +191,11 @@ async def search_accommodation(anchor_venue: dict, exclude_names: list[str], wal
 
 
 # ── 야간관광: 사용자가 고른 프로그램 중 그날 실제로 운영하는 것만 저녁 늦은 시간대에 끼워 넣기 ──
-def night_tour_to_stop(event: dict, date: str) -> dict:
+def night_tour_to_stop(event: dict, date: str, date_labels: dict) -> dict:
     return {
         "id": f"night-{event['id']}-{date}",
         "date": date,
-        "dateLabel": DATE_LABELS[date],
+        "dateLabel": date_labels[date],
         "venue": event["venue"],
         "name": event["name"],
         "time": None,
@@ -200,25 +205,31 @@ def night_tour_to_stop(event: dict, date: str) -> dict:
     }
 
 
-def pick_night_tour_stops(date: str, selected_ids: list[str], used_ids: list[str]) -> list[tuple[str, dict]]:
+def pick_night_tour_stops(
+    date: str, selected_ids: list[str], used_ids: list[str], fest: dict
+) -> list[tuple[str, dict]]:
     """(event_id, stop) 쌍으로 반환 — stop id만 보고 event id를 역추적하지 않기 위해."""
-    candidates = [e for e in NIGHT_TOUR_EVENTS if e["id"] in selected_ids and date in e["activeDates"] and e["id"] not in used_ids]
-    return [(e["id"], night_tour_to_stop(e, date)) for e in candidates]
+    events = fest["night_tour"]
+    candidates = [e for e in events if e["id"] in selected_ids and date in e["activeDates"] and e["id"] not in used_ids]
+    return [(e["id"], night_tour_to_stop(e, date, fest["date_labels"])) for e in candidates]
 
 
 # ── 요일 창(연속 날짜) 고르기 ──
-def pick_date_window(day_count: int) -> list[str]:
-    max_start = len(DATE_ORDER) - day_count
-    start_idx = min(3, max(0, max_start))
-    return DATE_ORDER[start_idx : start_idx + day_count]
+def pick_date_window(day_count: int, date_order: list[str], preferred_start: int) -> list[str]:
+    max_start = len(date_order) - day_count
+    start_idx = min(preferred_start, max(0, max_start))
+    return date_order[start_idx : start_idx + day_count]
 
 
 # ── LangGraph 노드 ──
 def decide_dates_and_filter_node(state: BuildState) -> dict:
     answers = state["answers"]
-    day_count = DURATION_DAY_COUNT.get(answers.get("duration"), 1)
-    family_pool = [s for s in STOP_POOL if answers.get("companion") == "family" or not s.get("kidsOnly")]
-    date_window = pick_date_window(day_count)
+    fest = state["festival"]
+    # 축제가 짧으면 고른 일수를 다 채울 수 없다. 있는 날짜만큼으로 줄인다.
+    day_count = min(DURATION_DAY_COUNT.get(answers.get("duration"), 1), len(fest["date_order"]))
+    pool = fest["stops"]
+    family_pool = [s for s in pool if answers.get("companion") == "family" or not s.get("kidsOnly")]
+    date_window = pick_date_window(day_count, fest["date_order"], fest["preferred_start"])
     walk = answers.get("transport") == "walk"
     return {
         "day_count": day_count,
@@ -238,7 +249,9 @@ async def pick_day_stops_node(state: BuildState) -> dict:
     day_index = state["day_index"]
     date = state["date_window"][day_index]
     anchor_venue = state["previous_stay"]["venue"] if state.get("previous_stay") else None
-    stops = await pick_day_stops(date, state["family_pool"], state["answers"], anchor_venue)
+    stops = await pick_day_stops(
+        date, state["family_pool"], state["answers"], anchor_venue, state["festival"]
+    )
     return {"current_date": date, "current_stops": stops}
 
 
@@ -247,6 +260,7 @@ async def search_food_node(state: BuildState) -> dict:
     date = state["current_date"]
     walk = state["walk"]
     used_food_names = state["used_food_names"]
+    date_labels = state["festival"]["date_labels"]
 
     lunch_anchor = closest_stop(stops, 12 * 60 + 30) or stops[0]
     dinner_anchor = closest_stop(stops, 18 * 60 + 30) or stops[-1]
@@ -256,10 +270,14 @@ async def search_food_node(state: BuildState) -> dict:
     dinner_places = search_places(dinner_anchor["venue"], used_food_names + [p["name"] for p in lunch_places], walk)
 
     lunch_items = list(
-        await asyncio.gather(*(to_stop_from_place(p, date, lunch_anchor["venue"], walk) for p in lunch_places))
+        await asyncio.gather(
+            *(to_stop_from_place(p, date, lunch_anchor["venue"], walk, date_labels) for p in lunch_places)
+        )
     )
     dinner_items = list(
-        await asyncio.gather(*(to_stop_from_place(p, date, dinner_anchor["venue"], walk) for p in dinner_places))
+        await asyncio.gather(
+            *(to_stop_from_place(p, date, dinner_anchor["venue"], walk, date_labels) for p in dinner_places)
+        )
     )
 
     placed_lunch = place_items_into_slots(stops, lunch_items, 11 * 60, 15 * 60, lunch_anchor["venue"])
@@ -305,7 +323,7 @@ def search_night_tour_node(state: BuildState) -> dict:
 
     date = state["current_date"]
     used_ids = state["used_night_tour_ids"]
-    pairs = pick_night_tour_stops(date, selected_ids, used_ids)
+    pairs = pick_night_tour_stops(date, selected_ids, used_ids, state["festival"])
     if not pairs:
         return {}
 
@@ -344,7 +362,7 @@ async def search_stay_node(state: BuildState) -> dict:
     stay_stop = {
         "id": f"stay-{slugify(stay['name'])}-{date}",
         "date": date,
-        "dateLabel": DATE_LABELS[date],
+        "dateLabel": state["festival"]["date_labels"][date],
         "venue": {
             "key": slugify(stay["name"]),
             "name": stay["name"],
@@ -371,7 +389,7 @@ def finalize_day_node(state: BuildState) -> dict:
     day_entry = {
         "dayNumber": day_index + 1,
         "date": date,
-        "dateLabel": DATE_LABELS[date],
+        "dateLabel": state["festival"]["date_labels"][date],
         "stops": state["current_stops"],
     }
     return {"days": state["days"] + [day_entry], "day_index": day_index + 1}
@@ -380,7 +398,8 @@ def finalize_day_node(state: BuildState) -> dict:
 async def summarize_trip_node(state: BuildState) -> dict:
     day_count = state["day_count"]
     days = state["days"]
-    title = f"{day_count}일 전주소리축제 여행"
+    fest_name = state["festival"]["name"]
+    title = f"{day_count}일 {fest_name} 여행"
     reason = "설문 답변을 바탕으로 실제 프로그램과 전주시 등록 음식점 데이터를 조합해 일정을 구성했어요."
     try:
         summary_input = [
@@ -392,8 +411,10 @@ async def summarize_trip_node(state: BuildState) -> dict:
             for d in days
         ]
         prompt = (
-            "아래는 방금 완성된 2026 전주세계소리축제 맞춤 여행 일정입니다. 전체 이름과, "
-            "사용자 답변에 맞춰 왜 이렇게 짰는지 요약해줘.\n\n[일정]\n"
+            # 축제 이름을 안 박아두면 모델이 다른 축제를 끌어와 없는 사실을 지어낸다.
+            f"아래는 방금 완성된 {fest_name} 맞춤 여행 일정입니다. 전체 이름과, "
+            "사용자 답변에 맞춰 왜 이렇게 짰는지 요약해줘. "
+            f"{fest_name} 외의 다른 축제나 행사는 언급하지 마세요.\n\n[일정]\n"
             f"{json.dumps(summary_input, ensure_ascii=False)}\n\n"
             "summarize_trip 도구로만 답하세요."
         )

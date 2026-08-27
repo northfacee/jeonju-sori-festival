@@ -13,6 +13,7 @@ from app.graph.nodes import (
     summarize_trip_node,
 )
 from app.models.state import BuildState
+from app.services.festival_data import get_festival
 
 
 class BuildCourseError(Exception):
@@ -55,7 +56,7 @@ def _build_graph():
 course_graph = _build_graph()
 
 
-async def build_course(answers: dict | None) -> dict:
+async def build_course(answers: dict | None, festival: str | None = None) -> dict:
     if not settings.gemini_api_key:
         raise BuildCourseError("GEMINI_API_KEY가 설정되지 않았습니다.", status=503)
     if not answers or not isinstance(answers, dict):
@@ -63,6 +64,7 @@ async def build_course(answers: dict | None) -> dict:
 
     initial_state: BuildState = {
         "answers": answers,
+        "festival": get_festival(festival),
         "day_count": 0,
         "date_window": [],
         "family_pool": [],

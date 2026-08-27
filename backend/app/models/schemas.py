@@ -17,6 +17,8 @@ class Answers(CamelModel):
 
 class BuildCourseRequest(BaseModel):
     answers: Answers
+    # 어떤 축제로 짤지. 안 보내면 지금까지처럼 소리축제로 짠다.
+    festival: str | None = None
 
 
 class Venue(CamelModel):

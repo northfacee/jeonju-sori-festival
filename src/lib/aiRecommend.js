@@ -1,8 +1,9 @@
-export async function fetchAiCourse(answers) {
+export async function fetchAiCourse(answers, festival) {
   const res = await fetch('/api/build-course', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ answers }),
+    // festival을 안 보내면 서버가 소리축제로 짠다(기존 동작 그대로).
+    body: JSON.stringify({ answers, festival }),
   })
   if (!res.ok) {
     const body = await res.json().catch(() => ({}))
