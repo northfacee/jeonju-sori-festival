@@ -1576,9 +1576,19 @@
   color: rgba(255, 255, 255, 0.78);
 }
 
-.hero-cta {
+/* 저장한 일정이 있으면 버튼이 둘이 된다. 자리 계산(바깥 여백·폭)은 줄이 맡고
+   버튼은 그 줄을 반씩 나눈다. 하나뿐일 때는 혼자 줄을 다 쓴다. */
+.hero-actions {
+  display: flex;
+  gap: 10px;
   margin: 4px 20px 8px;
   width: calc(100% - 40px);
+  /* 화면이 짧은 기기에서 눌려 찌그러지지 않게. 줄어드는 건 위쪽 카드가 맡는다. */
+  flex: none;
+}
+.hero-cta {
+  flex: 1;
+  min-width: 0;
   padding: 16px;
   border: none;
   border-radius: 14px;
@@ -1591,6 +1601,12 @@
 }
 .hero-cta:hover {
   background: var(--primary-hover);
+}
+.hero-cta-saved {
+  background: var(--success);
+}
+.hero-cta-saved:hover {
+  background: var(--success-strong);
 }
 
 @media (prefers-reduced-motion: reduce) {

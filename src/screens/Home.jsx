@@ -8,7 +8,7 @@ const EDGE_RESISTANCE = 0.32
 
 export default function Home() {
   const navigate = useNavigate()
-  const { startLiquid } = useAppState()
+  const { startLiquid, schedule } = useAppState()
   const [index, setIndex] = useState(0)
   const [dx, setDx] = useState(0)
   const [snapping, setSnapping] = useState(false)
@@ -119,6 +119,10 @@ export default function Home() {
   }
 
   const active = HERO_CARDS[index]
+  // 저장한 일정이 있는 사람에게만 그리로 가는 길을 낸다. 홈에는 하단 탭이 없어서
+  // 이 버튼이 없으면 다시 찾은 사람은 설문을 처음부터 다시 하는 수밖에 없다.
+  // 일정은 첫 렌더 전에 저장소에서 읽어오므로 버튼이 뒤늦게 튀어나오지 않는다.
+  const hasSaved = schedule.courses.length > 0
 
   return (
     <div className="screen hero-screen">
@@ -202,22 +206,31 @@ export default function Home() {
 
         <div className="hero-meta">{active.meta}</div>
 
-        <button
-          className="hero-cta"
-          onClick={(e) => {
-            // 방울이 이 버튼에서 솟아나고, 테두리 빛은 버튼 테두리를 그대로 덧그린다.
-            // 모서리 값은 적어두지 않고 버튼에서 읽어온다 — 버튼 모양이 바뀌어도 계속 맞는다.
-            const el = e.currentTarget
-            const started = startLiquid({
-              rect: el.getBoundingClientRect(),
-              radius: getComputedStyle(el).borderRadius,
-              onCover: () => navigate('/survey/1'),
-            })
-            if (!started) navigate('/survey/1')
-          }}
-        >
-          AI 코스 추천받기
-        </button>
+        <div className="hero-actions">
+          <button
+            className="hero-cta"
+            onClick={(e) => {
+              // 방울이 이 버튼에서 솟아나고, 테두리 빛은 버튼 테두리를 그대로 덧그린다.
+              // 모서리 값은 적어두지 않고 버튼에서 읽어온다 — 버튼 모양이 바뀌어도 계속 맞는다.
+              const el = e.currentTarget
+              const started = startLiquid({
+                rect: el.getBoundingClientRect(),
+                radius: getComputedStyle(el).borderRadius,
+                onCover: () => navigate('/survey/1'),
+              })
+              if (!started) navigate('/survey/1')
+            }}
+          >
+            AI 코스 추천받기
+          </button>
+          {/* 물방울 연출은 안 쓴다. 그건 "AI가 코스를 만든다"는 순간을 위한 것이라,
+              이미 있는 걸 보러 가는 데까지 쓰면 특별함이 닳는다. */}
+          {hasSaved && (
+            <button className="hero-cta hero-cta-saved" onClick={() => navigate('/schedule')}>
+              내 일정
+            </button>
+          )}
+        </div>
       </div>
     </div>
   )
