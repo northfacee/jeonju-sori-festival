@@ -157,7 +157,12 @@ export default function Home() {
                 ref={i === 0 ? slideRef : null}
                 className={`hero-slide ${i === index ? 'is-active' : ''}`}
               >
-                <div className="hero-card">
+                <div
+                  className={`hero-card ${card.poster ? 'is-poster' : ''}`}
+                  // 포스터는 잘리지 않게 통째로 넣는다. 남는 자리는 포스터를 크게 늘린
+                  // 축소본으로 메워서 검은 띠 대신 흐린 배경이 되게 한다.
+                  style={card.poster ? { backgroundImage: `url(${card.bg})` } : undefined}
+                >
                   {card.video ? (
                     <video
                       ref={(el) => {
