@@ -310,7 +310,9 @@
   background: var(--surface);
   border-top: 1px solid var(--border);
   display: flex;
-  padding: 8px 12px calc(20px + env(safe-area-inset-bottom, 0px));
+  /* 아래 값은 홈 인디케이터·제스처 바를 피하는 최소치만 둔다. 여기에 기기가 알려주는
+     안전 영역이 더해지므로, 기본값을 크게 잡으면 인디케이터가 있는 기기에서 두 번 벌어진다. */
+  padding: 6px 12px calc(8px + env(safe-area-inset-bottom, 0px));
 }
 .bottom-nav-item {
   flex: 1;
@@ -318,7 +320,8 @@
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  padding: 8px 0;
+  /* 4px까지 줄여도 누를 수 있는 높이가 49px로 남아 손가락에는 넉넉하다. */
+  padding: 4px 0;
   cursor: pointer;
   background: none;
   border: none;
