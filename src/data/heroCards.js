@@ -3,16 +3,18 @@
 export const HERO_CARDS = [
   {
     id: 'bookfair',
+    // 이 카드를 보고 있을 때 AI 코스를 누르면 이 축제로 짠다.
+    // 프로그램 데이터가 있는 축제에만 단다(backend/app/data).
+    festival: 'bookfair',
     title: '제9회 전주독서대전',
     subtitle: '달려라 책',
     meta: '9월 11일(금) ~ 9월 13일(일) · 전주한벽문화관·완판본문화관 일원',
-    // 사진이 아니라 포스터다. 잘라내면 로고와 주최 정보가 날아가므로 통째로 보여준다.
-    poster: true,
     image: '/hero/bookfair.jpg',
     bg: '/hero/bookfair-bg.jpg',
   },
   {
     id: 'sori',
+    festival: 'sori',
     title: '2026 전주세계소리축제',
     subtitle: '소리의 숨결, 모아 판으로',
     meta: '8월 12일(수) ~ 8월 16일(일) · 한국소리문화의전당',

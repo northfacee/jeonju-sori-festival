@@ -2,14 +2,13 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { HERO_CARDS } from '../data/heroCards.js'
 import { useAppState } from '../context/AppState.jsx'
-import { FESTIVALS, festivalOf } from '../data/festivals.js'
 
 const CHANGE_AT = 48 // 이만큼 끌면 옆 카드로 넘어간다
 const EDGE_RESISTANCE = 0.32
 
 export default function Home() {
   const navigate = useNavigate()
-  const { startLiquid, schedule, festival, setFestival } = useAppState()
+  const { startLiquid, schedule, setFestival } = useAppState()
   const [index, setIndex] = useState(0)
   const [dx, setDx] = useState(0)
   const [snapping, setSnapping] = useState(false)
@@ -36,6 +35,15 @@ export default function Home() {
     ro.observe(slide)
     return () => ro.disconnect()
   }, [])
+
+  // 보고 있는 카드가 곧 어떤 축제로 코스를 짤지다. 따로 고르는 칸을 두면
+  // 카드와 칸이 서로 다른 축제를 가리킬 수 있어 헷갈린다.
+  // 코스를 짤 수 없는 카드(군산·무주)에서는 직전에 고른 축제를 그대로 둔다.
+  useEffect(() => {
+    const key = HERO_CARDS[index].festival
+    if (key) setFestival(key)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [index])
 
   // 영상은 한 편에 1MB가 넘는다. 처음부터 다 받으면 홈 화면 진입만으로 데이터를 크게 쓰니
   // 실제로 본 카드만 받는다. 안 받은 카드는 포스터 사진이 대신 보여서 티가 나지 않는다.
@@ -209,19 +217,7 @@ export default function Home() {
           ))}
         </div>
 
-        {/* 어느 축제로 코스를 짤지 먼저 고른다. 설문 답변은 축제와 상관없이 같은 것을 묻는다. */}
-        <div className="hero-picker">
-          {FESTIVALS.map((f) => (
-            <button
-              key={f.key}
-              className={`hero-pick ${f.key === festival ? 'is-active' : ''}`}
-              onClick={() => setFestival(f.key)}
-            >
-              {f.short}
-            </button>
-          ))}
-        </div>
-        <div className="hero-meta">{festivalOf(festival).dateLabel} · {festivalOf(festival).place}</div>
+        <div className="hero-meta">{HERO_CARDS[index].meta}</div>
 
         <div className="hero-actions">
           <button
