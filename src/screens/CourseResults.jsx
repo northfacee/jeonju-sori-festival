@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAppState } from '../context/AppState.jsx'
 import { COURSES, courseTags, courseStatRows } from '../data/courses.js'
 import TopBar from '../components/TopBar.jsx'
+import BottomNav from '../components/BottomNav.jsx'
 
 export default function CourseResults() {
   const navigate = useNavigate()
@@ -71,10 +72,15 @@ export default function CourseResults() {
         </div>
       </div>
 
-      <div className="sticky-cta">
-        <button className="sticky-cta-btn" onClick={() => navigate(`/course/${picked.id}`)}>
-          {picked.name} 자세히 보기
-        </button>
+      {/* 버튼과 탭바 둘 다 아래에 붙는다. 각자 sticky로 두면 같은 자리에 겹치므로
+          한 덩어리로 묶어서 그 덩어리를 붙인다. */}
+      <div className="screen-bottom">
+        <div className="sticky-cta">
+          <button className="sticky-cta-btn" onClick={() => navigate(`/course/${picked.id}`)}>
+            {picked.name} 자세히 보기
+          </button>
+        </div>
+        <BottomNav />
       </div>
     </div>
   )

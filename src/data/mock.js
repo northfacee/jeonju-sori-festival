@@ -6,7 +6,7 @@ export const TAB_ICONS = {
 
 export const NAV_TABS = [
   { key: 'home', label: '홈', icon: TAB_ICONS.home, path: '/' },
-  { key: 'course', label: '코스', icon: TAB_ICONS.map, path: '/results' },
+  { key: 'course', label: '추천코스', icon: TAB_ICONS.map, path: '/results' },
   { key: 'schedule', label: '내 일정', icon: TAB_ICONS.me, path: '/schedule' },
 ]
 

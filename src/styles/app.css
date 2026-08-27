@@ -330,6 +330,22 @@
   font-weight: 600;
 }
 
+/* 아래에 버튼과 탭바가 함께 앉는 화면(추천 코스).
+   둘 다 sticky bottom:0으로 두면 같은 자리를 잡아 겹친다. 하나로 묶어
+   그 덩어리를 붙이고, 안쪽 둘은 흐름대로 쌓이게 한다.
+   아래 여백(홈 인디케이터 자리)은 맨 밑에 오는 탭바만 챙긴다. */
+.screen-bottom {
+  position: sticky;
+  bottom: 0;
+}
+.screen-bottom > .sticky-cta,
+.screen-bottom > .bottom-nav {
+  position: static;
+}
+.screen-bottom > .sticky-cta {
+  padding-bottom: 12px;
+}
+
 /* Sticky bottom CTA */
 .sticky-cta {
   position: sticky;

@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 const AppStateContext = createContext(null)
 
 const STORAGE_KEY = 'jeonju-schedule-v1'
-const EMPTY_SCHEDULE = { courses: [], doneStopKeys: [], alarmOffCourseIds: [], activeCourseId: null }
+const EMPTY_SCHEDULE = { courses: [], doneStopKeys: [], activeCourseId: null }
 
 function loadSchedule() {
   try {
@@ -56,7 +56,6 @@ export function AppStateProvider({ children }) {
         courses,
         // 코스를 지우면 그 코스의 체크 기록도 같이 지운다.
         doneStopKeys: prev.doneStopKeys.filter((key) => !key.startsWith(`${id}::`)),
-        alarmOffCourseIds: prev.alarmOffCourseIds.filter((cid) => cid !== id),
         activeCourseId: prev.activeCourseId === id ? (courses[0]?.id ?? null) : prev.activeCourseId,
       }
     })
@@ -67,14 +66,6 @@ export function AppStateProvider({ children }) {
       doneStopKeys: prev.doneStopKeys.includes(key)
         ? prev.doneStopKeys.filter((k) => k !== key)
         : [...prev.doneStopKeys, key],
-    }))
-
-  const toggleAlarm = (id) =>
-    setSchedule((prev) => ({
-      ...prev,
-      alarmOffCourseIds: prev.alarmOffCourseIds.includes(id)
-        ? prev.alarmOffCourseIds.filter((cid) => cid !== id)
-        : [...prev.alarmOffCourseIds, id],
     }))
 
   const setActiveCourse = (id) => setSchedule((prev) => ({ ...prev, activeCourseId: id }))
@@ -108,7 +99,6 @@ export function AppStateProvider({ children }) {
     saveCourse,
     removeCourse,
     toggleStopDone,
-    toggleAlarm,
     setActiveCourse,
     liquid,
     startLiquid,

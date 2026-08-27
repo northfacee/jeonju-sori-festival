@@ -8,8 +8,8 @@ import { preloadKakaoShare, shareCourse } from '../lib/share.js'
 
 export default function MySchedule() {
   const navigate = useNavigate()
-  const { schedule, removeCourse, toggleStopDone, toggleAlarm, setActiveCourse } = useAppState()
-  const { courses, doneStopKeys, alarmOffCourseIds, activeCourseId } = schedule
+  const { schedule, removeCourse, toggleStopDone, setActiveCourse } = useAppState()
+  const { courses, doneStopKeys, activeCourseId } = schedule
 
   const active = courses.find((c) => c.id === activeCourseId) || courses[0] || null
 
@@ -50,7 +50,6 @@ export default function MySchedule() {
 
   const { done, total, pct } = progressOf(active, doneStopKeys)
   const next = nextStopOf(active, doneStopKeys)
-  const alarmOff = alarmOffCourseIds.includes(active.id)
   const others = courses.filter((c) => c.id !== active.id)
   const groups = groupByDay(active)
 
@@ -83,6 +82,7 @@ export default function MySchedule() {
               {next.stop.time ? ` · ${next.stop.time}–${next.stop.timeEnd}` : ''}
             </div>
             <div className="next-actions">
+              {/* 길찾기 하나만 남아 줄을 다 쓴다(.btn-mid-primary가 flex:1). */}
               <a
                 className="btn-mid-primary"
                 href={directionsUrl(next.stop)}
@@ -91,9 +91,6 @@ export default function MySchedule() {
               >
                 길찾기 시작
               </a>
-              <button className="btn-mid-white" onClick={() => toggleAlarm(active.id)}>
-                {alarmOff ? '일정 알림 켜기' : '일정 알림 끄기'}
-              </button>
             </div>
           </div>
         ) : (
