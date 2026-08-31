@@ -1,12 +1,14 @@
 import asyncio
 import json
 
+from app.config import settings
 from app.constants import MAX_WALK_KM
 from app.graph.tools import SUMMARIZE_TRIP_TOOL, pick_day_stops_tool
 from app.models.state import BuildState
 from app.services.distance import haversine_km
 from app.services.festival_data import SURVEY_STEPS
-from app.services.food_search import find_promo_place, search_places
+from app.services.food_search import find_promo_place
+from app.services.food_search_hybrid import search_day_places_hybrid
 from app.services.geocode import geocode_place
 from app.services.llm import call_tool
 from app.services.time_utils import (
@@ -225,9 +227,16 @@ async def search_food_node(state: BuildState) -> dict:
     lunch_anchor = closest_stop(stops, 12 * 60 + 30) or stops[0]
     dinner_anchor = closest_stop(stops, 18 * 60 + 30) or stops[-1]
 
-    # 점심에서 고른 곳을 저녁 후보에서 바로 빼기 위해 순서대로 처리한다.
-    lunch_places = search_places(lunch_anchor["venue"], used_food_names, walk)
-    dinner_places = search_places(dinner_anchor["venue"], used_food_names + [p["name"] for p in lunch_places], walk)
+    lunch_places, dinner_places = await search_day_places_hybrid(
+        lunch_anchor["venue"],
+        dinner_anchor["venue"],
+        used_food_names,
+        walk,
+        kakao_api_key=settings.kakao_rest_api_key,
+        preferences=state["answers"],
+        gemini_api_key=settings.gemini_api_key,
+        gemini_model=settings.gemini_model,
+    )
 
     lunch_items = list(
         await asyncio.gather(

@@ -6,6 +6,7 @@ class Settings(BaseSettings):
 
     gemini_api_key: str = ""
     gemini_model: str = "gemini-3.7-flash"
+    kakao_rest_api_key: str = ""
 
     langsmith_tracing: bool = False
     langsmith_api_key: str = ""
