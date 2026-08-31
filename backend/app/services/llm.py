@@ -11,7 +11,7 @@ def get_chat_model(max_output_tokens: int = 2048) -> ChatGoogleGenerativeAI:
         # Gemini 3 계열 "thinking" 모델은 답변 전에 숨은 추론 토큰을 쓰다가
         # 도구 호출을 아예 못 내놓는 경우가 있어서 최대한 꺼둔다.
         # Gemini 3.7 Flash는 minimal을 지원하지 않아 가장 낮은 low를 쓴다.
-        thinking_level="medium",
+        thinking_level="low",
         # 기본값(6)은 429 할당량 초과 시 SDK가 응답의 retryDelay(길게는 수십 초)를
         # 그대로 존중해 재시도하다가 Vercel 함수 제한 시간을 넘겨 504로 죽는다.
         # 1로 두면 재시도 없이 즉시 실패하고, 호출부의 try/except 폴백이 바로 동작한다.
