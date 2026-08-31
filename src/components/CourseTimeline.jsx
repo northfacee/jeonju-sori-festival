@@ -23,8 +23,9 @@ function splitCard(s, i, selected, badge, onSelect, onChoose) {
   // 이미 정해진 것처럼 보여서 고를 수 있다는 걸 모르고 지나친다.
   // (고르지 않아도 일정에는 AI 추천 쪽이 들어간다 — effectiveStop 참고)
   const chosen = s.chosen
+  const aiMeta = s.venue.address || s.desc || s.venue.name
   const halves = [
-    { key: 'ours', tag: 'AI 추천', name: s.name, meta: s.venue.name, target: s },
+    { key: 'ours', tag: 'AI 추천', name: s.name, meta: aiMeta, target: s },
     { key: 'promo', tag: '소상공인 홍보', name: s.promo.name, meta: s.promo.address, target: promoAsStop(s.promo) },
   ]
 
@@ -101,6 +102,8 @@ export default function CourseTimeline({ stops, selectedIndex, onSelect, onDelet
         {stops.map((s, i) => {
           const selected = selectedIndex === i
           const badge = badgeFor(s)
+          const isFoodPlace = s.kind === 'food' || s.kind === 'cafe'
+          const stopMeta = isFoodPlace ? s.venue.address || s.venue.name : s.venue.name
           const card = (
             <button
               className={`stop-card ${selected ? 'is-selected' : ''}`}
@@ -121,7 +124,7 @@ export default function CourseTimeline({ stops, selectedIndex, onSelect, onDelet
                   </div>
                   <div className="stop-meta">
                     {showDate && s.dateLabel ? `${s.dateLabel} · ` : ''}
-                    {s.venue.name}
+                    {stopMeta}
                     {s.hall ? ` · ${s.hall}` : ''}
                   </div>
                   {selected && (
