@@ -1,7 +1,10 @@
 // 2026 전주 야간관광 프로그램 — 전주시 공식 관광 사이트(tour.jeonju.go.kr) 안내 기준
 // 출처: https://tour.jeonju.go.kr/index.jeonju?menuCd=DOM_000000102007000000
 //
-// activeDates: 축제 기간(08-12~08-16) 중 실제로 그 프로그램이 열리는 날짜만 나열.
+// activeDates: 축제별로, 그 축제 기간 중 실제로 이 프로그램이 열리는 날짜.
+// 야간관광은 5~11월 내내 도니 축제마다 겹치는 날이 다르다.
+//   소리축제 08-12~08-16 → 금·토는 08-14, 08-15
+//   독서대전 09-11~09-13 → 금·토는 09-11, 09-12
 // - 달빛한잔/윤슬마켓/맛있는 전주심야극장: "매주 금·토" 운영 → 08-14(금), 08-15(토)
 // - 나이트투어: 윤슬마켓 일정과 연계 진행 → 마찬가지로 08-14, 08-15
 // - 야간연회: 실제 운영일이 9~10월(9.4~10.9)뿐이라 축제 기간(8월)에는 해당 없음 → 빈 배열
@@ -22,7 +25,7 @@ export const NIGHT_TOUR_EVENTS = [
     price: '무료입장',
     desc: '전주천 야경 보면서 술과 스낵을 즐기는 야외 펍. 음악도 함께 흐른다.',
     image: '/night-tour/night01.jpg',
-    activeDates: ['08-14', '08-15'],
+    activeDates: { sori: ['08-14', '08-15'], bookfair: ['09-11', '09-12'] },
   },
   {
     id: 'yunseul-market',
@@ -40,7 +43,7 @@ export const NIGHT_TOUR_EVENTS = [
     price: '무료입장',
     desc: '전주천변에서 지역 작가의 수공예 소품과 굿즈를 파는 플리마켓.',
     image: '/night-tour/night02.jpg',
-    activeDates: ['08-14', '08-15'],
+    activeDates: { sori: ['08-14', '08-15'], bookfair: ['09-11', '09-12'] },
   },
   {
     id: 'night-tour-bus',
@@ -58,7 +61,7 @@ export const NIGHT_TOUR_EVENTS = [
     price: '1인 5,000원',
     desc: '덕진공원을 걸으며 스냅사진을 찍고 행사장까지 데려다주는 버스투어.',
     image: '/night-tour/night03.jpg',
-    activeDates: ['08-14', '08-15'],
+    activeDates: { sori: ['08-14', '08-15'], bookfair: ['09-11', '09-12'] },
   },
   {
     id: 'midnight-theater',
@@ -76,7 +79,7 @@ export const NIGHT_TOUR_EVENTS = [
     price: '1인 13,000원',
     desc: '캠핑장처럼 꾸민 한옥에서 영화와 음식을 함께. 상영작은 달마다 바뀐다.',
     image: '/night-tour/night04.jpg',
-    activeDates: ['08-14', '08-15'],
+    activeDates: { sori: ['08-14', '08-15'], bookfair: ['09-11', '09-12'] },
   },
   {
     id: 'night-banquet',
@@ -94,6 +97,6 @@ export const NIGHT_TOUR_EVENTS = [
     price: '1인 15,000원',
     desc: '판소리·잡가를 현대적으로 풀어낸 공연에 셰프의 정찬이 함께 나오는 디너쇼.',
     image: '/night-tour/night05.jpg',
-    activeDates: [],
+    activeDates: { sori: [], bookfair: [] },
   },
 ]

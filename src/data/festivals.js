@@ -9,8 +9,8 @@ export const FESTIVALS = [
     short: '독서대전',
     dateLabel: '9월 11일(금) ~ 9월 13일(일)',
     place: '전주한벽문화관 일원',
-    // 야간관광 프로그램이 없는 축제는 설문에서 그 질문을 건너뛴다.
-    hasNightTour: false,
+    // 독서대전 기간의 금·토에도 전주 야간관광 프로그램이 운영된다.
+    hasNightTour: true,
   },
   {
     key: 'sori',

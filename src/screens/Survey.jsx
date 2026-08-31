@@ -4,7 +4,6 @@ import { useAppState } from '../context/AppState.jsx'
 import { festivalOf } from '../data/festivals.js'
 import { SURVEY_STEPS } from '../data/survey.js'
 import { NIGHT_TOUR_EVENTS } from '../data/nightTour.js'
-import { DATE_LABELS } from '../data/stopPool.js'
 import { QuestionIcon } from '../components/surveyIcons.jsx'
 import TopBar from '../components/TopBar.jsx'
 import CoachMark from '../components/CoachMark.jsx'
@@ -23,9 +22,12 @@ const LEAVE_MS = 150
 // 달은 한 번만 적는다.
 function openDays(activeDates) {
   if (activeDates.length === 0) return null
-  const labels = activeDates.map((d) => DATE_LABELS[d] || d)
-  const month = labels[0].split(' ')[0]
-  return `${month} ${labels.map((l) => l.split(' ').slice(1).join(' ')).join('·')}`
+  const labels = activeDates.map((date) => {
+    const [month, day] = date.split('-').map(Number)
+    const weekday = ['일', '월', '화', '수', '목', '금', '토'][new Date(2026, month - 1, day).getDay()]
+    return { month, label: `${day}일(${weekday})` }
+  })
+  return `${labels[0].month}월 ${labels.map(({ label }) => label).join('·')}`
 }
 
 export default function Survey() {
@@ -90,7 +92,7 @@ export default function Survey() {
           <div className="survey-options">
             {NIGHT_TOUR_EVENTS.map((event) => {
               const selected = (answers.nightTourIds || []).includes(event.id)
-              const days = openDays(event.activeDates)
+              const days = openDays(event.activeDates[festival] || [])
               return (
                 <button
                   key={event.id}
