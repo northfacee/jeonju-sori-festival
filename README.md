@@ -154,7 +154,7 @@ VITE_KAKAO_MAP_KEY=여기에_카카오_JavaScript_키
 
 ```
 GEMINI_API_KEY=여기에_Gemini_API_키
-GEMINI_MODEL=gemini-3.5-flash-lite
+GEMINI_MODEL=gemini-3.7-flash
 
 # LangSmith 트레이싱 (선택 · 비워두면 비활성화)
 LANGSMITH_TRACING=false
