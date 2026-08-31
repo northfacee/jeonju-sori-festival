@@ -53,8 +53,6 @@ FESTIVALS: dict[str, dict] = {
         "night_tour": NIGHT_TOUR_EVENTS,
         # 하루만 갈 사람에게 먼저 보여줄 날. 프로그램이 가장 많은 토요일로 둔다.
         "preferred_start": 3,  # 08-15(토)
-        # 축제장이 넉 군데로 흩어져 있어 숙소를 끼워 넣을 만하다.
-        "supports_stay": True,
     },
     "bookfair": {
         "key": "bookfair",
@@ -68,7 +66,6 @@ FESTIVALS: dict[str, dict] = {
         # 독서대전 행사장이라 소리축제 때보다 오히려 가깝다.
         "night_tour": _night_tour_for("bookfair"),
         "preferred_start": 1,  # 09-12(토) — 사흘 중 프로그램이 가장 많다
-        "supports_stay": True,
     },
 }
 

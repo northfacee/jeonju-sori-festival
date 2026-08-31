@@ -9,7 +9,6 @@ from app.graph.nodes import (
     route_after_pick,
     search_food_node,
     search_night_tour_node,
-    search_stay_node,
     summarize_trip_node,
 )
 from app.models.state import BuildState
@@ -29,7 +28,6 @@ def _build_graph():
     graph.add_node("pick_day_stops", pick_day_stops_node)
     graph.add_node("search_food", search_food_node)
     graph.add_node("search_night_tour", search_night_tour_node)
-    graph.add_node("search_stay", search_stay_node)
     graph.add_node("finalize_day", finalize_day_node)
     graph.add_node("summarize_trip", summarize_trip_node)
 
@@ -41,8 +39,7 @@ def _build_graph():
         {"search_food": "search_food", "finalize_day": "finalize_day"},
     )
     graph.add_edge("search_food", "search_night_tour")
-    graph.add_edge("search_night_tour", "search_stay")
-    graph.add_edge("search_stay", "finalize_day")
+    graph.add_edge("search_night_tour", "finalize_day")
     graph.add_conditional_edges(
         "finalize_day",
         route_after_finalize,
@@ -71,9 +68,7 @@ async def build_course(answers: dict | None, festival: str | None = None) -> dic
         "walk": False,
         "day_index": 0,
         "used_food_names": [],
-        "used_stay_names": [],
         "used_night_tour_ids": [],
-        "previous_stay": None,
         "current_date": "",
         "current_stops": [],
         "days": [],

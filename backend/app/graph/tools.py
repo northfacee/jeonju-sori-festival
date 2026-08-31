@@ -16,20 +16,6 @@ def pick_day_stops_tool(stop_ids: list[str]) -> dict:
     }
 
 
-REPORT_STAY_TOOL = {
-    "name": "report_stay",
-    "description": "검색 결과 텍스트에서 실제 숙소 정보 1곳을 추출해 구조화한다.",
-    "parameters": {
-        "type": "object",
-        "properties": {
-            "name": {"type": "string", "description": "실제 숙소 이름 (호텔/게스트하우스 등)"},
-            "address": {"type": "string", "description": "정확한 도로명 주소"},
-            "desc": {"type": "string", "description": "한국어 1문장. 왜 추천하는지."},
-        },
-        "required": ["name", "address", "desc"],
-    },
-}
-
 SUMMARIZE_TRIP_TOOL = {
     "name": "summarize_trip",
     "description": "완성된 여행 일정을 보고 전체 코스 이름과 추천 이유를 짧게 요약한다.",

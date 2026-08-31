@@ -8,7 +8,6 @@ const DURATION = 4600
 function stepsFor(answers) {
   const steps = ['답변 정리하고 날짜 고르기', '축제 프로그램 시간표 대조', '근처 맛집·카페 찾기']
   if ((answers.nightTourIds || []).length > 0) steps.push('야간관광 프로그램 배치')
-  if (answers.duration && answers.duration !== 'day') steps.push('묵을 숙소 찾기')
   steps.push('코스 이름과 추천 이유 정리')
   return steps
 }
