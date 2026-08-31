@@ -15,6 +15,7 @@ from app.services.time_utils import (
     closest_stop,
     dedupe_overlaps,
     find_free_slot,
+    find_required_slot,
     overlaps,
     slugify,
     sort_key,
@@ -103,7 +104,7 @@ async def pick_day_stops(date: str, pool: list[dict], answers: dict, fest: dict)
     return sorted(picks, key=sort_key)
 
 
-# ── Phase 2: 전주시 공공데이터 "음식점기본정보"에서 근처 실제 음식점/카페 찾기 ──
+# ── Phase 2: 카카오 로컬 후보를 Gemini Search로 검증해 실제 음식점/카페 찾기 ──
 async def to_stop_from_place(
     place: dict, date: str, anchor_venue: dict, walk: bool, date_labels: dict,
     kind_override: str | None = None,
@@ -155,6 +156,47 @@ def place_items_into_slots(
         working.append(stop)
         placed.append(stop)
     return placed
+
+
+def place_required_meal(
+    existing_stops: list[dict],
+    items: list[dict],
+    window_start_min: int,
+    window_end_min: int,
+    preferred_start_min: int,
+    anchor_venue: dict,
+) -> tuple[list[dict], list[dict]]:
+    """식당 한 곳을 반드시 넣고, 남는 자리에 카페를 선택적으로 배치한다."""
+    meal_item = next((item for item in items if item.get("kind") == "food"), None)
+    if not meal_item:
+        return existing_stops, []
+
+    slot, conflicts = find_required_slot(
+        existing_stops,
+        window_start_min,
+        window_end_min,
+        45,
+        preferred_start_min,
+    )
+    conflict_ids = {stop["id"] for stop in conflicts}
+    working = [stop for stop in existing_stops if stop["id"] not in conflict_ids]
+
+    if meal_item["venue"].get("lat") is None:
+        meal_item["venue"]["lat"] = anchor_venue["lat"]
+        meal_item["venue"]["lon"] = anchor_venue["lon"]
+    meal_stop = {**meal_item, "time": slot["time"], "timeEnd": slot["timeEnd"]}
+    working.append(meal_stop)
+
+    optional_items = [item for item in items if item is not meal_item]
+    optional_stops = place_items_into_slots(
+        working,
+        optional_items,
+        window_start_min,
+        window_end_min,
+        anchor_venue,
+    )
+    placed = [meal_stop] + optional_stops
+    return dedupe_overlaps(working + optional_stops), placed
 
 
 # ── 야간관광: 사용자가 고른 프로그램 중 그날 실제로 운영하는 것만 저녁 늦은 시간대에 끼워 넣기 ──
@@ -249,12 +291,24 @@ async def search_food_node(state: BuildState) -> dict:
         )
     )
 
-    placed_lunch = place_items_into_slots(stops, lunch_items, 11 * 60, 15 * 60, lunch_anchor["venue"])
-    stops = dedupe_overlaps(stops + placed_lunch)
-    placed_dinner = place_items_into_slots(stops, dinner_items, 17 * 60, 21 * 60, dinner_anchor["venue"])
-    stops = dedupe_overlaps(stops + placed_dinner)
+    stops, placed_lunch = place_required_meal(
+        stops,
+        lunch_items,
+        11 * 60,
+        15 * 60,
+        12 * 60 + 30,
+        lunch_anchor["venue"],
+    )
+    stops, placed_dinner = place_required_meal(
+        stops,
+        dinner_items,
+        17 * 60,
+        21 * 60,
+        18 * 60 + 30,
+        dinner_anchor["venue"],
+    )
 
-    new_used_food_names = used_food_names + [p["name"] for p in lunch_places] + [p["name"] for p in dinner_places]
+    new_used_food_names = used_food_names + [stop["name"] for stop in placed_lunch + placed_dinner]
 
     attach_promos(placed_lunch + placed_dinner, new_used_food_names, walk)
 

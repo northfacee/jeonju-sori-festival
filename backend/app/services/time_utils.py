@@ -39,6 +39,47 @@ def find_free_slot(existing_stops: list[dict], window_start_min: int, window_end
     return None
 
 
+def find_required_slot(
+    existing_stops: list[dict],
+    window_start_min: int,
+    window_end_min: int,
+    duration_min: int,
+    preferred_start_min: int,
+) -> tuple[dict, list[dict]]:
+    """필수 일정의 최적 슬롯과 제거해야 할 충돌 일정을 반환한다.
+
+    빈 슬롯이 있으면 선호 시간에 가장 가까운 곳을 고른다. 빈 슬롯이 전혀
+    없으면 제거되는 일정의 총 길이와 개수가 가장 작은 슬롯을 골라 식사 시간을
+    확보한다.
+    """
+    candidates: list[tuple[dict, list[dict], int]] = []
+    start = window_start_min
+    while start + duration_min <= window_end_min:
+        slot = {
+            "time": minutes_to_time(start),
+            "timeEnd": minutes_to_time(start + duration_min),
+        }
+        conflicts = [stop for stop in existing_stops if overlaps(stop, slot)]
+        candidates.append((slot, conflicts, start))
+        start += 15
+
+    if not candidates:
+        raise ValueError("필수 일정을 배치할 수 있는 시간 범위가 없습니다.")
+
+    free = [candidate for candidate in candidates if not candidate[1]]
+    if free:
+        slot, conflicts, _ = min(free, key=lambda candidate: abs(candidate[2] - preferred_start_min))
+        return slot, conflicts
+
+    def disruption(candidate: tuple[dict, list[dict], int]) -> tuple[int, int, int]:
+        _, conflicts, start_min = candidate
+        removed_minutes = sum(to_minutes(stop["timeEnd"]) - to_minutes(stop["time"]) for stop in conflicts)
+        return removed_minutes, len(conflicts), abs(start_min - preferred_start_min)
+
+    slot, conflicts, _ = min(candidates, key=disruption)
+    return slot, conflicts
+
+
 def closest_stop(stops: list[dict], target_min: int) -> dict | None:
     if not stops:
         return None
