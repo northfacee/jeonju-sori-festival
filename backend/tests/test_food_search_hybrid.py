@@ -5,6 +5,8 @@ import httpx
 
 from app.services.food_search_hybrid import (
     dedupe_kakao_candidates,
+    fetch_kakao_candidates,
+    food_preference_guide,
     rerank_places_with_gemini_search,
     search_day_places_hybrid,
     search_places_hybrid,
@@ -110,7 +112,7 @@ class FoodSearchHybridTests(unittest.IsolatedAsyncioTestCase):
             result = await rerank_places_with_gemini_search(
                 candidates,
                 {
-                    "preferences": {"companion": "family"},
+                    "preferences": {"companion": "couple", "budget": "balanced"},
                     "geminiApiKey": "never-put-this-secret-in-a-prompt",
                     "geminiModel": "gemini-3.7-flash",
                 },
@@ -118,7 +120,33 @@ class FoodSearchHybridTests(unittest.IsolatedAsyncioTestCase):
 
         prompt = structured_model.ainvoke.await_args.args[0]
         self.assertNotIn("never-put-this-secret-in-a-prompt", prompt)
+        self.assertIn("데이트", prompt)
+        self.assertIn("15,000원 이상 25,000원 미만", prompt)
         self.assertEqual(result, ["food-near"])
+
+    async def test_transport_sets_exact_kakao_radius(self) -> None:
+        requested_radii: list[int] = []
+
+        async def handler(request: httpx.Request) -> httpx.Response:
+            requested_radii.append(int(request.url.params["radius"]))
+            return httpx.Response(200, json={"documents": []}, request=request)
+
+        async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+            for transport in ("walk", "transit", "car"):
+                await fetch_kakao_candidates(ANCHOR, transport, "test-key", client=client)
+
+        self.assertEqual(requested_radii, [1000, 1000, 3000, 3000, 5000, 5000])
+
+    def test_food_preference_guide_uses_meal_price_bands_only(self) -> None:
+        self.assertIn("15,000원 미만", food_preference_guide({"budget": "saving"})["budget"])
+        self.assertIn(
+            "15,000원 이상 25,000원 미만",
+            food_preference_guide({"budget": "balanced"})["budget"],
+        )
+        self.assertIn("25,000원 이상", food_preference_guide({"budget": "splurge"})["budget"])
+        self.assertIn("카페가 아닌 식당", food_preference_guide({"budget": "saving"})["priceBasis"])
+        self.assertIn("재미있는", food_preference_guide({"companion": "friend"})["companion"])
+        self.assertIn("데이트", food_preference_guide({"companion": "couple"})["companion"])
 
     async def test_gemini_ids_rerank_kakao_candidates(self) -> None:
         async def reranker(candidates: list[dict], context: dict) -> list[str]:
@@ -130,7 +158,7 @@ class FoodSearchHybridTests(unittest.IsolatedAsyncioTestCase):
             result = await search_places_hybrid(
                 ANCHOR,
                 [],
-                True,
+                "walk",
                 kakao_api_key="test-key",
                 preferences={"companion": "family"},
                 client=client,
@@ -143,10 +171,12 @@ class FoodSearchHybridTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_day_search_reranks_lunch_and_dinner_in_one_call(self) -> None:
         calls = 0
+        received_context: dict = {}
 
         async def day_reranker(lunch_candidates: list[dict], dinner_candidates: list[dict], context: dict) -> dict:
             nonlocal calls
             calls += 1
+            received_context.update(context)
             return {
                 "lunch": ["food-far", "cafe-far"],
                 "dinner": ["food-near", "cafe-near"],
@@ -157,13 +187,15 @@ class FoodSearchHybridTests(unittest.IsolatedAsyncioTestCase):
                 ANCHOR,
                 {**ANCHOR, "name": "덕진예술회관"},
                 [],
-                True,
+                "transit",
                 kakao_api_key="test-key",
                 client=client,
                 reranker=day_reranker,
             )
 
         self.assertEqual(calls, 1)
+        self.assertEqual(received_context["transport"], "transit")
+        self.assertEqual(received_context["radiusKm"], 3.0)
         self.assertEqual([place["name"] for place in lunch], ["검색추천식당", "검색추천카페"])
         self.assertEqual([place["name"] for place in dinner], ["가까운식당", "가까운카페"])
 
@@ -175,7 +207,7 @@ class FoodSearchHybridTests(unittest.IsolatedAsyncioTestCase):
             result = await search_places_hybrid(
                 ANCHOR,
                 [],
-                True,
+                "walk",
                 kakao_api_key="test-key",
                 client=client,
                 reranker=bad_reranker,
@@ -191,7 +223,7 @@ class FoodSearchHybridTests(unittest.IsolatedAsyncioTestCase):
             result = await search_places_hybrid(
                 ANCHOR,
                 [],
-                True,
+                "walk",
                 kakao_api_key="test-key",
                 client=client,
                 reranker=food_only_reranker,
@@ -204,7 +236,7 @@ class FoodSearchHybridTests(unittest.IsolatedAsyncioTestCase):
             result = await search_places_hybrid(
                 ANCHOR,
                 [],
-                True,
+                "walk",
                 kakao_api_key="test-key",
                 client=client,
             )
@@ -237,7 +269,7 @@ class FoodSearchHybridTests(unittest.IsolatedAsyncioTestCase):
                 result = await search_places_hybrid(
                     ANCHOR,
                     [],
-                    True,
+                    "walk",
                     kakao_api_key="test-key",
                     client=client,
                 )

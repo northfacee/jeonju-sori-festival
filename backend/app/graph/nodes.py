@@ -2,7 +2,7 @@ import asyncio
 import json
 
 from app.config import settings
-from app.constants import MAX_WALK_KM
+from app.constants import MAX_WALK_KM, TRANSPORT_RADIUS_KM
 from app.graph.tools import SUMMARIZE_TRIP_TOOL, pick_day_stops_tool
 from app.models.state import BuildState
 from app.services.distance import haversine_km
@@ -24,6 +24,12 @@ from app.services.time_utils import (
 DURATION_DAY_COUNT = {"day": 1, "night1": 2, "night2": 3}
 PROMO_LIMIT = 2  # 하루에 소상공인 홍보를 붙일 정류지 수
 
+COMPANION_PROGRAM_GUIDANCE = {
+    "family": "가족 코스: 어린이·부모님이 함께 즐기기 쉬운 체험과 공연을 우선하세요.",
+    "alone": "혼자 코스: 혼자서도 부담 없이 관람하고 이동하기 좋은 프로그램을 우선하세요.",
+    "friend": "친구 코스: 함께 웃고 즐길 수 있는 활기찬 공연·체험 중심의 재미있는 코스로 구성하세요.",
+    "couple": "커플 코스: 분위기 있는 공연과 산책·카페를 자연스럽게 잇는 데이트 코스로 구성하세요.",
+}
 
 # ── Phase 1: 그날의 실제 축제 프로그램 고르기 (사전 정리된 일정 데이터 사용) ──
 def _summarize_stop(s: dict) -> dict:
@@ -47,16 +53,22 @@ def _answer_lines(answers: dict) -> str:
     return "\n".join(lines)
 
 
+def _program_preference_notes(answers: dict) -> str:
+    transport = answers.get("transport", "transit")
+    radius_km = TRANSPORT_RADIUS_KM.get(transport, TRANSPORT_RADIUS_KM["transit"])
+    notes = [
+        COMPANION_PROGRAM_GUIDANCE.get(answers.get("companion"), ""),
+        f"이동수단 반경: {transport} 기준 첫 프로그램에서 약 {radius_km:g}km 안쪽 동선을 우선하세요.",
+    ]
+    return "\n".join(f"- {note}" for note in notes if note)
+
+
 async def pick_day_stops(date: str, pool: list[dict], answers: dict, fest: dict) -> list[dict]:
     day_pool = [s for s in pool if s["date"] == date]
     if not day_pool:
         return []
 
     tool = pick_day_stops_tool([s["id"] for s in day_pool])
-
-    walk_note = ""
-    if answers.get("transport") == "walk":
-        walk_note = "\n- 이동수단이 도보이므로, 서로 가까운(같은 공연장·건물 위주) 정류지를 고르세요."
 
     day_label = fest["date_labels"][date]
     prompt = f"""{fest["name"]} {day_label}에 실제로 열리는 프로그램 목록입니다. 아래 목록에만 있는 것을 골라 그날의 동선을 짜주세요.
@@ -68,7 +80,8 @@ async def pick_day_stops(date: str, pool: list[dict], answers: dict, fest: dict)
 {json.dumps([_summarize_stop(s) for s in day_pool], ensure_ascii=False)}
 
 규칙:
-- 시간이 겹치는 두 정류지를 동시에 고르면 안 됩니다.{walk_note}
+- 시간이 겹치는 두 정류지를 동시에 고르면 안 됩니다.
+{_program_preference_notes(answers)}
 - pick_day_stops 도구로만 답하세요."""
 
     try:
@@ -81,18 +94,17 @@ async def pick_day_stops(date: str, pool: list[dict], answers: dict, fest: dict)
 
     picks = dedupe_overlaps(picks)
 
-    anchor = None
-    if answers.get("transport") == "walk":
-        if picks:
-            anchor = picks[0]["venue"]
-        if anchor:
-            picks = [s for s in picks if haversine_km(anchor, s["venue"]) <= MAX_WALK_KM]
+    anchor = picks[0]["venue"] if picks else None
+    transport = answers.get("transport", "transit")
+    radius_km = TRANSPORT_RADIUS_KM.get(transport, TRANSPORT_RADIUS_KM["transit"])
+    if anchor:
+        picks = [s for s in picks if haversine_km(anchor, s["venue"]) <= radius_km]
 
     if len(picks) < 3:
         picked_ids = {p["id"] for p in picks}
         candidates = [s for s in day_pool if s["id"] not in picked_ids]
-        if answers.get("transport") == "walk" and anchor:
-            candidates = [s for s in candidates if haversine_km(anchor, s["venue"]) <= MAX_WALK_KM]
+        if anchor:
+            candidates = [s for s in candidates if haversine_km(anchor, s["venue"]) <= radius_km]
         candidates.sort(key=sort_key)
         for cand in candidates:
             if len(picks) >= 4:
@@ -263,6 +275,7 @@ async def search_food_node(state: BuildState) -> dict:
     stops = state["current_stops"]
     date = state["current_date"]
     walk = state["walk"]
+    transport = state["answers"].get("transport", "transit")
     used_food_names = state["used_food_names"]
     date_labels = state["festival"]["date_labels"]
 
@@ -273,7 +286,7 @@ async def search_food_node(state: BuildState) -> dict:
         lunch_anchor["venue"],
         dinner_anchor["venue"],
         used_food_names,
-        walk,
+        transport,
         kakao_api_key=settings.kakao_rest_api_key,
         preferences=state["answers"],
         gemini_api_key=settings.gemini_api_key,
@@ -310,12 +323,12 @@ async def search_food_node(state: BuildState) -> dict:
 
     new_used_food_names = used_food_names + [stop["name"] for stop in placed_lunch + placed_dinner]
 
-    attach_promos(placed_lunch + placed_dinner, new_used_food_names, walk)
+    attach_promos(placed_lunch + placed_dinner, new_used_food_names, transport)
 
     return {"current_stops": stops, "used_food_names": new_used_food_names}
 
 
-def attach_promos(food_stops: list[dict], used_names: list[str], walk: bool) -> None:
+def attach_promos(food_stops: list[dict], used_names: list[str], transport: str) -> None:
     """식사·카페 정류지 중 앞의 몇 곳에만 소상공인 홍보 가게를 붙인다.
     전부에 붙이면 광고처럼 보여서 하루 PROMO_LIMIT곳으로 제한한다."""
     taken = list(used_names)
@@ -325,7 +338,7 @@ def attach_promos(food_stops: list[dict], used_names: list[str], walk: bool) -> 
         if attached >= PROMO_LIMIT:
             break
         kind = "cafe" if stop.get("kind") == "cafe" else "food"
-        promo = find_promo_place(stop["venue"], taken, kind, walk)
+        promo = find_promo_place(stop["venue"], taken, kind, transport)
         if not promo:
             continue
         stop["promo"] = {
@@ -394,8 +407,11 @@ async def summarize_trip_node(state: BuildState) -> dict:
         prompt = (
             # 축제 이름을 안 박아두면 모델이 다른 축제를 끌어와 없는 사실을 지어낸다.
             f"아래는 방금 완성된 {fest_name} 맞춤 여행 일정입니다. 전체 이름과, "
-            "사용자 답변에 맞춰 왜 이렇게 짰는지 요약해줘. "
-            f"{fest_name} 외의 다른 축제나 행사는 언급하지 마세요.\n\n[일정]\n"
+            "사용자 답변에 맞춰 왜 이렇게 짰는지 요약해줘. 친구는 재미있는 코스, "
+            "커플은 데이트 코스의 분위기가 제목과 설명에 드러나야 합니다. "
+            f"{fest_name} 외의 다른 축제나 행사는 언급하지 마세요.\n\n"
+            f"[사용자 답변]\n{_answer_lines(state['answers'])}\n\n"
+            f"[개인화 방향]\n{_program_preference_notes(state['answers'])}\n\n[일정]\n"
             f"{json.dumps(summary_input, ensure_ascii=False)}\n\n"
             "summarize_trip 도구로만 답하세요."
         )

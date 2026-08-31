@@ -1,8 +1,7 @@
-"""카카오 로컬 API + Gemini Google Search 음식점 추천 실험 모듈.
+"""카카오 로컬 API + Gemini Google Search 음식점 추천 모듈.
 
-기존 ``food_search.py``를 바꾸지 않고 비교 테스트할 수 있도록 기존 CSV
-검색 함수를 복사하고, 같은 반환 형식을 사용하는 비동기 하이브리드 함수를
-추가했다. 외부 API가 실패하면 복사해 둔 CSV 검색으로 즉시 되돌아간다.
+카카오 후보를 동행·이동수단·예산에 맞춰 Gemini로 재정렬하고, 외부 API가
+실패하면 CSV 검색으로 즉시 되돌아간다.
 """
 
 import asyncio
@@ -14,7 +13,7 @@ from difflib import SequenceMatcher
 import httpx
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-from app.constants import MAX_WALK_KM
+from app.constants import TRANSPORT_RADIUS_KM
 from app.services.distance import haversine_km
 from app.services.restaurants import get_restaurants
 
@@ -24,6 +23,19 @@ KAKAO_CANDIDATE_SIZE = 10
 
 GeminiReranker = Callable[[list[dict], dict], Awaitable[list[str]]]
 DayGeminiReranker = Callable[[list[dict], list[dict], dict], Awaitable[dict[str, list[str]]]]
+
+COMPANION_FOOD_GUIDANCE = {
+    "family": "가족: 아이와 부모님이 함께 먹기 편하고 메뉴 선택 폭이 넓은 곳을 우선",
+    "alone": "혼자: 1인이 편하게 식사하고 오래 기다리지 않아도 되는 혼밥 친화적인 곳을 우선",
+    "friend": "친구: 함께 나눠 먹거나 대화하며 즐기기 좋은 활기차고 재미있는 곳을 우선",
+    "couple": "커플: 분위기와 공간이 좋아 식사와 카페를 데이트 코스로 잇기 좋은 곳을 우선",
+}
+
+FOOD_BUDGET_GUIDANCE = {
+    "saving": "가성비: 1인 대표 식사 가격이 15,000원 미만인 식당만 선택",
+    "balanced": "균형: 1인 대표 식사 가격이 15,000원 이상 25,000원 미만인 식당만 선택",
+    "splurge": "특별한 하루: 1인 대표 식사 가격이 25,000원 이상인 식당만 선택",
+}
 
 
 # ── 기존 food_search.py의 CSV 검색 로직 복사본 ──
@@ -67,9 +79,9 @@ def _to_place(r: dict) -> dict:
     }
 
 
-def find_promo_place(anchor_venue: dict, exclude_names: list[str], kind: str, walk: bool) -> dict | None:
+def find_promo_place(anchor_venue: dict, exclude_names: list[str], kind: str, transport: str) -> dict | None:
     """기존 소상공인 홍보 슬롯용 CSV 검색 복사본."""
-    radius_km = MAX_WALK_KM if walk else 5
+    radius_km = TRANSPORT_RADIUS_KM.get(transport, TRANSPORT_RADIUS_KM["transit"])
     excluded = {n.strip().lower() for n in exclude_names}
     candidates = [
         {**r, "distanceKm": haversine_km(anchor_venue, r)}
@@ -84,9 +96,9 @@ def find_promo_place(anchor_venue: dict, exclude_names: list[str], kind: str, wa
     return _to_place(random.choice(candidates[:12]))
 
 
-def search_places(anchor_venue: dict, exclude_names: list[str], walk: bool) -> list[dict]:
+def search_places(anchor_venue: dict, exclude_names: list[str], transport: str) -> list[dict]:
     """기존 CSV 검색과 같은 시그니처를 가진 실험용 폴백."""
-    radius_km = MAX_WALK_KM if walk else 5
+    radius_km = TRANSPORT_RADIUS_KM.get(transport, TRANSPORT_RADIUS_KM["transit"])
     picks = find_nearby_restaurants(anchor_venue, radius_km, exclude_names, count=2)
     return [_to_place(r) for r in picks]
 
@@ -195,7 +207,7 @@ def dedupe_kakao_candidates(candidates: list[dict]) -> list[dict]:
 
 async def fetch_kakao_candidates(
     anchor_venue: dict,
-    walk: bool,
+    transport: str,
     api_key: str,
     *,
     client: httpx.AsyncClient | None = None,
@@ -204,7 +216,7 @@ async def fetch_kakao_candidates(
     if not api_key:
         raise ValueError("KAKAO_REST_API_KEY가 필요합니다.")
 
-    radius_km = MAX_WALK_KM if walk else 5
+    radius_km = TRANSPORT_RADIUS_KM.get(transport, TRANSPORT_RADIUS_KM["transit"])
     owns_client = client is None
     api_client = client or httpx.AsyncClient(timeout=httpx.Timeout(4.0))
     try:
@@ -228,6 +240,15 @@ def _candidate_summary(place: dict) -> dict:
         "category": place["category"],
         "address": place["address"],
         "distanceKm": round(place["distanceKm"], 2),
+    }
+
+
+def food_preference_guide(preferences: dict | None) -> dict:
+    answers = preferences or {}
+    return {
+        "companion": COMPANION_FOOD_GUIDANCE.get(answers.get("companion"), "일반적인 방문 편의성을 우선"),
+        "budget": FOOD_BUDGET_GUIDANCE.get(answers.get("budget"), "식당 가격 제한 없음"),
+        "priceBasis": "가격 구간은 카페가 아닌 식당의 1인 대표 식사 가격에만 적용",
     }
 
 
@@ -259,6 +280,9 @@ async def rerank_places_with_gemini_search(candidates: list[dict], context: dict
 [사용자와 일정 조건]
 {json.dumps(prompt_context, ensure_ascii=False)}
 
+[반드시 반영할 개인화 기준]
+{json.dumps(food_preference_guide(context.get("preferences")), ensure_ascii=False)}
+
 [카카오맵에서 거리순으로 찾은 허용 후보]
 {json.dumps([_candidate_summary(place) for place in candidates], ensure_ascii=False)}
 
@@ -266,6 +290,8 @@ async def rerank_places_with_gemini_search(candidates: list[dict], context: dict
 - Google Search로 최근 영업 정보와 방문 목적 적합성을 확인하세요.
 - 반드시 허용 후보의 kakaoPlaceId만 반환하세요.
 - 가능하면 식당 1곳과 카페 1곳을 고르세요.
+- 식당은 Google Search로 최신 메뉴의 1인 대표 가격을 확인하고 개인화 예산 구간을 반드시 지키세요.
+- 카페에는 식사 가격 구간을 적용하지 마세요.
 - 영업 여부가 불명확하거나 서로 다른 지역의 동명 가게는 선택하지 마세요.
 - 거리와 사용자 조건을 최신 온라인 평판보다 우선하세요.
 """
@@ -317,6 +343,9 @@ async def rerank_day_places_with_gemini_search(
 [사용자와 일정 조건]
 {json.dumps(prompt_context, ensure_ascii=False)}
 
+[반드시 반영할 개인화 기준]
+{json.dumps(food_preference_guide(context.get("preferences")), ensure_ascii=False)}
+
 [점심 공연장 주변 카카오맵 후보]
 {json.dumps([_candidate_summary(place) for place in lunch_candidates], ensure_ascii=False)}
 
@@ -327,6 +356,8 @@ async def rerank_day_places_with_gemini_search(
 - Google Search로 최근 영업 정보와 방문 목적 적합성을 확인하세요.
 - 각 목록에 허용된 kakaoPlaceId만 반환하세요.
 - 점심과 저녁에 가능하면 식당 1곳과 카페 1곳씩 고르세요.
+- 식당은 Google Search로 최신 메뉴의 1인 대표 가격을 확인하고 개인화 예산 구간을 반드시 지키세요.
+- 카페에는 식사 가격 구간을 적용하지 마세요.
 - 점심과 저녁에 같은 장소를 중복 선택하지 마세요.
 - 영업 여부가 불명확하거나 서로 다른 지역의 동명 가게는 선택하지 마세요.
 - 거리와 사용자 조건을 최신 온라인 평판보다 우선하세요.
@@ -411,7 +442,7 @@ def _public_place(place: dict) -> dict:
 async def search_places_hybrid(
     anchor_venue: dict,
     exclude_names: list[str],
-    walk: bool,
+    transport: str,
     *,
     kakao_api_key: str,
     preferences: dict | None = None,
@@ -426,7 +457,7 @@ async def search_places_hybrid(
     테스트할 수 있다. Gemini 키가 없으면 카카오 거리순 결과를 사용한다.
     """
     try:
-        candidates = await fetch_kakao_candidates(anchor_venue, walk, kakao_api_key, client=client)
+        candidates = await fetch_kakao_candidates(anchor_venue, transport, kakao_api_key, client=client)
         excluded = {name.strip().lower() for name in exclude_names}
         candidates = [place for place in candidates if place["name"].strip().lower() not in excluded]
         if not candidates:
@@ -435,7 +466,8 @@ async def search_places_hybrid(
         selected_ids: list[str] = []
         context = {
             "preferences": preferences or {},
-            "transport": "walk" if walk else "car",
+            "transport": transport,
+            "radiusKm": TRANSPORT_RADIUS_KM.get(transport, TRANSPORT_RADIUS_KM["transit"]),
             "anchor": {"name": anchor_venue.get("name"), "lat": anchor_venue["lat"], "lon": anchor_venue["lon"]},
             "geminiApiKey": gemini_api_key,
             "geminiModel": gemini_model,
@@ -453,14 +485,14 @@ async def search_places_hybrid(
         return [_public_place(place) for place in picks]
     except Exception as err:
         print(f"[food_search_hybrid] Kakao search failed; using CSV fallback: {err}")
-        return search_places(anchor_venue, exclude_names, walk)
+        return search_places(anchor_venue, exclude_names, transport)
 
 
 async def search_day_places_hybrid(
     lunch_anchor: dict,
     dinner_anchor: dict,
     exclude_names: list[str],
-    walk: bool,
+    transport: str,
     *,
     kakao_api_key: str,
     preferences: dict | None = None,
@@ -471,8 +503,8 @@ async def search_day_places_hybrid(
 ) -> tuple[list[dict], list[dict]]:
     """하루의 점심·저녁 후보를 병렬 조회하고 Gemini는 한 번만 호출한다."""
     fetch_results = await asyncio.gather(
-        fetch_kakao_candidates(lunch_anchor, walk, kakao_api_key, client=client),
-        fetch_kakao_candidates(dinner_anchor, walk, kakao_api_key, client=client),
+        fetch_kakao_candidates(lunch_anchor, transport, kakao_api_key, client=client),
+        fetch_kakao_candidates(dinner_anchor, transport, kakao_api_key, client=client),
         return_exceptions=True,
     )
     excluded = {name.strip().lower() for name in exclude_names}
@@ -487,7 +519,8 @@ async def search_day_places_hybrid(
     dinner_candidates = available(fetch_results[1])
     context = {
         "preferences": preferences or {},
-        "transport": "walk" if walk else "car",
+        "transport": transport,
+        "radiusKm": TRANSPORT_RADIUS_KM.get(transport, TRANSPORT_RADIUS_KM["transit"]),
         "lunchAnchor": {
             "name": lunch_anchor.get("name"),
             "lat": lunch_anchor["lat"],
@@ -516,7 +549,7 @@ async def search_day_places_hybrid(
     if lunch_picks:
         lunch_places = [_public_place(place) for place in lunch_picks]
     else:
-        lunch_places = search_places(lunch_anchor, exclude_names, walk)
+        lunch_places = search_places(lunch_anchor, exclude_names, transport)
 
     lunch_names = {place["name"].strip().lower() for place in lunch_places}
     lunch_ids = {place.get("kakaoPlaceId") for place in lunch_places if place.get("kakaoPlaceId")}
@@ -533,6 +566,6 @@ async def search_day_places_hybrid(
         dinner_places = search_places(
             dinner_anchor,
             exclude_names + [place["name"] for place in lunch_places],
-            walk,
+            transport,
         )
     return lunch_places, dinner_places

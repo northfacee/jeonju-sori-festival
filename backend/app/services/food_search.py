@@ -1,6 +1,6 @@
 import random
 
-from app.constants import MAX_WALK_KM
+from app.constants import TRANSPORT_RADIUS_KM
 from app.services.distance import haversine_km
 from app.services.restaurants import get_restaurants
 
@@ -45,9 +45,9 @@ def _to_place(r: dict) -> dict:
     }
 
 
-def find_promo_place(anchor_venue: dict, exclude_names: list[str], kind: str, walk: bool) -> dict | None:
+def find_promo_place(anchor_venue: dict, exclude_names: list[str], kind: str, transport: str) -> dict | None:
     """소상공인 홍보 슬롯에 넣을 대안 가게. 추천 가게와 같은 종류(식당/카페)로 근처에서 하나 고른다."""
-    radius_km = MAX_WALK_KM if walk else 5
+    radius_km = TRANSPORT_RADIUS_KM.get(transport, TRANSPORT_RADIUS_KM["transit"])
     excluded = {n.strip().lower() for n in exclude_names}
     candidates = [
         {**r, "distanceKm": haversine_km(anchor_venue, r)}
@@ -62,7 +62,7 @@ def find_promo_place(anchor_venue: dict, exclude_names: list[str], kind: str, wa
     return _to_place(random.choice(candidates[:12]))
 
 
-def search_places(anchor_venue: dict, exclude_names: list[str], walk: bool) -> list[dict]:
-    radius_km = MAX_WALK_KM if walk else 5
+def search_places(anchor_venue: dict, exclude_names: list[str], transport: str) -> list[dict]:
+    radius_km = TRANSPORT_RADIUS_KM.get(transport, TRANSPORT_RADIUS_KM["transit"])
     picks = find_nearby_restaurants(anchor_venue, radius_km, exclude_names, count=2)
     return [_to_place(r) for r in picks]
